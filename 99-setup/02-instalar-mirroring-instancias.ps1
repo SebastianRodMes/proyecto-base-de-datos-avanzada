@@ -9,6 +9,9 @@
 # habilita TCP/IP, configura el Firewall y crea el Alias TURISMODW.
 # =====================================================================
 
+[CmdletBinding()]
+param()
+
 $ErrorActionPreference = 'Stop'
 
 Write-Host ''
@@ -18,19 +21,19 @@ Write-Host '==================================================================='
 Write-Host ''
 
 $setupPath = 'C:\SQL2025\Evaluation_ESN\setup.exe'
-if (-not (Test-Path $setupPath)) {
+if (-not (Test-Path -Path $setupPath)) {
     Write-Host "ERROR: No se encontro el instalador de SQL Server en $setupPath" -ForegroundColor Red
     exit 1
 }
 
 $dirActual = $PSScriptRoot
-$iniMirror  = Join-Path $dirActual 'ConfigurationFile_MIRROR.ini'
-$iniWitness = Join-Path $dirActual 'ConfigurationFile_WITNESS.ini'
+$iniMirror  = Join-Path -Path $dirActual -ChildPath 'ConfigurationFile_MIRROR.ini'
+$iniWitness = Join-Path -Path $dirActual -ChildPath 'ConfigurationFile_WITNESS.ini'
 $claveInstancias = 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL'
 
 # --- 1. Instalar instancia MIRROR (Espejo) -----------------------------------
 Write-Host '[1/5] Verificando instancia MIRROR (Espejo)...' -ForegroundColor Cyan
-$mirrorInst = (Get-ItemProperty $claveInstancias -ErrorAction SilentlyContinue).MIRROR
+$mirrorInst = (Get-ItemProperty -Path $claveInstancias -ErrorAction SilentlyContinue).MIRROR
 
 if (-not $mirrorInst) {
     Write-Host '      Instalando instancia MIRROR... Espere por favor (tarda 3 a 5 minutos)...' -ForegroundColor Yellow
@@ -48,7 +51,7 @@ if (-not $mirrorInst) {
 
 # --- 2. Instalar instancia WITNESS (Testigo) ---------------------------------
 Write-Host '[2/5] Verificando instancia WITNESS (Testigo)...' -ForegroundColor Cyan
-$witnessInst = (Get-ItemProperty $claveInstancias -ErrorAction SilentlyContinue).WITNESS
+$witnessInst = (Get-ItemProperty -Path $claveInstancias -ErrorAction SilentlyContinue).WITNESS
 
 if (-not $witnessInst) {
     Write-Host '      Instalando instancia WITNESS... Espere por favor (tarda 3 a 5 minutos)...' -ForegroundColor Yellow
@@ -101,7 +104,7 @@ $ramas = @(
 )
 
 foreach ($r in $ramas) {
-    if (-not (Test-Path $r)) { New-Item -ItemType Directory -Path $r -Force | Out-Null }
+    if (-not (Test-Path -Path $r)) { New-Item -ItemType Directory -Path $r -Force | Out-Null }
     Set-ItemProperty -Path $r -Name 'TURISMODW' -Value $aliasDestino -Type String
 }
 Write-Host '      OK: Alias TURISMODW configurado apuntando a localhost,1433.' -ForegroundColor Green
@@ -117,12 +120,12 @@ $rutas = @(
     'D:\DB\mssql\Mirror\backup'
 )
 foreach ($r in $rutas) {
-    if (-not (Test-Path $r)) { New-Item -ItemType Directory -Path $r -Force | Out-Null }
+    if (-not (Test-Path -Path $r)) { New-Item -ItemType Directory -Path $r -Force | Out-Null }
 }
 icacls 'D:\DB\mssql' /grant '*S-1-1-0:(OI)(CI)F' /T | Out-Null
 Write-Host '      OK: Permisos asignados en D:\DB\mssql.' -ForegroundColor Green
 
 Write-Host ''
 Write-Host '===================================================================' -ForegroundColor Green
-Write-Host '  ¡INSTANCIAS Y ENTORNO CONFIGURADOS CON EXITO!                    ' -ForegroundColor Green
+Write-Host '  INSTANCIAS Y ENTORNO CONFIGURADOS CON EXITO                      ' -ForegroundColor Green
 Write-Host '===================================================================' -ForegroundColor Green
