@@ -1,43 +1,50 @@
 table DimEstadoReserva
+	lineageTag: cf6d9c65-3e86-40b4-9823-49a00ac26715
 
-	column 'EstadoKey'
+	column EstadoKey
 		dataType: int64
 		isHidden
+		lineageTag: f69c1562-60bc-46c8-8d93-17878883d0c6
 		summarizeBy: none
 		sourceColumn: EstadoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: 69c68f27-3bfd-47d1-a81a-1625f2a9b4e8
 		summarizeBy: none
 		sourceColumn: Estado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Descripcion'
+	column Descripcion
 		dataType: string
+		lineageTag: 14cb1849-c474-400c-87bd-8a7e7b4f4fac
 		summarizeBy: none
 		sourceColumn: Descripcion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsConfirmada'
+	column EsConfirmada
 		dataType: boolean
+		lineageTag: 1f09aa5e-0434-4888-8393-ff8b9787926c
 		summarizeBy: none
 		sourceColumn: EsConfirmada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsCancelada'
+	column EsCancelada
 		dataType: boolean
+		lineageTag: 26e1ac7d-6211-4eb0-843a-1aac0f5df2f2
 		summarizeBy: none
 		sourceColumn: EsCancelada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CuentaParaIngreso'
+	column CuentaParaIngreso
 		dataType: boolean
+		lineageTag: 611dfb9a-d283-456b-bfc7-e593a38454f8
 		summarizeBy: none
 		sourceColumn: CuentaParaIngreso
 
@@ -47,9 +54,10 @@ table DimEstadoReserva
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimEstadoReserva"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

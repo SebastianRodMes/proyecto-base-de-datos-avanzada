@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "ds_tours",
   "position": {
     "x": 660,
     "y": 190,
     "z": 0,
-    "width": 596,
-    "height": 300
+    "height": 300,
+    "width": 596
   },
   "visual": {
     "visualType": "barChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimTour.Nombre",
-              "nativeQueryRef": "Nombre"
+              "nativeQueryRef": "Nombre",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Tours mas solicitados'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

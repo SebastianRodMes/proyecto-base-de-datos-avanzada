@@ -1,107 +1,128 @@
 table DimHotel
+	lineageTag: fe2cea27-e8c2-4b99-b8c0-009af5df1301
 
-	column 'HotelKey'
+	column HotelKey
 		dataType: int64
 		isHidden
+		lineageTag: e790ebd6-eafa-4b15-b9f2-d041a23baba1
 		summarizeBy: none
 		sourceColumn: HotelKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HotelId'
+	column HotelId
 		dataType: int64
 		isHidden
+		lineageTag: 03c9869c-e26b-4398-a770-70f2e971e04f
 		summarizeBy: none
 		sourceColumn: HotelId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Nombre'
+	column Nombre
 		dataType: string
+		lineageTag: c791d3cf-6133-4733-a165-73a7db5286b9
 		summarizeBy: none
 		sourceColumn: Nombre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Categoria'
+	column Categoria
 		dataType: string
+		lineageTag: 8bc5b463-95c0-41d8-8e18-308722184c94
 		summarizeBy: none
 		sourceColumn: Categoria
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NumeroEstrellas'
+	column NumeroEstrellas
 		dataType: int64
+		lineageTag: 343fc5f4-f1c3-4714-91af-0bbcaf1aa750
 		summarizeBy: none
 		sourceColumn: NumeroEstrellas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Ciudad'
+	column Ciudad
 		dataType: string
+		lineageTag: 143d879a-24d6-48e4-a3de-4acb13913978
 		summarizeBy: none
 		sourceColumn: Ciudad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Pais'
+	column Pais
 		dataType: string
+		lineageTag: 9b99c02b-e07b-4393-a856-5a929f743ac9
 		summarizeBy: none
 		sourceColumn: Pais
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PaisCiudad'
+	column PaisCiudad
 		dataType: string
+		lineageTag: 8e4942eb-c54b-4f23-a5de-70b05d1bd310
 		summarizeBy: none
 		sourceColumn: PaisCiudad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Servicios'
+	column Servicios
 		dataType: string
+		lineageTag: 0d28c196-64bb-4985-9e9e-a85142e3b564
 		summarizeBy: none
 		sourceColumn: Servicios
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CapacidadTotal'
+	column CapacidadTotal
 		dataType: int64
 		formatString: #,0
+		lineageTag: 2e511ffe-3c6b-4d1b-8c17-971310405745
 		summarizeBy: none
 		sourceColumn: CapacidadTotal
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoCapacidad'
+	column RangoCapacidad
 		dataType: string
+		lineageTag: 4f72331c-175d-4302-8f0b-9f9468218f23
 		summarizeBy: none
 		sourceColumn: RangoCapacidad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: 9cccc3a2-4347-4ccd-98eb-fdb898fcac8a
 		summarizeBy: none
 		sourceColumn: Estado
 
 		annotation SummarizationSetBy = Automatic
 
-	hierarchy 'Geografia'
+	hierarchy Geografia
+		lineageTag: 48da754f-dae0-4545-ac1f-aa57b4c3dc11
+
 		level Pais
+			lineageTag: 8b1b5d7b-516e-4d7f-b9c5-071b40011889
 			column: Pais
+
 		level Ciudad
+			lineageTag: 199f1cf2-5fc5-4550-aa68-cecbcacc9299
 			column: Ciudad
+
 		level Hotel
+			lineageTag: 0f330e37-31c2-4011-8441-04f1c20386f8
 			column: Nombre
 
 	partition DimHotel = m
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimHotel"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "top_paises",
   "position": {
     "x": 24,
     "y": 466,
     "z": 0,
-    "width": 600,
-    "height": 230
+    "height": 230,
+    "width": 600
   },
   "visual": {
     "visualType": "barChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimCliente.PaisOrigen",
-              "nativeQueryRef": "PaisOrigen"
+              "nativeQueryRef": "PaisOrigen",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Paises de origen del visitante'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

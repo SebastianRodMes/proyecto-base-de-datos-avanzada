@@ -1,80 +1,92 @@
 table DimTour
+	lineageTag: b8c93c2b-1554-461a-a514-ab982e5e67be
 
-	column 'TourKey'
+	column TourKey
 		dataType: int64
 		isHidden
+		lineageTag: 6043eaf0-7cc7-4356-a861-0cc495b8b49a
 		summarizeBy: none
 		sourceColumn: TourKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TourId'
+	column TourId
 		dataType: int64
 		isHidden
+		lineageTag: 095d3f60-b190-49d5-ae5f-89027a32235c
 		summarizeBy: none
 		sourceColumn: TourId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Nombre'
+	column Nombre
 		dataType: string
+		lineageTag: 6d1ce6d2-7053-44c7-93b2-bbce76d57eb4
 		summarizeBy: none
 		sourceColumn: Nombre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Destino'
+	column Destino
 		dataType: string
+		lineageTag: 9841258d-548e-4fa1-846f-7d0890342c46
 		summarizeBy: none
 		sourceColumn: Destino
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoActividad'
+	column TipoActividad
 		dataType: string
+		lineageTag: 56350ca7-ceb4-4e33-ad32-08d9e0b544e4
 		summarizeBy: none
 		sourceColumn: TipoActividad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Proveedor'
+	column Proveedor
 		dataType: string
+		lineageTag: ee6b9072-f59d-4fe6-8fec-7554a1bf13b5
 		summarizeBy: none
 		sourceColumn: Proveedor
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DuracionHoras'
+	column DuracionHoras
 		dataType: int64
+		lineageTag: 7f066d73-156a-4384-9dbd-4a68d7942f16
 		summarizeBy: none
 		sourceColumn: DuracionHoras
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoDuracion'
+	column RangoDuracion
 		dataType: string
+		lineageTag: 52d8e6d6-85c6-4bcf-bc82-e873dfef7b7d
 		summarizeBy: none
 		sourceColumn: RangoDuracion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CupoMaximo'
+	column CupoMaximo
 		dataType: int64
+		lineageTag: 1a27a206-2cb4-4d63-8235-cb108e83358a
 		summarizeBy: none
 		sourceColumn: CupoMaximo
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Precio'
-		dataType: decimal
+	column Precio
+		dataType: double
 		formatString: $#,0.00
+		lineageTag: 80dde532-2fc9-49da-8166-fc52f36ace32
 		summarizeBy: none
 		sourceColumn: Precio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: 1f8f03b0-dca3-490c-bb9c-6507ad824556
 		summarizeBy: none
 		sourceColumn: Estado
 
@@ -84,9 +96,10 @@ table DimTour
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimTour"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

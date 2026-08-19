@@ -1,29 +1,34 @@
 table DimCanal
+	lineageTag: c4071e88-8a42-4a12-b35b-f1bea482532a
 
-	column 'CanalKey'
+	column CanalKey
 		dataType: int64
 		isHidden
+		lineageTag: 910a6a3c-823f-4bbc-8fcb-1d15bce1cb8d
 		summarizeBy: none
 		sourceColumn: CanalKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Canal'
+	column Canal
 		dataType: string
+		lineageTag: 52901a40-9b5c-4e48-af81-f2cb5014930a
 		summarizeBy: none
 		sourceColumn: Canal
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Dispositivo'
+	column Dispositivo
 		dataType: string
+		lineageTag: c4b8da28-5ad3-42bf-88c3-30f624cee81c
 		summarizeBy: none
 		sourceColumn: Dispositivo
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoDispositivo'
+	column TipoDispositivo
 		dataType: string
+		lineageTag: 3c6e4f6b-dda8-4819-90c9-297097790934
 		summarizeBy: none
 		sourceColumn: TipoDispositivo
 
@@ -33,9 +38,10 @@ table DimCanal
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimCanal"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

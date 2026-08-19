@@ -1,66 +1,76 @@
 table CalidadDatos
+	lineageTag: 20faf39f-21c6-48ab-8b78-28954e771341
 
-	column 'EjecucionId'
+	column EjecucionId
 		dataType: int64
+		lineageTag: 2e289eaa-c96f-4c00-9042-49db5eef5bf0
 		summarizeBy: none
 		sourceColumn: EjecucionId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Fuente'
+	column Fuente
 		dataType: string
+		lineageTag: 5fb72b9b-34f0-4dec-964e-480d82948e74
 		summarizeBy: none
 		sourceColumn: Fuente
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Objeto'
+	column Objeto
 		dataType: string
+		lineageTag: 2f2cf3c8-1eac-4824-bfdd-5c3c774ff233
 		summarizeBy: none
 		sourceColumn: Objeto
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Regla'
+	column Regla
 		dataType: string
+		lineageTag: f4550535-018d-4d48-bc66-8d087479be15
 		summarizeBy: none
 		sourceColumn: Regla
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Severidad'
+	column Severidad
 		dataType: string
+		lineageTag: f885a975-549d-45bc-87d3-ccbfd8df8369
 		summarizeBy: none
 		sourceColumn: Severidad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Registros'
+	column Registros
 		dataType: int64
 		formatString: #,0
+		lineageTag: 29fa3da0-547f-4256-89fc-0058c89f40f2
 		summarizeBy: sum
 		sourceColumn: Registros
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PrimeraDeteccion'
+	column PrimeraDeteccion
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: b0a135ee-1c9d-4fbf-82e7-b7aab8f2ba06
 		summarizeBy: none
 		sourceColumn: PrimeraDeteccion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaDeteccion'
+	column UltimaDeteccion
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: 6bbc5018-bdae-4dc4-82ed-b46b3a4229c1
 		summarizeBy: none
 		sourceColumn: UltimaDeteccion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EjemploDescripcion'
+	column EjemploDescripcion
 		dataType: string
+		lineageTag: 5e21d704-e311-4399-bce2-47dea7f38238
 		summarizeBy: none
 		sourceColumn: EjemploDescripcion
 
@@ -70,9 +80,10 @@ table CalidadDatos
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_CalidadDatos"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

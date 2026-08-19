@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "vi_presup",
   "position": {
     "x": 24,
     "y": 486,
     "z": 0,
-    "width": 620,
-    "height": 210
+    "height": 210,
+    "width": 620
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimCliente.RangoPresupuesto",
-              "nativeQueryRef": "RangoPresupuesto"
+              "nativeQueryRef": "RangoPresupuesto",
+              "active": true
             }
           ]
         },
@@ -67,39 +68,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Presupuesto declarado contra gasto real'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

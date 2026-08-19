@@ -15,3 +15,7 @@ venv/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Power BI: cache y ajustes locales (no versionar)
+.pbi/
+*.abf

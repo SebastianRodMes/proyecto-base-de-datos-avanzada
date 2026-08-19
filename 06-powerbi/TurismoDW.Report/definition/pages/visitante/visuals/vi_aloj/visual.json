@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "vi_aloj",
   "position": {
     "x": 856,
     "y": 190,
     "z": 0,
-    "width": 400,
-    "height": 280
+    "height": 280,
+    "width": 400
   },
   "visual": {
     "visualType": "treemap",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimCliente.TipoAlojamiento",
-              "nativeQueryRef": "TipoAlojamiento"
+              "nativeQueryRef": "TipoAlojamiento",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Preferencia de alojamiento'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

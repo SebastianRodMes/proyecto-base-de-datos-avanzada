@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "sl_pais",
   "position": {
     "x": 846,
     "y": 466,
     "z": 0,
-    "width": 200,
-    "height": 230
+    "height": 230,
+    "width": 200
   },
   "visual": {
     "visualType": "slicer",
@@ -26,44 +26,12 @@
                 }
               },
               "queryRef": "DimHotel.Pais",
-              "nativeQueryRef": "Pais"
+              "nativeQueryRef": "Pais",
+              "active": true
             }
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Pais del destino'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

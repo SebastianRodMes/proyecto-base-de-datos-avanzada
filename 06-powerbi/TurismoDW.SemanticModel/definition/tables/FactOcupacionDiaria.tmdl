@@ -1,60 +1,67 @@
 table FactOcupacionDiaria
-
 	isHidden
+	lineageTag: 05f8299f-0336-4d34-905c-c8a8623e6e9c
 
-	column 'TiempoKey'
+	column TiempoKey
 		dataType: int64
 		isHidden
+		lineageTag: 665ae341-bb63-4a01-b1ac-3adbc28cb432
 		summarizeBy: none
 		sourceColumn: TiempoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HotelKey'
+	column HotelKey
 		dataType: int64
 		isHidden
+		lineageTag: cc8ac7b5-b8d7-4032-b0d9-a855a849cdee
 		summarizeBy: none
 		sourceColumn: HotelKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HabitacionesOcupadas'
+	column HabitacionesOcupadas
 		dataType: int64
-		formatString: #,0
 		isHidden
+		formatString: #,0
+		lineageTag: 7c5c656c-4255-4e05-8bc8-4ab6dfff7e4c
 		summarizeBy: sum
 		sourceColumn: HabitacionesOcupadas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HabitacionesDisponibles'
+	column HabitacionesDisponibles
 		dataType: int64
-		formatString: #,0
 		isHidden
+		formatString: #,0
+		lineageTag: dcd1be66-8afd-4d41-ae99-5ea83798b466
 		summarizeBy: sum
 		sourceColumn: HabitacionesDisponibles
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PersonasAlojadas'
+	column PersonasAlojadas
 		dataType: int64
 		formatString: #,0
+		lineageTag: aa4492bf-0a9b-45f6-9715-71dd1f72a02b
 		summarizeBy: sum
 		sourceColumn: PersonasAlojadas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'IngresoDia'
-		dataType: decimal
+	column IngresoDia
+		dataType: double
 		formatString: $#,0.00
+		lineageTag: ac9a730b-9b28-4451-b4a8-68ff1bcd527e
 		summarizeBy: sum
 		sourceColumn: IngresoDia
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ReservasActivas'
+	column ReservasActivas
 		dataType: int64
 		formatString: #,0
+		lineageTag: cd9634d2-66e7-4fb1-8793-6e4eeac96611
 		summarizeBy: sum
 		sourceColumn: ReservasActivas
 
@@ -64,9 +71,10 @@ table FactOcupacionDiaria
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_FactOcupacionDiaria"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

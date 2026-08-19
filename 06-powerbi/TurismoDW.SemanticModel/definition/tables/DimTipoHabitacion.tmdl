@@ -1,68 +1,78 @@
 table DimTipoHabitacion
+	lineageTag: 3f18e2b8-0aac-4ff2-87ec-a4ab2ef02e04
 
-	column 'TipoHabitacionKey'
+	column TipoHabitacionKey
 		dataType: int64
 		isHidden
+		lineageTag: 4a3170dd-5d58-4f0a-9410-44b990d57e79
 		summarizeBy: none
 		sourceColumn: TipoHabitacionKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoHabitacionId'
+	column TipoHabitacionId
 		dataType: int64
 		isHidden
+		lineageTag: b68419d1-e4d2-44a8-88a9-44969f68ba12
 		summarizeBy: none
 		sourceColumn: TipoHabitacionId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HotelKey'
+	column HotelKey
 		dataType: int64
 		isHidden
+		lineageTag: 0de41378-591f-474d-b0cf-cec0b9c3c93b
 		summarizeBy: none
 		sourceColumn: HotelKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoHabitacion'
+	column TipoHabitacion
 		dataType: string
+		lineageTag: c17438ea-8507-448d-957f-5c7617e57945
 		summarizeBy: none
 		sourceColumn: TipoHabitacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CapacidadPersonas'
+	column CapacidadPersonas
 		dataType: int64
+		lineageTag: e358fc0d-fc5e-4bc8-bdb6-6c0004a0c3d2
 		summarizeBy: none
 		sourceColumn: CapacidadPersonas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TarifaBase'
-		dataType: decimal
+	column TarifaBase
+		dataType: double
 		formatString: $#,0.00
+		lineageTag: 19d454a7-8bc4-4e24-86be-c57c85f77d96
 		summarizeBy: none
 		sourceColumn: TarifaBase
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoTarifa'
+	column RangoTarifa
 		dataType: string
+		lineageTag: 629d1eb2-809c-4911-b7ef-eda5d7072363
 		summarizeBy: none
 		sourceColumn: RangoTarifa
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CantidadDisponible'
+	column CantidadDisponible
 		dataType: int64
 		formatString: #,0
+		lineageTag: 231538fb-2df8-4dc4-93e5-06ce400c2044
 		summarizeBy: none
 		sourceColumn: CantidadDisponible
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: eefa4d0b-9766-48c3-97fb-5563a19a51bf
 		summarizeBy: none
 		sourceColumn: Estado
 
@@ -72,9 +82,10 @@ table DimTipoHabitacion
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimTipoHabitacion"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

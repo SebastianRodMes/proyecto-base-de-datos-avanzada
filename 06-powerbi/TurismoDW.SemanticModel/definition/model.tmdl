@@ -10,6 +10,8 @@ annotation PBI_QueryOrder = ["DimTiempo", "DimCliente", "DimHotel", "DimTipoHabi
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
+annotation PBI_ProTooling = ["DevMode"]
+
 ref table DimTiempo
 ref table DimCliente
 ref table DimHotel
@@ -27,3 +29,4 @@ ref table FactInteraccionWeb
 ref table EstadoSistema
 ref table CalidadDatos
 ref table _Medidas
+

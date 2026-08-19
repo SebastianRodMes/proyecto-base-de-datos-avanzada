@@ -1,80 +1,92 @@
 table DimPaquete
+	lineageTag: 50ffa8b1-fa14-4b63-b9e1-c660bd7b728e
 
-	column 'PaqueteKey'
+	column PaqueteKey
 		dataType: int64
 		isHidden
+		lineageTag: f4b3813c-035c-4378-856c-e60499b31301
 		summarizeBy: none
 		sourceColumn: PaqueteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PaqueteId'
+	column PaqueteId
 		dataType: int64
 		isHidden
+		lineageTag: 9f8ea9a6-0d12-4e6f-ad67-e58f1d8bb4fe
 		summarizeBy: none
 		sourceColumn: PaqueteId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Nombre'
+	column Nombre
 		dataType: string
+		lineageTag: 857edf5d-00f8-49ff-a21f-607ac2b6944f
 		summarizeBy: none
 		sourceColumn: Nombre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoPaquete'
+	column TipoPaquete
 		dataType: string
+		lineageTag: 0ba58473-91c6-4106-8efe-dfc2056dd036
 		summarizeBy: none
 		sourceColumn: TipoPaquete
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DuracionDias'
+	column DuracionDias
 		dataType: int64
+		lineageTag: 723b39b2-fc2a-4d52-bc9f-bc33de70ec21
 		summarizeBy: none
 		sourceColumn: DuracionDias
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoDuracion'
+	column RangoDuracion
 		dataType: string
+		lineageTag: 1ae76a84-ee4b-4f07-9c20-78c0df342f16
 		summarizeBy: none
 		sourceColumn: RangoDuracion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PrecioTotal'
-		dataType: decimal
+	column PrecioTotal
+		dataType: double
 		formatString: $#,0.00
+		lineageTag: 2a2a4ede-6f54-456d-816c-9ee82b02cfae
 		summarizeBy: none
 		sourceColumn: PrecioTotal
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoPrecio'
+	column RangoPrecio
 		dataType: string
+		lineageTag: ad4b5d20-f852-4baf-8bbb-fbc2a99b39d9
 		summarizeBy: none
 		sourceColumn: RangoPrecio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ServiciosAdicionales'
+	column ServiciosAdicionales
 		dataType: string
+		lineageTag: b590226f-5ae8-4ccd-bafd-4e3345e42ebf
 		summarizeBy: none
 		sourceColumn: ServiciosAdicionales
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: 82fa11e1-5f44-4a67-b8bf-97835d897b42
 		summarizeBy: none
 		sourceColumn: Estado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FuenteDatos'
+	column FuenteDatos
 		dataType: string
+		lineageTag: d49d50b2-efb7-46e1-8872-365e9f467ebc
 		summarizeBy: none
 		sourceColumn: FuenteDatos
 
@@ -84,9 +96,10 @@ table DimPaquete
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimPaquete"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+
