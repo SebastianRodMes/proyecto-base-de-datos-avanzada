@@ -1,0 +1,431 @@
+Changed database context to 'TurismoDW'.
+SQL Server parse and compile time: 
+   CPU time = 2 ms, elapsed time = 2 ms.
+===== T1: eliminacion de particiones (un anio) =====
+
+ SQL Server Execution Times:
+   CPU time = 12 ms,  elapsed time = 11 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 94 ms, elapsed time = 95 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+Reservas             Ingreso                                 
+-------------------- ----------------------------------------
+              334499                            2253261659.84
+Table 'FactReserva'. Scan count 2, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 391, lob physical reads 0, lob page server reads 0, lob read-ahead reads 632, lob page server read-ahead reads 0.
+Table 'FactReserva'. Segment reads 1, segment skipped 0.
+
+ SQL Server Execution Times:
+   CPU time = 87 ms,  elapsed time = 88 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 1 ms.
+===== T2: ocupacion hotelera por pais y mes =====
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 205 ms, elapsed time = 205 ms.
+Pais                                                         Anio   Mes PctOcupacion                            
+------------------------------------------------------------ ------ --- ----------------------------------------
+Colombia                                                       2024   4                       23.818792995622263
+Mexico                                                         2024  12                       50.810129242408321
+Estados Unidos                                                 2024   3                       31.657125032111270
+Espana                                                         2025   2                       34.348706587898317
+Espana                                                         2025   6                       28.497284878863826
+Estados Unidos                                                 2025  11                       20.164960182025028
+Mexico                                                         2025   2                       36.205211726384364
+Mexico                                                         2025   6                       29.143865363735070
+Costa Rica                                                     2026   7                       41.835654663106492
+Mexico                                                         2026   4                       23.846362649294245
+Mexico                                                         2026   1                       55.521698014080067
+Espana                                                         2024  12                       48.417414504001940
+Colombia                                                       2024   5                       13.410851540277189
+Estados Unidos                                                 2024   8                       33.820507174575213
+Costa Rica                                                     2025   7                       40.955233215462702
+Costa Rica                                                     2025   3                       32.680534507228596
+Colombia                                                       2025   4                       24.792839274546591
+Espana                                                         2026  12                       47.890896596329533
+Costa Rica                                                     2026   8                       33.498412354766543
+Costa Rica                                                     2026   9                       13.981481481481481
+Colombia                                                       2026   7                       42.654179023179809
+Estados Unidos                                                 2026   8                       33.547102645968659
+Estados Unidos                                                 2026   9                       12.075772530559562
+Mexico                                                         2026   5                       12.091025694940914
+Costa Rica                                                     2024   3                       31.755009501816169
+Costa Rica                                                     2025   4                       23.408836689038031
+Espana                                                         2025  12                       48.039958767887460
+Estados Unidos                                                 2025   4                       22.493363670838073
+Mexico                                                         2025  12                       50.344646422191867
+Costa Rica                                                     2026  12                       50.774277741694931
+Estados Unidos                                                 2026  12                       50.566993284157216
+Mexico                                                         2027   1                       21.416226439705210
+Espana                                                         2027   1                       19.682553288759357
+Colombia                                                       2027   1                       22.915671855601184
+Costa Rica                                                     2024   9                       14.163381052474471
+Espana                                                         2024   8                       32.403589619209313
+Mexico                                                         2024   8                       34.242933697593779
+Estados Unidos                                                 2024  11                       19.998103905953735
+Estados Unidos                                                 2025  12                       50.884436126096370
+Estados Unidos                                                 2026  11                       20.401971937808115
+Colombia                                                       2024  12                       51.794468316891605
+Mexico                                                         2024  10                       10.381948092886413
+Espana                                                         2025  11                       20.216165413533834
+Espana                                                         2025   8                       33.538988600533592
+Colombia                                                       2025  11                       20.379143214509068
+Costa Rica                                                     2026   5                       12.169541266748454
+Costa Rica                                                     2026   4                       22.788963460104399
+Colombia                                                       2026   2                       36.845852318413294
+Mexico                                                         2026   8                       34.512976778396553
+Mexico                                                         2026  10                       11.249868656089103
+Costa Rica                                                     2027   1                       19.521987221102265
+Espana                                                         2024   4                       22.686403508771929
+Mexico                                                         2024   1                       54.942208679205632
+Estados Unidos                                                 2024   7                       42.876802818452053
+Mexico                                                         2025  10                       11.103484688489968
+Espana                                                         2026   4                       22.359544695071010
+Colombia                                                       2026  10                       11.643617987048356
+Colombia                                                       2026   9                       14.331613508442776
+Colombia                                                       2026  11                       20.871638524077548
+Colombia                                                       2026   6                       29.841307066916823
+Mexico                                                         2026   9                       13.851248642779587
+Costa Rica                                                     2024   4                       23.311272682078051
+Costa Rica                                                     2024   7                       43.518919439032017
+Colombia                                                       2024   6                       31.113977485928705
+Mexico                                                         2024   2                       35.874424351342244
+Estados Unidos                                                 2024   5                       13.199271764316451
+Estados Unidos                                                 2024   9                       14.467091778638123
+Espana                                                         2025   4                       22.065580618212197
+Espana                                                         2025   7                       40.165433745654458
+Colombia                                                       2025   7                       43.408430672396053
+Estados Unidos                                                 2025   8                       34.624206392895152
+Mexico                                                         2025   1                       53.180624146264579
+Costa Rica                                                     2026  10                       11.455073893997015
+Costa Rica                                                     2026   1                       54.592143561617473
+Espana                                                         2024  11                       19.414682539682539
+Colombia                                                       2024  11                       20.902126328955597
+Mexico                                                         2024   4                       23.331161780673181
+Estados Unidos                                                 2024  10                       10.448255557191226
+Costa Rica                                                     2025  10                       10.966178345481224
+Costa Rica                                                     2025   1                       54.708510740660556
+Colombia                                                       2025   6                       30.279080675422138
+Colombia                                                       2025   2                       37.766349504154382
+Estados Unidos                                                 2025   9                       13.887833421992552
+Espana                                                         2026  11                       19.407372598162071
+Estados Unidos                                                 2026  10                       11.197658629674483
+Costa Rica                                                     2024  11                       20.294245587869748
+Costa Rica                                                     2024   8                       33.826164874551971
+Colombia                                                       2024   7                       43.353961145070507
+Mexico                                                         2024   7                       42.264369023852054
+Mexico                                                         2024   3                       33.530524324892297
+Estados Unidos                                                 2024  12                       48.520129179052442
+Costa Rica                                                     2025   6                       29.086813323390504
+Colombia                                                       2025   5                       12.626339042546753
+Estados Unidos                                                 2025  10                       10.584792102462475
+Estados Unidos                                                 2025   6                       28.470800151687523
+Espana                                                         2026   3                       31.948318376586627
+Espana                                                         2026   7                       41.144696418465518
+Colombia                                                       2026   1                       56.919899533982932
+Mexico                                                         2026   7                       43.228433329830829
+Costa Rica                                                     2024  10                       11.053679247552380
+Espana                                                         2024   3                       31.844227504244482
+Espana                                                         2024   7                       40.393827310211011
+Espana                                                         2024   6                       27.397660818713450
+Colombia                                                       2024   2                       36.869217830109335
+Mexico                                                         2024   6                       29.787187839305103
+Costa Rica                                                     2025  12                       49.397416468211012
+Espana                                                         2026   8                       32.848249656399062
+Colombia                                                       2026   5                       13.714216546631967
+Mexico                                                         2026   2                       35.836435551419264
+Costa Rica                                                     2024  12                       50.522900579731062
+Espana                                                         2024   9                       13.635650153826834
+Espana                                                         2024   5                       11.267584283288867
+Colombia                                                       2024  10                       11.600496277915632
+Colombia                                                       2024   1                       56.695212733765054
+Mexico                                                         2024   5                       12.473993905642534
+Mexico                                                         2024   9                       14.223404719326558
+Estados Unidos                                                 2024   2                       36.911066650974853
+Espana                                                         2025   3                       31.131255558250464
+Colombia                                                       2025   9                       14.116635397123202
+Estados Unidos                                                 2025   7                       41.859334287496788
+Mexico                                                         2025   3                       33.313018808448040
+Espana                                                         2026   5                       11.668319235905945
+Espana                                                         2026   9                       13.606411862990810
+Espana                                                         2026  10                       10.699613462044401
+Costa Rica                                                     2026  11                       20.507394978871488
+Costa Rica                                                     2026   3                       32.062014385028024
+Costa Rica                                                     2026   2                       36.968680089485458
+Colombia                                                       2026   8                       35.277340676632572
+Estados Unidos                                                 2026   2                       34.121566715423370
+Estados Unidos                                                 2026   3                       32.003009284744394
+Costa Rica                                                     2024   5                       12.335005835709730
+Estados Unidos                                                 2024   6                       30.893060295790671
+Costa Rica                                                     2025  11                       20.798222719363658
+Costa Rica                                                     2025   2                       35.649701715137956
+Espana                                                         2025   9                       13.823135795240684
+Espana                                                         2025   5                       12.409246263676259
+Colombia                                                       2025  10                       10.847870858319704
+Colombia                                                       2025   1                       56.456908551715790
+Estados Unidos                                                 2025   3                       33.726008293882344
+Estados Unidos                                                 2025   2                       35.145457500406305
+Mexico                                                         2025   5                       12.081012924240832
+Mexico                                                         2025   9                       14.109663409337676
+Espana                                                         2026   1                       51.636146818659552
+Costa Rica                                                     2026   6                       29.746147153865274
+Estados Unidos                                                 2026   6                       29.606560485400075
+Costa Rica                                                     2024   6                       29.968617946805866
+Costa Rica                                                     2024   2                       35.594898300290570
+Espana                                                         2024  10                       10.657902726334325
+Colombia                                                       2024   8                       34.587393330508987
+Estados Unidos                                                 2025   1                       54.609343462145399
+Mexico                                                         2025  11                       20.668838219326818
+Mexico                                                         2025   8                       34.217715666701691
+Colombia                                                       2026  12                       51.330720813411608
+Colombia                                                       2026   3                       33.641741814440476
+Estados Unidos                                                 2026   5                       12.570186061873830
+Espana                                                         2024   1                       51.933765866278599
+Colombia                                                       2024   9                       13.924110077956231
+Estados Unidos                                                 2024   4                       22.778725824800910
+Espana                                                         2025  10                       10.105371733678504
+Colombia                                                       2025   8                       35.691914301277007
+Estados Unidos                                                 2025   5                       12.206869976879885
+Estados Unidos                                                 2026   4                       23.046075085324232
+Costa Rica                                                     2024   1                       54.084878881912871
+Espana                                                         2024   2                       34.462773312591824
+Colombia                                                       2024   3                       32.765690249954608
+Estados Unidos                                                 2024   1                       51.545010826085360
+Costa Rica                                                     2025   8                       34.049878521084409
+Costa Rica                                                     2025   9                       13.892618701279325
+Espana                                                         2025   1                       52.684129679036300
+Mexico                                                         2025   7                       42.005358831564568
+Mexico                                                         2025   4                       22.778501628664495
+Espana                                                         2026   2                       33.750671321160042
+Colombia                                                       2026   4                       23.666353971232020
+Estados Unidos                                                 2026   1                       54.336856398399941
+Mexico                                                         2026  11                       21.117263843648208
+Mexico                                                         2026   6                       29.291530944625407
+Estados Unidos                                                 2027   1                       19.894999419886297
+Mexico                                                         2024  11                       20.487513572204125
+Costa Rica                                                     2025   5                       12.144364074743821
+Colombia                                                       2025   3                       34.439871694002299
+Colombia                                                       2025  12                       51.848181323004297
+Espana                                                         2026   6                       29.227756892230576
+Estados Unidos                                                 2026   7                       40.734522367793313
+Mexico                                                         2026   3                       32.876957024272354
+Mexico                                                         2026  12                       50.161815698224230
+Table 'FactOcupacionDiaria'. Scan count 2, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 336, lob physical reads 0, lob page server reads 0, lob read-ahead reads 315, lob page server read-ahead reads 0.
+Table 'FactOcupacionDiaria'. Segment reads 4, segment skipped 3.
+Table 'DimTiempo'. Scan count 1, logical reads 33, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'DimHotel'. Scan count 1, logical reads 9, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Workfile'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+
+ SQL Server Execution Times:
+   CPU time = 151 ms,  elapsed time = 168 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 3 ms.
+===== T3: ranking de tours mas solicitados =====
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 143 ms, elapsed time = 143 ms.
+Nombre                                                                                                                                                 Destino                                                                                              Veces                Ingreso                                 
+------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------------------------------------------------------------------------- -------------------- ----------------------------------------
+Trekking Volcanico Ciudad de Mexico                                                                                                                    Ciudad de Mexico                                                                                                    95475                              67173845.70
+Avistamiento de Aves Puerto Viejo                                                                                                                      Puerto Viejo                                                                                                        81874                              62697058.94
+Tour de Cafe San Jose                                                                                                                                  San Jose                                                                                                            81551                              38230370.20
+City Tour Bogota                                                                                                                                       Bogota                                                                                                              72282                              58050856.80
+Avistamiento de Aves Cancun                                                                                                                            Cancun                                                                                                              70174                              63660965.40
+Buceo Malaga                                                                                                                                           Malaga                                                                                                              68536                              30548167.70
+Kayak Jaco                                                                                                                                             Jaco                                                                                                                68337                              61816683.86
+Canopy Medellin                                                                                                                                        Medellin                                                                                                            68277                              65654110.80
+City Tour Granada                                                                                                                                      Granada                                                                                                             66452                              21186989.52
+Tour Gastronomico Barcelona                                                                                                                            Barcelona                                                                                                           66362                              66903038.88
+Rafting Tamarindo                                                                                                                                      Tamarindo                                                                                                           66268                              26935056.12
+Buceo Orlando                                                                                                                                          Orlando                                                                                                             62929                              62071202.94
+Canopy Madrid                                                                                                                                          Madrid                                                                                                              60775                              37263981.32
+Kayak Playa del Carmen                                                                                                                                 Playa del Carmen                                                                                                    59070                              21794156.46
+Tour Gastronomico Santa Marta                                                                                                                          Santa Marta                                                                                                         58787                              31113960.88
+Safari Fotografico Tortuguero                                                                                                                          Tortuguero                                                                                                          58505                              44574316.08
+Tour de Cafe Nueva Orleans                                                                                                                             Nueva Orleans                                                                                                       58175                              15891969.04
+Cabalgata Cartagena                                                                                                                                    Cartagena                                                                                                           56907                              48932232.30
+Trekking Volcanico Nosara                                                                                                                              Nosara                                                                                                              52985                              54286499.42
+Snorkel Samara                                                                                                                                         Samara                                                                                                              51567                              26780403.48
+Table 'FactReservaTour'. Scan count 2, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 3340, lob physical reads 0, lob page server reads 0, lob read-ahead reads 5773, lob page server read-ahead reads 0.
+Table 'FactReservaTour'. Segment reads 6, segment skipped 0.
+Table 'DimTour'. Scan count 1, logical reads 12, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'DimEstadoReserva'. Scan count 1, logical reads 2, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+
+ SQL Server Execution Times:
+   CPU time = 240 ms,  elapsed time = 269 ms.
+SQL Server parse and compile time: 
+   CPU time = 8 ms, elapsed time = 8 ms.
+===== T4: perfil del visitante vs satisfaccion =====
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 221 ms, elapsed time = 222 ms.
+PaisOrigen                                                   RangoEdad            Reservas             CalifPromedio                           
+------------------------------------------------------------ -------------------- -------------------- ----------------------------------------
+Espana                                                       45-54                               65709                                 3.951010
+Mexico                                                       35-44                               64643                                 3.962256
+Reino Unido                                                  55-64                               21442                                 3.959541
+Alemania                                                     45-54                               21857                                 3.946994
+Colombia                                                     35-44                               21858                                 3.974018
+Estados Unidos                                               45-54                               65557                                 3.955331
+Costa Rica                                                   25-34                               78700                                 3.965479
+Mexico                                                       55-64                               65068                                 3.969098
+Mexico                                                       65+                                 45632                                 3.953634
+Francia                                                      55-64                               21603                                 3.933406
+Colombia                                                     25-34                               19643                                 3.969402
+Mexico                                                       25-34                               58812                                 3.934601
+Chile                                                        65+                                 15253                                 3.967578
+Alemania                                                     65+                                 15163                                 3.951939
+Canada                                                       65+                                 15201                                 3.968813
+Reino Unido                                                  45-54                               21497                                 3.949238
+Chile                                                        35-44                               21355                                 3.938185
+Espana                                                       25-34                               59129                                 3.969260
+Estados Unidos                                               65+                                 45983                                 3.945345
+Alemania                                                     35-44                               21744                                 3.947431
+Francia                                                      35-44                               21544                                 3.938705
+Estados Unidos                                               55-64                               65669                                 3.981464
+Alemania                                                     25-34                               19650                                 3.935583
+Canada                                                       55-64                               21873                                 3.947747
+Espana                                                       35-44                               65276                                 3.965925
+Francia                                                      25-34                               19380                                 3.962163
+Costa Rica                                                   35-44                               87049                                 3.965493
+Argentina                                                    45-54                               21575                                 3.955894
+Argentina                                                    35-44                               21529                                 3.933921
+Francia                                                      45-54                               21663                                 3.952637
+Canada                                                       45-54                               21789                                 3.965331
+Estados Unidos                                               25-34                               58338                                 3.975734
+Chile                                                        25-34                               19211                                 3.936617
+Espana                                                       65+                                 45653                                 3.962456
+Chile                                                        55-64                               21881                                 3.936364
+Argentina                                                    55-64                               21943                                 3.944617
+Espana                                                       55-64                               64731                                 3.968754
+Reino Unido                                                  25-34                               19732                                 3.967364
+Argentina                                                    25-34                               19353                                 3.960965
+Francia                                                      65+                                 15063                                 3.923765
+Alemania                                                     55-64                               21766                                 3.955576
+Colombia                                                     55-64                               21924                                 3.937207
+Chile                                                        45-54                               21443                                 3.977434
+Colombia                                                     65+                                 15325                                 3.969847
+Reino Unido                                                  65+                                 15201                                 3.962938
+Canada                                                       25-34                               19390                                 3.974980
+Costa Rica                                                   65+                                 61382                                 3.948411
+Canada                                                       35-44                               21899                                 3.963934
+Estados Unidos                                               35-44                               65261                                 3.967150
+Mexico                                                       45-54                               65322                                 3.958294
+Colombia                                                     45-54                               21646                                 3.940889
+Costa Rica                                                   45-54                               86971                                 3.959692
+Costa Rica                                                   55-64                               86638                                 3.965450
+Argentina                                                    65+                                 15260                                 3.962461
+Reino Unido                                                  35-44                               21821                                 3.955671
+Warning: Null value is eliminated by an aggregate or other SET operation.
+Table 'FactReserva'. Scan count 24, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 7572, lob physical reads 6, lob page server reads 0, lob read-ahead reads 7626, lob page server read-ahead reads 0.
+Table 'FactReserva'. Segment reads 6, segment skipped 0.
+Table 'DimCliente'. Scan count 13, logical reads 2906, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'FactResena'. Scan count 9, logical reads 1258, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+
+ SQL Server Execution Times:
+   CPU time = 22793 ms,  elapsed time = 3834 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 2 ms.
+===== T5: tendencia mensual completa (la mas pesada) =====
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 74 ms, elapsed time = 76 ms.
+Anio   Mes Reservas             Ingresos                                 EstadiaPromedio                         
+------ --- -------------------- ---------------------------------------- ----------------------------------------
+  2021   1                50987                             344417161.94                                 7.547786
+  2021   2                27944                             186475953.46                                 7.515244
+  2021   3                31005                             210439265.90                                 7.505757
+  2021   4                20116                             135601247.64                                 7.473652
+  2021   5                10409                              71038541.00                                 7.513786
+  2021   6                29788                             201302773.50                                 7.484993
+  2021   7                41152                             278626977.72                                 7.476696
+  2021   8                30452                             201638544.88                                 7.502003
+  2021   9                 9890                              66637960.22                                 7.526289
+  2021  10                10294                              71660835.52                                 7.585195
+  2021  11                19787                             134692978.60                                 7.491029
+  2021  12                51600                             348491718.22                                 7.512984
+  2022   1                51591                             347909704.18                                 7.496326
+  2022   2                28098                             189366782.62                                 7.503167
+  2022   3                31007                             211956530.46                                 7.491824
+  2022   4                19961                             132728912.74                                 7.514002
+  2022   5                10245                              68871124.54                                 7.583504
+  2022   6                29788                             203420493.24                                 7.499395
+  2022   7                40930                             276521583.76                                 7.499828
+  2022   8                30915                             208716077.82                                 7.477729
+  2022   9                 9950                              65668525.12                                 7.508442
+  2022  10                10331                              69646385.28                                 7.486400
+  2022  11                19744                             132939385.52                                 7.537277
+  2022  12                51518                             348441487.62                                 7.508676
+  2023   1                51385                             347500418.70                                 7.498647
+  2023   2                27873                             188008629.54                                 7.492447
+  2023   3                30933                             210180052.00                                 7.503378
+  2023   4                19834                             133980213.12                                 7.486891
+  2023   5                10165                              67924499.18                                 7.447614
+  2023   6                29787                             202236284.80                                 7.541511
+  2023   7                41079                             275519829.16                                 7.517636
+  2023   8                30792                             208844202.96                                 7.479410
+  2023   9                10048                              67506143.44                                 7.459992
+  2023  10                10315                              70451814.56                                 7.549394
+  2023  11                19926                             133196355.90                                 7.508631
+  2023  12                51405                             347233623.52                                 7.494757
+  2024   1                51194                             342039176.70                                 7.507227
+  2024   2                28884                             196024241.74                                 7.498892
+  2024   3                30722                             207610164.06                                 7.462046
+  2024   4                19906                             132411826.02                                 7.514970
+  2024   5                10445                              71592800.34                                 7.463571
+  2024   6                29783                             200370924.12                                 7.497297
+  2024   7                41294                             278796816.92                                 7.476291
+  2024   8                30768                             208637495.12                                 7.471951
+  2024   9                 9941                              69537169.10                                 7.457298
+  2024  10                10292                              68755248.58                                 7.518169
+  2024  11                19808                             131869241.90                                 7.515700
+  2024  12                51462                             345616555.24                                 7.489681
+  2025   1                50972                             344902383.04                                 7.484952
+  2025   2                27840                             187039658.80                                 7.522808
+  2025   3                30704                             205816606.32                                 7.543153
+  2025   4                19755                             133745158.20                                 7.525335
+  2025   5                10123                              68343108.62                                 7.487404
+  2025   6                29518                             198413228.78                                 7.479233
+  2025   7                40729                             272734652.88                                 7.488349
+  2025   8                30875                             210041819.88                                 7.522234
+  2025   9                10021                              68762120.76                                 7.550643
+  2025  10                10143                              69042972.72                                 7.458740
+  2025  11                19931                             135310245.62                                 7.486779
+  2025  12                51091                             345957719.60                                 7.482589
+  2026   1                51362                             347301616.88                                 7.501499
+  2026   2                27864                             186657115.12                                 7.504019
+  2026   3                30316                             202562406.92                                 7.497921
+  2026   4                19972                             133574599.24                                 7.513368
+  2026   5                10203                              69615405.42                                 7.519357
+  2026   6                29527                             200239766.98                                 7.505029
+  2026   7                41147                             277424664.76                                 7.482732
+  2026   8                30689                             208183781.94                                 7.489980
+  2026   9                10028                              67702506.20                                 7.462704
+  2026  10                10504                              70539285.42                                 7.490479
+  2026  11                19893                             133528760.94                                 7.488010
+  2026  12                51250                             345827775.02                                 7.493814
+Table 'FactReserva'. Scan count 2, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 3382, lob physical reads 0, lob page server reads 0, lob read-ahead reads 8178, lob page server read-ahead reads 0.
+Table 'FactReserva'. Segment reads 6, segment skipped 0.
+Table 'DimTiempo'. Scan count 1, logical reads 33, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Worktable'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+
+ SQL Server Execution Times:
+   CPU time = 256 ms,  elapsed time = 302 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 3 ms.
