@@ -1,0 +1,20 @@
+Changed database context to 'TurismoDW'.
+Filegroup + archivo creado: FG_PRE2021
+Filegroup + archivo creado: FG_2021
+Filegroup + archivo creado: FG_2022
+Filegroup + archivo creado: FG_2023
+Filegroup + archivo creado: FG_2024
+Filegroup + archivo creado: FG_2025
+Filegroup + archivo creado: FG_2026
+Filegroup + archivo creado: FG_2027PLUS
+=== Distribucion de FactReserva por particion ===
+Particion   Filegroup                                                                                                                        Filas               
+----------- -------------------------------------------------------------------------------------------------------------------------------- --------------------
+          1 FG_PRE2021                                                                                                                                          0
+          2 FG_2021                                                                                                                                        333424
+          3 FG_2022                                                                                                                                        334078
+          4 FG_2023                                                                                                                                        333542
+          5 FG_2024                                                                                                                                        334499
+          6 FG_2025                                                                                                                                        331702
+          7 FG_2026                                                                                                                                        332755
+          8 FG_2027PLUS                                                                                                                                         0
