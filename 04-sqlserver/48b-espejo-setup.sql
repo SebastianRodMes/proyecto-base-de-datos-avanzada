@@ -7,8 +7,14 @@
    Paso 2 del Mirroring en la instancia ESPEJO (localhost\MIRROR):
    1. Crear Endpoint en puerto 5023.
    2. Conceder permisos de conexión.
-   3. Restaurar TurismoDW con NORECOVERY y 7 clausulas MOVE.
+   3. Restaurar TurismoDW con NORECOVERY y 15 clausulas MOVE.
    4. Establecer PARTNER apuntando al Principal (puerto 5022).
+
+   NOTA (integracion con Integrante 2): la base ahora esta particionada por
+   anio, lo que agrega 8 filegroups (pre2021, 2021..2026, 2027plus). Por eso
+   el RESTORE mueve 14 archivos de datos + 1 de log = 15, no 7. Si se corre
+   el mirroring, hacerlo DESPUES del particionamiento (04-sqlserver/47b) para
+   que el backup del principal ya incluya estos archivos.
    ===================================================================== */
 SET NOCOUNT ON;
 USE master;
@@ -67,6 +73,15 @@ WITH NORECOVERY, REPLACE,
      MOVE 'TurismoDW_fact02' TO 'D:\DB\mssql\Mirror\data\TurismoDW_fact02.ndf',
      MOVE 'TurismoDW_stg01'  TO 'D:\DB\mssql\Mirror\data\TurismoDW_stg01.ndf',
      MOVE 'TurismoDW_idx01'  TO 'D:\DB\mssql\Mirror\data\TurismoDW_idx01.ndf',
+     -- Filegroups por anio agregados por el particionamiento (Integrante 2)
+     MOVE 'TurismoDW_pre2021'   TO 'D:\DB\mssql\Mirror\data\TurismoDW_pre2021.ndf',
+     MOVE 'TurismoDW_2021'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2021.ndf',
+     MOVE 'TurismoDW_2022'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2022.ndf',
+     MOVE 'TurismoDW_2023'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2023.ndf',
+     MOVE 'TurismoDW_2024'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2024.ndf',
+     MOVE 'TurismoDW_2025'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2025.ndf',
+     MOVE 'TurismoDW_2026'      TO 'D:\DB\mssql\Mirror\data\TurismoDW_2026.ndf',
+     MOVE 'TurismoDW_2027plus'  TO 'D:\DB\mssql\Mirror\data\TurismoDW_2027plus.ndf',
      MOVE 'TurismoDW_log'    TO 'D:\DB\mssql\Mirror\log\TurismoDW_log.ldf';
 GO
 
