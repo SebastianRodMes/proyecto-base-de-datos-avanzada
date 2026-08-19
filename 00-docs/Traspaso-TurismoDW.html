@@ -1,0 +1,1056 @@
+<title>Traspaso TurismoDW</title>
+<style>
+  /* ---------- tokens: tema claro (base, sin estampar) ---------- */
+  :root {
+    --ground:      #F3F5F2;
+    --surface:     #FFFFFF;
+    --surface-alt: #ECEFEA;
+    --ink:         #131A17;
+    --ink-soft:    #4A554F;
+    --ink-faint:   #77837C;
+    --rule:        #D9DED6;
+    --rule-soft:   #E7EBE4;
+    --accent:      #0B6E55;
+    --accent-ink:  #08543F;
+    --accent-wash: #E4EFE9;
+    --warn:        #9C4A18;
+    --warn-wash:   #F6EBE1;
+    --ok:          #2F6B3E;
+
+    --src-pg:      #2E6288;
+    --src-mongo:   #3D7A3C;
+    --src-json:    #8A6A1F;
+    --src-xml:     #6B4A85;
+
+    --serif: "Sitka Display", "Sitka Banner", "Sitka Text", Constantia, Georgia, ui-serif, serif;
+    --sans:  "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono:  "Cascadia Mono", "Cascadia Code", Consolas, ui-monospace, "SFMono-Regular", monospace;
+
+    --measure: 68ch;
+  }
+
+  /* ---------- tokens: tema oscuro por preferencia del sistema ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0E1311;
+      --surface:     #161D1A;
+      --surface-alt: #1C2521;
+      --ink:         #E4EAE6;
+      --ink-soft:    #A6B3AC;
+      --ink-faint:   #77857D;
+      --rule:        #26302B;
+      --rule-soft:   #1F2823;
+      --accent:      #4FD1A5;
+      --accent-ink:  #7DE0BE;
+      --accent-wash: #14261F;
+      --warn:        #E9A468;
+      --warn-wash:   #2A1D12;
+      --ok:          #67C482;
+
+      --src-pg:      #7FB3DA;
+      --src-mongo:   #86C784;
+      --src-json:    #D6B461;
+      --src-xml:     #B394D0;
+    }
+  }
+
+  /* ---------- tokens: tema oscuro por eleccion explicita ---------- */
+  :root[data-theme="dark"] {
+    --ground:      #0E1311;
+    --surface:     #161D1A;
+    --surface-alt: #1C2521;
+    --ink:         #E4EAE6;
+    --ink-soft:    #A6B3AC;
+    --ink-faint:   #77857D;
+    --rule:        #26302B;
+    --rule-soft:   #1F2823;
+    --accent:      #4FD1A5;
+    --accent-ink:  #7DE0BE;
+    --accent-wash: #14261F;
+    --warn:        #E9A468;
+    --warn-wash:   #2A1D12;
+    --ok:          #67C482;
+
+    --src-pg:      #7FB3DA;
+    --src-mongo:   #86C784;
+    --src-json:    #D6B461;
+    --src-xml:     #B394D0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- estructura ---------- */
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  @media (min-width: 1100px) {
+    .shell {
+      grid-template-columns: 210px minmax(0, 1fr);
+      column-gap: 56px;
+      padding-right: 40px;
+    }
+  }
+
+  main { min-width: 0; max-width: var(--measure); }
+
+  /* ---------- indice lateral ---------- */
+  .indice { display: none; }
+
+  @media (min-width: 1100px) {
+    .indice {
+      display: block;
+      position: sticky;
+      top: 0;
+      align-self: start;
+      padding-top: 132px;
+      padding-bottom: 40px;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .indice ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .indice a {
+      display: flex;
+      gap: 10px;
+      padding: 5px 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+    .indice a .k {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      padding-top: 2px;
+      flex: none;
+      width: 1.6em;
+    }
+    .indice a:hover { color: var(--accent); }
+    .indice a:hover .k { color: var(--accent); }
+    .indice a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    /* Los tres integrantes son subniveles de la seccion 05, no secciones propias. */
+    .indice .sub a { padding-left: 26px; font-size: 12.5px; }
+    .indice .sub a .k { display: none; }
+    .indice .sub a::before {
+      content: "";
+      width: 10px;
+      height: 1px;
+      background: var(--rule);
+      align-self: center;
+      margin-right: 8px;
+      flex: none;
+    }
+  }
+
+  /* ---------- portada ---------- */
+  .portada {
+    padding: 96px 0 40px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 20px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 6vw, 3.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+    margin: 0 0 20px;
+  }
+  .bajada {
+    font-size: 1.16rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 30px;
+    max-width: 58ch;
+  }
+  .creditos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+  .creditos b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- secciones ---------- */
+  section { padding-top: 68px; scroll-margin-top: 24px; }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.65rem, 3.2vw, 2.15rem);
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0 0 6px;
+  }
+  .h2-num {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 1.06rem;
+    letter-spacing: -0.003em;
+    margin: 38px 0 10px;
+  }
+  h4 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 28px 0 10px;
+  }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 1.06rem; color: var(--ink-soft); margin-bottom: 26px; }
+
+  a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  code, .mono { font-family: var(--mono); font-size: 0.885em; }
+  p code, li code, td code, th code {
+    background: var(--surface-alt);
+    padding: 0.1em 0.34em;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  li::marker { color: var(--ink-faint); }
+
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 44px 0; }
+
+  /* ---------- cifras clave ---------- */
+  .cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 30px 0 34px;
+  }
+  .cifra { background: var(--surface); padding: 18px 20px; }
+  .cifra .n {
+    font-family: var(--mono);
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    line-height: 1.1;
+  }
+  .cifra .l {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+
+  /* ---------- tuberia de etapas ---------- */
+  .tuberia {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 26px 0 34px;
+    counter-reset: etapa;
+  }
+  .etapa {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    padding: 14px 15px 16px;
+  }
+  .etapa .k {
+    counter-increment: etapa;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 7px;
+  }
+  .etapa .k::before { content: counter(etapa) " · "; color: var(--accent); }
+  .etapa .t { font-weight: 650; font-size: 0.95rem; display: block; margin-bottom: 5px; }
+  .etapa .d { font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+
+  /* ---------- fuentes de datos ---------- */
+  .fuentes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin: 26px 0 32px;
+  }
+  .fuente {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--f, var(--accent));
+    padding: 15px 16px;
+  }
+  .fuente[data-f="pg"]    { --f: var(--src-pg); }
+  .fuente[data-f="mongo"] { --f: var(--src-mongo); }
+  .fuente[data-f="json"]  { --f: var(--src-json); }
+  .fuente[data-f="xml"]   { --f: var(--src-xml); }
+  .fuente .n {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--f);
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .fuente .v {
+    font-family: var(--mono);
+    font-size: 1.12rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .fuente .d { font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
+
+  /* ---------- tablas ---------- */
+  .tabla-caja { overflow-x: auto; margin: 22px 0 30px; border: 1px solid var(--rule); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--surface); }
+  th, td {
+    text-align: left;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  td.mono-cell { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+
+  /* ---------- bloques de codigo ---------- */
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 18px 0 26px;
+    font-family: var(--mono);
+    font-size: 12.8px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  pre .c { color: var(--ink-faint); }
+
+  /* ---------- avisos ---------- */
+  .aviso {
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--warn);
+    background: var(--warn-wash);
+    padding: 16px 18px;
+    margin: 24px 0 28px;
+  }
+  .aviso .t {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--warn);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 9px;
+  }
+  .aviso p:last-child { margin-bottom: 0; }
+
+  .nota {
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    background: var(--accent-wash);
+    padding: 16px 18px;
+    margin: 24px 0 28px;
+  }
+  .nota .t {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 9px;
+  }
+  .nota p:last-child { margin-bottom: 0; }
+
+  /* ---------- fichas de integrante ---------- */
+  .roles { display: flex; flex-direction: column; gap: 20px; margin: 28px 0 10px; }
+  .rol {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 0;
+  }
+  .rol-cab {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface-alt);
+    flex-wrap: wrap;
+  }
+  .rol-n {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--surface);
+    background: var(--accent);
+    padding: 3px 9px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .rol-t { font-weight: 650; font-size: 1.02rem; }
+  .rol-sub { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); }
+  .rol-cuerpo { padding: 18px 20px 6px; }
+  .rol-cuerpo > *:last-child { margin-bottom: 14px; }
+
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li {
+    padding-left: 26px;
+    position: relative;
+    margin-bottom: 9px;
+  }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.52em;
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid var(--accent);
+    border-radius: 2px;
+  }
+
+  /* ---------- estado ---------- */
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill.ok    { color: var(--ok);   background: var(--accent-wash); }
+  .pill.warn  { color: var(--warn); background: var(--warn-wash); }
+
+  footer {
+    margin-top: 76px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.7;
+    max-width: var(--measure);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+
+<div class="shell">
+
+  <nav class="indice" aria-label="Índice">
+    <ol>
+      <li><a href="#que"><span class="k">01</span>Qué se construyó</a></li>
+      <li><a href="#como"><span class="k">02</span>Cómo funciona el ETL</a></li>
+      <li><a href="#estrella"><span class="k">03</span>El modelo estrella</a></li>
+      <li><a href="#infra"><span class="k">04</span>Estado de la infraestructura</a></li>
+      <li><a href="#roles"><span class="k">05</span>Cómo lo retoman</a></li>
+      <li class="sub"><a href="#int2">Integrante 2 · particionamiento</a></li>
+      <li class="sub"><a href="#int3">Integrante 3 · alta disponibilidad</a></li>
+      <li class="sub"><a href="#int4">Integrante 4 · consistencia</a></li>
+      <li><a href="#pbi"><span class="k">06</span>El reporte Power BI</a></li>
+      <li><a href="#comandos"><span class="k">07</span>Comandos de referencia</a></li>
+      <li><a href="#tropiezos"><span class="k">08</span>Tropiezos ya resueltos</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="portada">
+      <p class="eyebrow">ITI-821 · Bases de Datos Avanzadas · Semana 3</p>
+      <h1>Traspaso del modelo analítico TurismoDW</h1>
+      <p class="bajada">Qué quedó construido, cómo funciona el ETL de punta a punta, y qué tiene que hacer cada integrante para retomarlo desde donde está hoy.</p>
+      <p class="creditos">
+        <span><b>Escenario 8</b> Turismo Inteligente</span>
+        <span><b>Integrante 1</b> Alex Herrera</span>
+        <span><b>Alcance</b> ingreso de datos al modelo analítico y reporte PBI</span>
+      </p>
+    </header>
+
+    <section id="que">
+      <span class="h2-num">Sección 01</span>
+      <h2>Qué se construyó</h2>
+      <p class="lead">Una base analítica en SQL Server con modelo estrella, alimentada por un ETL que integra las cuatro fuentes del escenario, más el modelo semántico de Power BI que la consume.</p>
+
+      <h3>Qué está hecho y qué no</h3>
+      <p>Para que nadie tenga que deducirlo leyendo el documento entero.</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Trabajo</th><th>Estado</th><th>Responsable</th></tr></thead>
+          <tbody>
+            <tr><td>Base analítica <code>TurismoDW</code> con modelo estrella</td><td><span class="pill ok">Hecho</span></td><td>Int. 1</td></tr>
+            <tr><td>ETL desde las cuatro fuentes</td><td><span class="pill ok">Hecho · 22/22</span></td><td>Int. 1</td></tr>
+            <tr><td>Modelo semántico de Power BI</td><td><span class="pill ok">Hecho</span></td><td>Int. 1</td></tr>
+            <tr><td>Lienzo del reporte (6 páginas, 56 visuales)</td><td><span class="pill warn">Generado, sin confirmar</span></td><td>Int. 1</td></tr>
+            <tr><td><b>Instalar SQL Server Developer Edition</b></td><td><span class="pill warn">Pendiente · bloquea al Int. 3</span></td><td>quien tenga la máquina</td></tr>
+            <tr><td>Filegroups por año, particionamiento e índices</td><td><span class="pill warn">Pendiente</span></td><td>Int. 2</td></tr>
+            <tr><td>Mirroring y prueba de falla</td><td><span class="pill warn">Bloqueado</span></td><td>Int. 3</td></tr>
+            <tr><td>Documento final y bitácora</td><td><span class="pill warn">Pendiente</span></td><td>Int. 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>El enunciado de la Semana 3 asigna al Integrante 1 tres requerimientos. Los tres están cubiertos y ejecutados:</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead>
+            <tr><th>Requerimiento del enunciado</th><th>Dónde está</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Crear base analítica y modelo estrella o equivalente</td><td class="mono-cell">04-sqlserver/40, 42</td><td><span class="pill ok">Hecho</span></td></tr>
+            <tr><td>Cargar información desde PostgreSQL y MongoDB</td><td class="mono-cell">05-etl/run_etl.py</td><td><span class="pill ok">Hecho</span></td></tr>
+            <tr><td>Dashboard PBI conectado al modelo de alta disponibilidad</td><td class="mono-cell">06-powerbi/ + 00-docs/04</td><td><span class="pill ok">Modelo y lienzo generados</span></td></tr>
+            <tr><td>Validación de datos antes y después del reemplazo del nodo</td><td class="mono-cell">04-sqlserver/46</td><td><span class="pill ok">22 / 22 pruebas OK</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Volumen que mueve el sistema</h3>
+      <p>La base operacional de las semanas 1–2 tenía 5 reservas. Eso no alcanza para que el particionamiento y los índices del Integrante&nbsp;2 midan nada, ni para que un dashboard signifique algo. Lo primero fue escalarla.</p>
+
+      <div class="cifras">
+        <div class="cifra"><span class="n">2 000 005</span><span class="l">reservas, 2021–2026</span></div>
+        <div class="cifra"><span class="n">8 488 093</span><span class="l">filas que atraviesan el ETL</span></div>
+        <div class="cifra"><span class="n">14</span><span class="l">tablas del modelo estrella</span></div>
+        <div class="cifra"><span class="n">52</span><span class="l">medidas DAX</span></div>
+      </div>
+
+      <h4>Las cuatro fuentes</h4>
+      <div class="fuentes">
+        <div class="fuente" data-f="pg">
+          <span class="n">PostgreSQL</span>
+          <span class="v">6 481 943</span>
+          <span class="d">Reservas, clientes, hoteles, tours y paquetes. Instancia local PG&nbsp;15 en el puerto 5433, base <code>turismo</code>.</span>
+        </div>
+        <div class="fuente" data-f="mongo">
+          <span class="n">MongoDB</span>
+          <span class="v">2 000 000</span>
+          <span class="d">500 000 reseñas (RF-12) y 1 500 000 interacciones web (RF-13), base <code>turismo_nosql</code>.</span>
+        </div>
+        <div class="fuente" data-f="json">
+          <span class="n">JSON</span>
+          <span class="v">6 000</span>
+          <span class="d">Preferencias de visitantes en 3 lotes (RF-10). Enriquecen <code>DimCliente</code>.</span>
+        </div>
+        <div class="fuente" data-f="xml">
+          <span class="n">XML</span>
+          <span class="v">150</span>
+          <span class="d">Catálogo de paquetes en 2 documentos (RF-11). Enriquecen <code>DimPaquete</code>.</span>
+        </div>
+      </div>
+
+      <div class="nota">
+        <span class="t">Por qué hay datos inválidos a propósito</span>
+        <p>Un ~2&nbsp;% de los registros JSON y XML se emite deliberadamente mal formado: identificación vacía, correo sin dominio, presupuesto negativo, precio no numérico. Sin ellos <code>etl.Error</code> quedaría vacío y no habría <em>ninguna</em> evidencia de que la validación de RF-15 funciona. Son la prueba, no un descuido.</p>
+      </div>
+    </section>
+
+    <section id="como">
+      <span class="h2-num">Sección 02</span>
+      <h2>Cómo funciona el ETL</h2>
+      <p class="lead">Seis etapas, cada una cronometrada y registrada en la bitácora. El orquestador es <code>05-etl/run_etl.py</code>.</p>
+
+      <div class="tuberia">
+        <div class="etapa"><span class="k">EXTRAER</span><span class="t">Fuente → archivo</span><span class="d">Cursor del lado del servidor en PG, <code>batch_size</code> en Mongo, <code>iterparse</code> en XML.</span></div>
+        <div class="etapa"><span class="k">CARGAR_STG</span><span class="t">bcp → staging</span><span class="d">Carga masiva con registro mínimo en el log.</span></div>
+        <div class="etapa"><span class="k">VALIDAR</span><span class="t">RF-15</span><span class="d">Obligatorios, formatos, duplicados, rangos. Rechazos a <code>etl.Error</code>.</span></div>
+        <div class="etapa"><span class="k">CARGAR_DW</span><span class="t">MERGE + recarga</span><span class="d">Dimensiones por <code>MERGE</code> SCD-1; hechos por recarga completa.</span></div>
+        <div class="etapa"><span class="k">OCUPACIÓN</span><span class="t">Estadías → días</span><span class="d">Explota cada estadía confirmada en sus noches.</span></div>
+        <div class="etapa"><span class="k">INTEGRIDAD</span><span class="t">FK + estadísticas</span><span class="d">Revalida claves foráneas y actualiza estadísticas.</span></div>
+      </div>
+
+      <h3>Por qué pasa por un archivo intermedio</h3>
+      <p>Parece un rodeo escribir 8,5 millones de filas a disco para después cargarlas. No lo es: es lo que habilita la ruta de carga masiva del motor. Un <code>INSERT</code> fila a fila desde Python envía cada fila como parámetro por ODBC; <code>bcp</code> escribe directo en las páginas de datos.</p>
+      <p>La transformación, en cambio, ocurre <em>dentro</em> del motor. Python sólo mueve bytes; los <code>MERGE</code> y las agregaciones corren como procedimientos almacenados, donde están los datos y los índices. Arrastrar 2 millones de filas a memoria de Python para transformarlas sería el error de diseño clásico.</p>
+
+      <h3>Tiempos medidos</h3>
+      <p>Corrida completa sobre <code>.\SQLEXPRESS</code>, que es el host provisional. En una instancia Developer sin el tope de memoria de Express estos números mejoran.</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Etapa</th><th>Filas</th><th>Tiempo</th></tr></thead>
+          <tbody>
+            <tr><td>Extracción PostgreSQL</td><td class="num">6 481 943</td><td class="num">51 s</td></tr>
+            <tr><td>Extracción MongoDB</td><td class="num">2 000 000</td><td class="num">28 s</td></tr>
+            <tr><td>Extracción JSON + XML</td><td class="num">6 150</td><td class="num">0,1 s</td></tr>
+            <tr><td>Carga masiva a staging (bcp)</td><td class="num">8 488 093</td><td class="num">2 m 39 s</td></tr>
+            <tr><td>Validación RF-15</td><td class="num">84 rechazos</td><td class="num">14 s</td></tr>
+            <tr><td>Dimensiones (MERGE)</td><td class="num">54 490</td><td class="num">2 m 10 s</td></tr>
+            <tr><td>Hechos (recarga completa)</td><td class="num">8 380 015</td><td class="num">2 m 03 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Resultado de la última corrida</h3>
+      <p>Carga completa sobre <code>.\SQLEXPRESS</code>, verificada de punta a punta.</p>
+
+      <div class="cifras">
+        <div class="cifra"><span class="n">9 m 53 s</span><span class="l">duración total del ETL</span></div>
+        <div class="cifra"><span class="n">8 738 708</span><span class="l">filas cargadas al modelo</span></div>
+        <div class="cifra"><span class="n">84</span><span class="l">rechazos (los inyectados a propósito)</span></div>
+        <div class="cifra"><span class="n">22 / 22</span><span class="l">pruebas de consistencia en OK</span></div>
+      </div>
+
+      <div class="nota">
+        <span class="t">Reconciliación exacta contra el origen</span>
+        <p>Las 2 000 005 reservas de PostgreSQL llegan íntegras a <code>dw.FactReserva</code>, y la suma de <code>monto_total</code> coincide <b>al centavo</b>: 16 864 714 832,70 en ambos lados. Lo mismo para las 500 000 reseñas y 1 500 000 interacciones de MongoDB. Evidencia completa en <code>00-docs/05-evidencias/validacion-consistencia.txt</code>.</p>
+      </div>
+
+      <h4>KPI de referencia, calculados en T-SQL</h4>
+      <p>Son los números que el dashboard debe reproducir tarjeta por tarjeta.</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>KPI</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Reservas confirmadas</td><td class="num">1 400 004</td></tr>
+            <tr><td>Ingresos confirmados</td><td class="num">USD 13 327 403 349</td></tr>
+            <tr><td>Ticket promedio confirmado</td><td class="num">USD 9 519,55</td></tr>
+            <tr><td>Ocupación hotelera promedio</td><td class="num">30,87 %</td></tr>
+            <tr><td>Pico de ocupación diaria</td><td class="num">82,00 %</td></tr>
+            <tr><td>Promedio de estadía</td><td class="num">7,50 noches</td></tr>
+            <tr><td>Días de anticipación promedio</td><td class="num">90,50</td></tr>
+            <tr><td>Tasa de cancelación</td><td class="num">18,00 %</td></tr>
+            <tr><td>Calificación promedio</td><td class="num">3,96 / 5</td></tr>
+            <tr><td>Índice de satisfacción</td><td class="num">71,89 %</td></tr>
+            <tr><td>Tasa de conversión web</td><td class="num">9,98 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Trazabilidad: de una fila al registro original</h3>
+      <p>El esquema <code>etl</code> cubre RNF-05 en tres niveles: <code>Ejecucion</code> (una fila por corrida), <code>Etapa</code> (una por etapa, con tiempos) y <code>Error</code> (una por registro rechazado, con el dato original completo). Cada fila de hechos lleva <code>EjecucionIdCarga</code> y su clave de negocio, así que la cadena cierra en ambos sentidos.</p>
+
+      <pre><span class="c">-- De un hecho al registro original en PostgreSQL</span>
+SELECT f.ReservaId, f.MontoTotal, e.FechaInicio, e.Servidor
+FROM   dw.FactReserva f
+JOIN   etl.Ejecucion e ON e.EjecucionId = f.EjecucionIdCarga
+WHERE  f.ReservaKey = 12345;
+
+<span class="c">-- Qué se rechazó en la última corrida y por qué</span>
+SELECT Fuente, ArchivoOrigen, Campo, ReglaValidacion, DatosOriginales
+FROM   etl.Error
+WHERE  EjecucionId = (SELECT MAX(EjecucionId) FROM etl.Ejecucion);</pre>
+    </section>
+
+    <section id="estrella">
+      <span class="h2-num">Sección 03</span>
+      <h2>El modelo estrella</h2>
+      <p class="lead">Ocho dimensiones y seis tablas de hechos. Lo primero que se fijó fue el grano de cada hecho, porque es lo que determina si las medidas se pueden sumar sin doble conteo.</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Tabla de hechos</th><th>Una fila representa</th><th>Filas</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">dw.FactReserva</td><td>una reserva</td><td class="num">2 000 005</td></tr>
+            <tr><td class="mono-cell">dw.FactReservaTour</td><td>una reserva × un tour</td><td class="num">2 680 006</td></tr>
+            <tr><td class="mono-cell">dw.FactReservaHabitacion</td><td>una reserva × un tipo de habitación</td><td class="num">1 700 004</td></tr>
+            <tr><td class="mono-cell">dw.FactInteraccionWeb</td><td>un evento de navegación</td><td class="num">1 500 000</td></tr>
+            <tr><td class="mono-cell">dw.FactResena</td><td>una reseña</td><td class="num">500 000</td></tr>
+            <tr><td class="mono-cell">dw.FactOcupacionDiaria</td><td>un hotel × un día</td><td class="num">derivada</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Consecuencia práctica que hay que tener presente al escribir DAX o SQL: contar filas de <code>FactReservaHabitacion</code> <em>no</em> da el número de reservas, porque una reserva con dos tipos de habitación aparece dos veces. Por eso la medida usa <code>DISTINCTCOUNT</code> sobre la clave de negocio.</p>
+
+      <h3>La tabla que no viene de ninguna fuente</h3>
+      <p><code>FactOcupacionDiaria</code> es derivada. «Porcentaje de ocupación hotelera» es el primer KPI del escenario y no se puede calcular desde el grano de reserva: una estadía de cinco noches ocupa cinco días distintos. Explotar eso en DAX sobre 2 millones de filas colapsaría el reporte; el ETL lo hace una vez y deja una tabla que el dashboard consulta al instante.</p>
+
+      <div class="nota">
+        <span class="t">Guarda numerador y denominador, nunca el porcentaje</span>
+        <p>Un porcentaje no es aditivo. Si cada fila guardara <code>PctOcupacion</code> y el reporte lo promediara para obtener el mes, el resultado sería incorrecto: un día con 3 habitaciones disponibles pesaría igual que uno con 300. Guardando <code>HabitacionesOcupadas</code> y <code>HabitacionesDisponibles</code> por separado, <code>DIVIDE(SUM(..), SUM(..))</code> da el valor correcto en cualquier nivel de agregación.</p>
+      </div>
+
+      <h4>Convenciones que conviene respetar</h4>
+      <ul>
+        <li>Claves subrogadas <code>INT IDENTITY</code> con sufijo <code>Key</code>. El DW no depende de que el origen mantenga sus identificadores.</li>
+        <li>Las claves de negocio del origen se conservan (<code>ClienteId</code>, <code>ReservaId</code>…). Sin ellas no hay trazabilidad.</li>
+        <li>Fila <code>-1</code> «No aplica» en cada dimensión, para que todo hecho tenga clave válida y los <code>JOIN</code> puedan ser <code>INNER</code>.</li>
+        <li><code>TiempoKey</code> entero <code>yyyymmdd</code>: 4 bytes, legible al depurar, y sirve directo como límite de partición.</li>
+      </ul>
+    </section>
+
+    <section id="infra">
+      <span class="h2-num">Sección 04</span>
+      <h2>Estado de la infraestructura</h2>
+
+      <div class="aviso">
+        <span class="t">Sigue pendiente · nadie lo ha hecho todavía</span>
+        <p>La instancia <code>MSSQLSERVER</code> es <b>Enterprise Evaluation instalada el 1 de agosto de 2025</b>. Esa licencia caduca a los 180 días: venció el 28 de enero de 2026. El servicio ya no arranca. No es un riesgo por venir, es un hecho verificado.</p>
+        <p>Se eligió el camino de salida —Developer Edition— pero <b>elegirlo no es ejecutarlo</b>. Estado comprobado de la máquina en este momento:</p>
+      </div>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Instancia</th><th>Edición</th><th>Servicio</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">MSSQLSERVER</td><td>Enterprise Evaluation</td><td><span class="pill warn">Detenida</span></td></tr>
+            <tr><td class="mono-cell">SQLEXPRESS</td><td>Express</td><td><span class="pill ok">Corriendo</span></td></tr>
+            <tr><td class="mono-cell">SQLEXPRESS01</td><td>Express</td><td><span class="pill ok">Corriendo</span></td></tr>
+            <tr><td class="mono-cell">SQLEXPRESS02</td><td>Express</td><td><span class="pill ok">Corriendo</span></td></tr>
+            <tr><td class="mono-cell">Developer Edition</td><td>—</td><td><span class="pill warn">No instalada</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Las otras tres instancias son Express Edition, y <b>Express sólo puede actuar como testigo</b> de Database Mirroring, nunca como principal ni como espejo. Con lo que hay instalado hoy, Mirroring es imposible.</p>
+
+      <p>Por eso la validación de este entregable se hizo sobre <code>.\SQLEXPRESS</code>, que estaba corriendo y acepta conexiones sin privilegios elevados. Sirve para probar el ETL y el modelo de punta a punta, pero no para la entrega final.</p>
+
+      <h3>El cierre definitivo</h3>
+      <p>SQL Server 2022 <b>Developer Edition</b>: gratuita, funcionalidad idéntica a Enterprise, y <b>sin caducidad</b>. Dos instancias Developer como principal y espejo, con <code>SQLEXPRESS</code> de testigo — rol para el que Express sí es válido, así que las instancias existentes no se desperdician.</p>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Riesgo</th><th>Cómo se cierra</th></tr></thead>
+          <tbody>
+            <tr><td>Enterprise Evaluation caduca</td><td>Developer no caduca. Eliminado.</td></tr>
+            <tr><td>Mirroring imposible con Express</td><td>Dos Developer + Express de testigo. Eliminado.</td></tr>
+            <tr><td>Tope de 10 GB por base</td><td>Developer no tiene tope. Eliminado.</td></tr>
+            <tr><td>UAC repetido</td><td>Se reduce a la instalación. Después nada pide elevación.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>El procedimiento completo — descarga, dos instancias, endpoints, permisos y los scripts de Mirroring — está en <code>99-setup/01-instalar-developer.md</code>.</p>
+
+      <div class="nota">
+        <span class="t">Migrar no repite trabajo</span>
+        <p>El script <code>40-crear-basedatos.sql</code> detecta la edición y ajusta los tamaños de archivo solo: en Express preasigna 2,6&nbsp;GB; en Developer, 7,4&nbsp;GB. Cambiar de host es editar una línea de <code>05-etl/.env</code> y volver a correr la secuencia. Nada se rehace a mano.</p>
+      </div>
+    </section>
+
+    <section id="roles">
+      <span class="h2-num">Sección 05</span>
+      <h2>Cómo lo retoman los compañeros</h2>
+      <p class="lead">Cada integrante tiene un documento propio con el detalle. Esto es lo mínimo para arrancar.</p>
+
+      <div class="roles">
+        <div class="rol" id="int2">
+          <div class="rol-cab">
+            <span class="rol-n">Integrante 2</span>
+            <span class="rol-t">Filegroups, particionamiento e índices</span>
+            <span class="rol-sub">00-docs/03-contrato-integrante2.md</span>
+          </div>
+          <div class="rol-cuerpo">
+            <p>La base ya viene con cinco filegroups por propósito: <code>FG_DIM</code>, <code>FG_FACT</code> (dos archivos), <code>FG_STG</code>, <code>FG_IDX</code> y <code>PRIMARY</code> sólo para metadatos. Los filegroups <em>por rango de año</em> son tuyos, porque dependen de cómo decidas particionar.</p>
+
+            <h4>Clave de partición acordada</h4>
+            <pre>dw.FactReserva.FechaInicioKey   INT   <span class="c">-- yyyymmdd</span></pre>
+            <p>Es la columna por la que consulta todo el dashboard, reparte parejo entre 2021 y 2026, y permite archivar por año con <code>SWITCH PARTITION</code>.</p>
+
+            <h4>Lo importante</h4>
+            <ul class="checklist">
+              <li>Las tablas de hechos se entregan <b>sin índices no agrupados, a propósito</b>, para que tu comparación «antes y después» parta de una línea base limpia.</li>
+              <li>Los índices <code>UQ_*_Negocio</code> <b>no son tuning</b>: impiden que una segunda corrida del ETL duplique filas. No los borres.</li>
+              <li>El <b>Query Store ya está activo</b> (modo lectura-escritura, intervalos de 15 min), así que tenés el histórico de planes sin capturarlo a mano.</li>
+              <li>Power BI consume las vistas <code>dw.vw_*</code>, no las tablas. Podés reparticionar sin que el <code>.pbix</code> se entere.</li>
+              <li>El contrato trae <b>5 consultas testigo</b> que son las que el dashboard ejecuta de verdad. Capturá su plan antes de tocar nada.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rol" id="int3">
+          <div class="rol-cab">
+            <span class="rol-n">Integrante 3</span>
+            <span class="rol-t">Alta disponibilidad y prueba de recuperación</span>
+            <span class="rol-sub">99-setup/01-instalar-developer.md §6</span>
+          </div>
+          <div class="rol-cuerpo">
+            <p><b>Tu tarea está bloqueada hasta que existan dos instancias Developer.</b> Ese es el primer paso, no el Mirroring. Leé la sección 04 de este documento antes de nada.</p>
+
+            <h4>Lo que ya está resuelto de tu lado</h4>
+            <ul class="checklist">
+              <li>La base nace en modelo de recuperación <code>FULL</code>, que es prerrequisito de Mirroring.</li>
+              <li>El alias de cliente SQL <code>TURISMODW</code> está diseñado para que, tras el failover, se repunte el alias y <b>ni el ETL ni el <code>.pbix</code> se toquen</b>.</li>
+              <li><code>dw.vw_EstadoSistema</code> ya expone rol, estado, socio y testigo del mirroring. Es lo que muestra la página 6 del dashboard.</li>
+              <li>Los scripts de backup, restore, endpoints y permisos están escritos y listos.</li>
+            </ul>
+
+            <div class="aviso">
+              <span class="t">El detalle donde suele fallar</span>
+              <p>El <code>RESTORE … WITH NORECOVERY</code> en el espejo debe listar en el <code>MOVE</code> <b>los seis archivos de datos más el log</b>. La base tiene cinco filegroups, no uno. Si copiás el ejemplo de <code>Mirroring.zip</code> tal cual, que asume un solo archivo, el restore falla.</p>
+            </div>
+
+            <p>El segundo tropiezo clásico es el <code>GRANT CONNECT ON ENDPOINT</code>: como cada instancia corre bajo una cuenta de servicio virtual distinta, sin ese permiso la sesión queda en <code>DISCONNECTED</code> sin decir por qué.</p>
+          </div>
+        </div>
+
+        <div class="rol" id="int4">
+          <div class="rol-cab">
+            <span class="rol-n">Integrante 4</span>
+            <span class="rol-t">Rendimiento, consistencia y documentación</span>
+            <span class="rol-sub">04-sqlserver/46-validacion-consistencia.sql</span>
+          </div>
+          <div class="rol-cuerpo">
+            <p>Tenés tres insumos ya construidos, no hay que fabricarlos:</p>
+
+            <ul class="checklist">
+              <li><b>Tiempos por etapa</b> en <code>etl.Etapa</code>: cada corrida deja duración y filas de las seis etapas. Es tu línea base de rendimiento del ETL.</li>
+              <li><b>Query Store activo</b> sobre la base, con los planes y duraciones de todas las consultas del dashboard.</li>
+              <li><b>22 pruebas de consistencia</b> automatizadas en <code>46-validacion-consistencia.sql</code>, con veredicto <span class="mono">OK</span> / <span class="mono">REVISAR</span> por prueba y un veredicto global.</li>
+            </ul>
+
+            <h4>Qué cubren esas pruebas</h4>
+            <ul>
+              <li><b>Completitud</b> — conteos y sumas del DW contra PostgreSQL y MongoDB.</li>
+              <li><b>Integridad</b> — cero huérfanos, cero claves sin resolver, cero FK no confiables.</li>
+              <li><b>Unicidad</b> — que la recarga no haya duplicado hechos.</li>
+              <li><b>Coherencia de negocio</b> — ocupación ≤ 100 %, noches no negativas, calificaciones en 1–5, cobertura de los seis años.</li>
+            </ul>
+
+            <p>El script también imprime un bloque de <b>KPI de referencia calculados en T-SQL</b>, pensado para contrastarlos tarjeta por tarjeta contra Power BI. Si un número no coincide, casi siempre es un filtro que quedó activo en el <code>.pbix</code> o una medida que promedia porcentajes en vez de dividir sumas.</p>
+
+            <p>Para los diagramas: la arquitectura y el linaje campo → fuente están en <code>00-docs/01</code> y <code>00-docs/02</code>, listos para pasar al documento final.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pbi">
+      <span class="h2-num">Sección 06</span>
+      <h2>El reporte Power BI</h2>
+      <p class="lead">Se entrega como proyecto PBIP, todo en archivos de texto: el modelo semántico en TMDL y el lienzo en PBIR.</p>
+
+      <p>Un <code>.pbix</code> es un contenedor binario: no se puede generar por script, ni revisar en un diff, ni versionar de forma útil. PBIP guarda el modelo como <code>.tmdl</code>, así que el modelo completo quedó generado en lugar de armado a mano en la interfaz.</p>
+
+      <p>El lienzo también está generado: <b>6 páginas y 56 visuales</b> en formato PBIR, donde cada visual es un archivo JSON de texto. Se produce con <code>61-generar-reporte.py</code>.</p>
+
+      <div class="cifras">
+        <div class="cifra"><span class="n">17</span><span class="l">tablas en el modelo</span></div>
+        <div class="cifra"><span class="n">26</span><span class="l">relaciones</span></div>
+        <div class="cifra"><span class="n">52</span><span class="l">medidas DAX</span></div>
+        <div class="cifra"><span class="n">56</span><span class="l">visuales en 6 páginas</span></div>
+      </div>
+
+      <div class="aviso">
+        <span class="t">Hasta dónde llega la verificación</span>
+        <p>Comprobado: los 68 archivos son JSON válido y las <b>92 referencias de campo resuelven contra el modelo semántico</b> — ninguna medida ni columna inventada. <b>No comprobado:</b> que Power BI Desktop abra el lienzo, porque desde este entorno no se puede levantar la interfaz gráfica y confirmarlo. El formato PBIR cambia entre versiones.</p>
+        <p>Si una versión rechaza el lienzo, el modelo semántico sigue siendo válido y la especificación página por página está en <code>00-docs/04-guia-powerbi.md</code>.</p>
+      </div>
+
+      <h3>La decisión que hace que el failover funcione</h3>
+      <p>Lo natural es conectar Power BI a <code>localhost</code>. Y funciona, hasta que el nodo principal cae: entonces hay que abrir el archivo, cambiar el origen de datos y volver a publicar. Eso no es alta disponibilidad, es intervención manual disfrazada.</p>
+      <p>Por eso todo apunta al alias <code>TURISMODW</code>, un nombre lógico que el cliente de SQL Server resuelve al nodo real. Tras el failover se repunta el alias y el <code>.pbix</code> no se toca.</p>
+
+      <h4>Modo Import, no DirectQuery</h4>
+      <p>El escenario dice que «las consultas históricas afectan las operaciones». DirectQuery reintroduce ese problema en el DW. Con Import el dashboard <b>sigue visible durante la caída</b> —los datos están en el archivo, no en el servidor— y el refresco posterior confirma la reconexión mostrando el nuevo nombre de nodo con los mismos totales. Esa es exactamente la evidencia que pide el enunciado.</p>
+
+      <h4>Antes de abrir el proyecto</h4>
+      <p>En Power BI Desktop hay que activar, en <span class="mono">Opciones → Características de vista previa</span>: proyectos <code>.pbip</code>, formato TMDL y formato PBIR. Después reiniciar.</p>
+    </section>
+
+    <section id="comandos">
+      <span class="h2-num">Sección 07</span>
+      <h2>Comandos de referencia</h2>
+      <p class="lead">Secuencia completa, en orden. Toda la configuración vive en <code>05-etl/.env</code>; para apuntar a otra instancia sólo cambia <code>SQL_SERVIDOR</code>.</p>
+
+      <pre><span class="c"># 0. Preparar la instancia (una vez, como Administrador)</span>
+.\99-setup\00-setup-admin.ps1
+
+<span class="c"># 1. Origen relacional: escalar a volumen productivo</span>
+psql -h 127.0.0.1 -p 5433 -U postgres -d turismo -f 01-postgres\10-generador-volumen.sql
+psql -h 127.0.0.1 -p 5433 -U postgres -d turismo -f 01-postgres\11-verificacion-origen.sql
+
+<span class="c"># 2. Origen NoSQL</span>
+python 02-mongodb\20-seed_resenas.py --limpiar
+mongosh --quiet --file 02-mongodb\21-verificacion-mongo.js
+
+<span class="c"># 3. Fuentes de archivo (RF-10 y RF-11)</span>
+python 03-archivos\30-gen_json_xml.py
+
+<span class="c"># 4. Base analítica</span>
+sqlcmd -S TURISMODW -E -C              -i 04-sqlserver\40-crear-basedatos.sql
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\41-esquema-staging.sql
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\42-esquema-estrella.sql
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\43-etl-control.sql
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\44-transformacion.sql
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\45-vistas-powerbi.sql
+
+<span class="c"># 5. ETL</span>
+pip install -r 05-etl\requirements.txt
+python 05-etl\run_etl.py
+
+<span class="c"># 6. Validación</span>
+sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\46-validacion-consistencia.sql
+
+<span class="c"># 7. Reporte</span>
+python 06-powerbi\60-generar-pbip.py
+<span class="c">#    luego abrir 06-powerbi\TurismoDW.pbip en Power BI Desktop</span></pre>
+
+      <h4>Modos útiles del ETL</h4>
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">run_etl.py</td><td>Carga completa de las cuatro fuentes</td></tr>
+            <tr><td class="mono-cell">run_etl.py --solo-mongo</td><td>Sólo reseñas e interacciones web</td></tr>
+            <tr><td class="mono-cell">run_etl.py --solo-archivos</td><td>Sólo JSON y XML</td></tr>
+            <tr><td class="mono-cell">run_etl.py --sin-extraer</td><td>Reutiliza los archivos ya extraídos, salta la extracción</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Estructura del entregable</h4>
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Carpeta</th><th>Contenido</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">00-docs/</td><td>Arquitectura y justificación del ETL, diccionario del modelo, contrato para el Integrante 2, guía de Power BI</td></tr>
+            <tr><td class="mono-cell">01-postgres/</td><td>Generador de volumen, verificación del origen, limpieza, y el DDL/CRUD original de las semanas 1–2</td></tr>
+            <tr><td class="mono-cell">02-mongodb/</td><td>Siembra de reseñas e interacciones, verificación</td></tr>
+            <tr><td class="mono-cell">03-archivos/</td><td>Generador de las fuentes JSON y XML, más los archivos generados</td></tr>
+            <tr><td class="mono-cell">04-sqlserver/</td><td>Los 7 scripts de la base analítica, en orden 40 → 46</td></tr>
+            <tr><td class="mono-cell">05-etl/</td><td>Paquete Python del ETL y su orquestador</td></tr>
+            <tr><td class="mono-cell">06-powerbi/</td><td>Proyecto PBIP + TMDL y el catálogo de medidas DAX</td></tr>
+            <tr><td class="mono-cell">99-setup/</td><td>Preparación de la instancia y migración a Developer Edition</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tropiezos">
+      <span class="h2-num">Sección 08</span>
+      <h2>Tropiezos ya resueltos</h2>
+      <p class="lead">Cosas que costaron tiempo y que no hay que volver a descubrir.</p>
+
+      <div class="nota">
+        <span class="t">La lección que más se paga</span>
+        <p>El defecto más caro no produjo ningún error: produjo <b>datos sesgados</b>. Dos tercios del catálogo quedaban sin demanda y todos los conteos daban bien —2 000 005 reservas, cero huérfanos, integridad perfecta—. Sólo apareció al mirar el <em>ranking de destinos</em> del dashboard y ver diez ciudades con la misma cifra exacta.</p>
+        <p>Validar conteos e integridad no alcanza. Hay que mirar la salida y preguntarse si se parece a la realidad que representa.</p>
+      </div>
+
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Síntoma</th><th>Causa real</th><th>Solución</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>El contenedor Docker de PostgreSQL de las semanas 1–2 no existe</td>
+              <td>Sin contenedor, imagen ni volumen en esta máquina</td>
+              <td>Se reconstruyó el origen en PG 15 del puerto 5433 con el DDL y CRUD originales</td>
+            </tr>
+            <tr>
+              <td><span class="mono">CREATE DATABASE failed … file is compressed</span></td>
+              <td><code>D:\DB</code> heredaba compresión NTFS</td>
+              <td><code>compact /U /S</code> sobre las rutas de datos</td>
+            </tr>
+            <tr>
+              <td><span class="mono">bcp: unknown option u</span></td>
+              <td><code>-u</code> sólo existe en el bcp de ODBC 18; el instalado es ODBC 17</td>
+              <td>Se quitó; ODBC 17 no fuerza cifrado en local</td>
+            </tr>
+            <tr>
+              <td><span class="mono">String data, right truncation</span> al cargar</td>
+              <td>Con <code>-t</code> multicarácter, bcp no aplica el terminador de fila por omisión y la última columna se traga el archivo entero</td>
+              <td>Pasar <code>-r</code> con un salto de línea <b>real</b>; la secuencia <code>\n</code> no la interpreta</td>
+            </tr>
+            <tr>
+              <td>Dos tercios del catálogo sin una sola reserva. Se manifestó como ocupación del 255 %, luego picos del 163 %, luego diez destinos con exactamente 154 547 reservas</td>
+              <td><b>El multiplicador compartía factor con el módulo.</b> <code>40503 mod 150 = 3</code>, así que <code>(i × 40503) mod 150</code> sólo produce múltiplos de 3: sólo 50 de los 150 paquetes se elegían jamás, y con ellos dos tercios de las ciudades y los hoteles</td>
+              <td>Muestrear con <code>random()</code> —como ya hacía el calendario— en vez de aritmética modular sobre el contador</td>
+            </tr>
+            <tr>
+              <td>Ocupación por encima del 100 % en algunos hoteles</td>
+              <td>La capacidad instalada variaba 10× entre hoteles mientras la demanda se repartía pareja</td>
+              <td><b>Dimensionar cada hotel a su demanda pico</b> (paso 6b): capacidad = pico diario ÷ 0,82. Es como se construye un hotel real, y hace al generador inmune a cambios en la demanda</td>
+            </tr>
+            <tr>
+              <td><span class="mono">entero fuera de rango</span> al generar clientes</td>
+              <td><code>50 000 × 104 729</code> desborda <code>integer</code> en PostgreSQL</td>
+              <td>Promover el contador a <code>bigint</code> antes de multiplicar</td>
+            </tr>
+            <tr>
+              <td>Violación de clave foránea al generar reservas</td>
+              <td>Las secuencias avanzan aunque una inserción falle, así que los IDs dejan de ser densos</td>
+              <td>Materializar la lista real de IDs y muestrear sobre un correlativo denso</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      ITI-821 Bases de Datos Avanzadas · Escenario 8: Turismo Inteligente · Semana 3<br>
+      Integrante 1 — Alex Herrera · Documento de traspaso al equipo<br>
+      Detalle completo en <span class="mono">04-Proyecto/Semana3-Integrante1/</span>
+    </footer>
+
+  </main>
+</div>

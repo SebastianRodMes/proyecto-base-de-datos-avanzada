@@ -1,0 +1,108 @@
+relationship rel_01_FactReserva_DimTiempo_FechaInicioKey
+	fromColumn: FactReserva.FechaInicioKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_02_FactReserva_DimTiempo_FechaReservaKey
+	isActive: false
+	fromColumn: FactReserva.FechaReservaKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_03_FactReserva_DimTiempo_FechaFinKey
+	isActive: false
+	fromColumn: FactReserva.FechaFinKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_04_FactReserva_DimCliente_ClienteKey
+	fromColumn: FactReserva.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship rel_05_FactReserva_DimPaquete_PaqueteKey
+	fromColumn: FactReserva.PaqueteKey
+	toColumn: DimPaquete.PaqueteKey
+
+relationship rel_06_FactReserva_DimEstadoReserva_EstadoKey
+	fromColumn: FactReserva.EstadoKey
+	toColumn: DimEstadoReserva.EstadoKey
+
+relationship rel_07_FactReservaHabitacion_DimTiempo_FechaInicioKey
+	fromColumn: FactReservaHabitacion.FechaInicioKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_08_FactReservaHabitacion_DimCliente_ClienteKey
+	fromColumn: FactReservaHabitacion.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship rel_09_FactReservaHabitacion_DimHotel_HotelKey
+	fromColumn: FactReservaHabitacion.HotelKey
+	toColumn: DimHotel.HotelKey
+
+relationship rel_10_FactReservaHabitacion_DimTipoHabitacion_TipoHabitacionKey
+	fromColumn: FactReservaHabitacion.TipoHabitacionKey
+	toColumn: DimTipoHabitacion.TipoHabitacionKey
+
+relationship rel_11_FactReservaHabitacion_DimEstadoReserva_EstadoKey
+	fromColumn: FactReservaHabitacion.EstadoKey
+	toColumn: DimEstadoReserva.EstadoKey
+
+relationship rel_12_FactReservaTour_DimTiempo_FechaInicioKey
+	fromColumn: FactReservaTour.FechaInicioKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_13_FactReservaTour_DimCliente_ClienteKey
+	fromColumn: FactReservaTour.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship rel_14_FactReservaTour_DimTour_TourKey
+	fromColumn: FactReservaTour.TourKey
+	toColumn: DimTour.TourKey
+
+relationship rel_15_FactReservaTour_DimEstadoReserva_EstadoKey
+	fromColumn: FactReservaTour.EstadoKey
+	toColumn: DimEstadoReserva.EstadoKey
+
+relationship rel_16_FactOcupacionDiaria_DimTiempo_TiempoKey
+	fromColumn: FactOcupacionDiaria.TiempoKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_17_FactOcupacionDiaria_DimHotel_HotelKey
+	fromColumn: FactOcupacionDiaria.HotelKey
+	toColumn: DimHotel.HotelKey
+
+relationship rel_18_FactResena_DimTiempo_TiempoKey
+	fromColumn: FactResena.TiempoKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_19_FactResena_DimCliente_ClienteKey
+	fromColumn: FactResena.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship rel_20_FactResena_DimHotel_HotelKey
+	isActive: false
+	fromColumn: FactResena.HotelKey
+	toColumn: DimHotel.HotelKey
+
+relationship rel_21_FactResena_DimTour_TourKey
+	isActive: false
+	fromColumn: FactResena.TourKey
+	toColumn: DimTour.TourKey
+
+relationship rel_22_FactResena_DimPaquete_PaqueteKey
+	isActive: false
+	fromColumn: FactResena.PaqueteKey
+	toColumn: DimPaquete.PaqueteKey
+
+relationship rel_23_FactInteraccionWeb_DimTiempo_TiempoKey
+	fromColumn: FactInteraccionWeb.TiempoKey
+	toColumn: DimTiempo.TiempoKey
+
+relationship rel_24_FactInteraccionWeb_DimCliente_ClienteKey
+	fromColumn: FactInteraccionWeb.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship rel_25_FactInteraccionWeb_DimCanal_CanalKey
+	fromColumn: FactInteraccionWeb.CanalKey
+	toColumn: DimCanal.CanalKey
+
+relationship rel_26_DimTipoHabitacion_DimHotel_HotelKey
+	fromColumn: DimTipoHabitacion.HotelKey
+	toColumn: DimHotel.HotelKey

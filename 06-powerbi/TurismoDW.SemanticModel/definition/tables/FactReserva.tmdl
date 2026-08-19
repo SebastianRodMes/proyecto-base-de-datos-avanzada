@@ -1,0 +1,127 @@
+table FactReserva
+
+	isHidden
+
+	column 'ReservaId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ReservaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaReservaKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: FechaReservaKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaInicioKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: FechaInicioKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaFinKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: FechaFinKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PaqueteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: PaqueteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EstadoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: EstadoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CantidadPersonas'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: CantidadPersonas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MontoTotal'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: sum
+		sourceColumn: MontoTotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Noches'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: Noches
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DiasAnticipacion'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: DiasAnticipacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MontoConfirmado'
+		dataType: decimal
+		formatString: $#,0.00
+		isHidden
+		summarizeBy: sum
+		sourceColumn: MontoConfirmado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EsCancelada'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: EsCancelada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ConteoReserva'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: ConteoReserva
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactReserva = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactReserva"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,100 @@
+table FactInteraccionWeb
+
+	isHidden
+
+	column 'InteraccionId'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: InteraccionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TiempoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TiempoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CanalKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: CanalKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TourKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TourKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoEvento'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoEvento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DestinoBuscado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: DestinoBuscado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DuracionSegundos'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: average
+		sourceColumn: DuracionSegundos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EsConversion'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: EsConversion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ConteoEvento'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: ConteoEvento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactInteraccionWeb = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactInteraccionWeb"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

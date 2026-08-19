@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "sy_reservado",
+  "position": {
+    "x": 24,
+    "y": 572,
+    "z": 0,
+    "width": 1232,
+    "height": 124
+  },
+  "visual": {
+    "visualType": "textbox",
+    "query": {
+      "queryState": {}
+    },
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Espacio reservado — Integrante 2: resultados de particionamiento e indices (antes / despues). Reemplazar este cuadro por la tabla comparativa.",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#77837C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

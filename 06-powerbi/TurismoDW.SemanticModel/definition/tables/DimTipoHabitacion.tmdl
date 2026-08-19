@@ -1,0 +1,80 @@
+table DimTipoHabitacion
+
+	column 'TipoHabitacionKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TipoHabitacionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoHabitacionId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TipoHabitacionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoHabitacion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoHabitacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CapacidadPersonas'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: CapacidadPersonas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TarifaBase'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: TarifaBase
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoTarifa'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoTarifa
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CantidadDisponible'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: CantidadDisponible
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimTipoHabitacion = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimTipoHabitacion"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

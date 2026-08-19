@@ -1,0 +1,78 @@
+table CalidadDatos
+
+	column 'EjecucionId'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: EjecucionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fuente'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Fuente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Objeto'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Objeto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regla'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Regla
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Severidad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Severidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Registros'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: Registros
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PrimeraDeteccion'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: PrimeraDeteccion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaDeteccion'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: UltimaDeteccion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EjemploDescripcion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: EjemploDescripcion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CalidadDatos = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_CalidadDatos"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

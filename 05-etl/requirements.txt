@@ -1,0 +1,10 @@
+# ITI-821 | Escenario 8 | Semana 3 | Integrante 1
+# Dependencias del ETL. Instalar con:  pip install -r requirements.txt
+#
+# Nota: bcp y sqlcmd no son paquetes de Python; vienen con
+# "Microsoft ODBC Driver 17/18 for SQL Server + Command Line Utilities".
+
+psycopg2-binary>=2.9      # extraccion desde PostgreSQL
+pymongo>=4.6              # extraccion y siembra de MongoDB
+pyodbc>=5.0               # DDL, MERGE y control sobre SQL Server
+lxml>=5.0                 # parseo de los documentos XML (RF-11)

@@ -1,0 +1,164 @@
+table DimCliente
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Identificacion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Identificacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreCompleto'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NombreCompleto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Correo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Correo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PaisOrigen'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PaisOrigen
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Edad'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: Edad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoEdad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoEdad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaRegistro'
+		dataType: dateTime
+		formatString: Short Date
+		summarizeBy: none
+		sourceColumn: FechaRegistro
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DestinosPreferidos'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: DestinosPreferidos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoAlojamiento'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoAlojamiento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ActividadesFavoritas'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ActividadesFavoritas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PresupuestoEstimado'
+		dataType: decimal
+		formatString: $#,0
+		summarizeBy: none
+		sourceColumn: PresupuestoEstimado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoPresupuesto'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoPresupuesto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TemporadaViaje'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TemporadaViaje
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Idioma'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Idioma
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dieta'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Dieta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GrupoViaje'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: GrupoViaje
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SegmentoVip'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: SegmentoVip
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FuenteDatos'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: FuenteDatos
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCliente = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimCliente"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

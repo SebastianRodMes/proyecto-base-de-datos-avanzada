@@ -1,0 +1,18 @@
+{
+  "name": "TurismoDW",
+  "dataColors": [
+    "#0B6E55",
+    "#2E6288",
+    "#B5822A",
+    "#6B4A85",
+    "#3D7A3C",
+    "#9C4A18",
+    "#4A7C8C",
+    "#7A5C3E",
+    "#556B5D",
+    "#8C6A9E"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#131A17",
+  "tableAccent": "#0B6E55"
+}

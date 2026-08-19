@@ -1,0 +1,41 @@
+table DimCanal
+
+	column 'CanalKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: CanalKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Canal'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Canal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dispositivo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Dispositivo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoDispositivo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoDispositivo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCanal = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimCanal"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

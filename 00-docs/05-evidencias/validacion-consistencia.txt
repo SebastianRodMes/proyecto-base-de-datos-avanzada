@@ -1,0 +1,77 @@
+Changed database context to 'TurismoDW'.
+ 
+=====================================================================
+ VALIDACION DE CONSISTENCIA - TurismoDW
+=====================================================================
+Orden|Prueba|Esperado|Obtenido|Diferencia|Veredicto
+-----|------|--------|--------|----------|---------
+1|Conteo de reservas: PostgreSQL vs dw.FactReserva|2,000,005|2,000,005|0|OK
+2|Suma de monto_total: PostgreSQL vs dw.FactReserva|16,864,714,832.70|16,864,714,832.70|0.00|OK
+3|Conteo de resenas: MongoDB vs dw.FactResena|500,000|500,000|0|OK
+4|Conteo de interacciones: MongoDB vs dw.FactInteraccionWeb|1,500,000|1,500,000|0|OK
+5|FactReserva sin ClienteKey resuelta|0|0||OK
+6|FactReserva sin EstadoKey resuelta|0|0||OK
+7|FactReserva con FechaInicioKey invalida|0|0||OK
+8|FactReservaHabitacion sin HotelKey resuelta|0|0||OK
+9|FactReservaTour sin TourKey resuelta|0|0||OK
+10|Huerfanos FactReserva -> DimCliente|0|0||OK
+11|Huerfanos FactReserva -> DimTiempo|0|0||OK
+12|Huerfanos FactOcupacionDiaria -> DimHotel|0|0||OK
+13|Claves foraneas no confiables o deshabilitadas|0|0||OK
+14|ReservaId duplicados en dw.FactReserva|0|0||OK
+15|ClienteId duplicados en dw.DimCliente|0|0||OK
+16|Pares (dia, hotel) duplicados en FactOcupacionDiaria|0|0||OK
+17|Ocupacion diaria maxima por hotel (%)|<= 100|82.00||OK
+18|Reservas con noches negativas|0|0||OK
+19|Reservas con monto negativo|0|0||OK
+20|Resenas fuera del rango 1..5|0|0||OK
+21|MontoConfirmado en reservas no confirmadas|0|0||OK
+22|Anios cubiertos por FactReserva|6 (2021-2026)|6||OK
+Pruebas|Correctas|Por revisar|Omitidas|Veredicto global
+-------|---------|-----------|--------|----------------
+22|22|0|0|MODELO CONSISTENTE
+ 
+=== KPI de referencia para contrastar contra Power BI ===
+KPI|Valor
+---|-----
+Reservas totales|2,000,005
+Reservas confirmadas|1,400,004
+Ingresos confirmados (USD)|13,327,403,349.30
+Ticket promedio confirmado (USD)|9,519.55
+Promedio de estadia (noches)|7.50
+Dias de anticipacion promedio|90.50
+Tasa de cancelacion (%)|18.00
+Ocupacion hotelera promedio (%)|30.87
+Calificacion promedio de resenas|3.96
+Indice de satisfaccion (% promotores)|71.89
+Tasa de conversion web (%)|9.98
+ 
+=== Top 10 destinos mas visitados (contraste con la pagina 4 del reporte) ===
+Destino|Reservas|Ingresos
+-------|--------|--------
+Jaco, Costa Rica|80,000|277,557,778.60
+Samara, Costa Rica|80,000|302,292,173.91
+Puerto Viejo, Costa Rica|80,000|259,515,396.16
+Monteverde, Costa Rica|80,000|282,756,496.05
+Manuel Antonio, Costa Rica|80,000|294,538,842.06
+Tortuguero, Costa Rica|80,000|275,506,660.53
+Sevilla, Espana|80,000|288,901,478.44
+La Fortuna, Costa Rica|40,001|189,128,208.08
+Nosara, Costa Rica|40,000|119,408,005.80
+Medellin, Colombia|40,000|175,911,162.00
+ 
+=== Reservas por temporada y anio ===
+Anio|TemporadaTuristica|Reservas|Ingresos
+----|------------------|--------|--------
+2021|Alta|223,253|1,486,942,583.88
+2021|Verde|111,257|737,973,809.56
+2022|Alta|221,561|1,470,402,398.16
+2022|Verde|110,818|738,936,015.44
+2023|Alta|222,366|1,482,809,931.76
+2023|Verde|110,663|738,844,027.54
+2024|Alta|222,381|1,484,580,530.60
+2024|Verde|111,083|736,822,806.08
+2025|Alta|222,021|1,481,332,392.38
+2025|Verde|111,344|744,481,162.14
+2026|Alta|221,746|1,480,720,368.30
+2026|Verde|111,512|743,557,323.46

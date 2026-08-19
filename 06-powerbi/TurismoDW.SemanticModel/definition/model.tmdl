@@ -1,0 +1,29 @@
+model Model
+	culture: es-CR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-CR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DimTiempo", "DimCliente", "DimHotel", "DimTipoHabitacion", "DimTour", "DimPaquete", "DimEstadoReserva", "DimCanal", "FactReserva", "FactReservaHabitacion", "FactReservaTour", "FactOcupacionDiaria", "FactResena", "FactInteraccionWeb", "EstadoSistema", "CalidadDatos", "_Medidas"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+ref table DimTiempo
+ref table DimCliente
+ref table DimHotel
+ref table DimTipoHabitacion
+ref table DimTour
+ref table DimPaquete
+ref table DimEstadoReserva
+ref table DimCanal
+ref table FactReserva
+ref table FactReservaHabitacion
+ref table FactReservaTour
+ref table FactOcupacionDiaria
+ref table FactResena
+ref table FactInteraccionWeb
+ref table EstadoSistema
+ref table CalidadDatos
+ref table _Medidas

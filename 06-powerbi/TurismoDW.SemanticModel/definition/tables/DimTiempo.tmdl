@@ -1,0 +1,175 @@
+table DimTiempo
+
+	dataCategory: Time
+
+	column 'TiempoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TiempoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Anio'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: Anio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trimestre'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreTrimestre'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NombreTrimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mes'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreMes'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NombreMes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreMesCorto'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: NombreMesCorto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'AnioMes'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: AnioMes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'AnioMesEtiqueta'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: AnioMesEtiqueta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Semana'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Semana
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DiaDelMes'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: DiaDelMes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DiaDelAnio'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: DiaDelAnio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DiaSemana'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: DiaSemana
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreDiaSemana'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NombreDiaSemana
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoDia'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoDia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TemporadaTuristica'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TemporadaTuristica
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoTemporada'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoTemporada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Semestre'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Semestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NombreSemestre'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NombreSemestre
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Calendario'
+		level Anio
+			column: Anio
+		level Trimestre
+			column: NombreTrimestre
+		level Mes
+			column: NombreMes
+		level Dia
+			column: DiaDelMes
+
+	partition DimTiempo = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimTiempo"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

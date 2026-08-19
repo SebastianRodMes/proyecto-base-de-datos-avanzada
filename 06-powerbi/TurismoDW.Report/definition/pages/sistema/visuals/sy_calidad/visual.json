@@ -1,0 +1,125 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "sy_calidad",
+  "position": {
+    "x": 652,
+    "y": 190,
+    "z": 0,
+    "width": 604,
+    "height": 240
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalidadDatos"
+                    }
+                  },
+                  "Property": "Fuente"
+                }
+              },
+              "queryRef": "CalidadDatos.Fuente",
+              "nativeQueryRef": "Fuente"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalidadDatos"
+                    }
+                  },
+                  "Property": "Objeto"
+                }
+              },
+              "queryRef": "CalidadDatos.Objeto",
+              "nativeQueryRef": "Objeto"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalidadDatos"
+                    }
+                  },
+                  "Property": "Regla"
+                }
+              },
+              "queryRef": "CalidadDatos.Regla",
+              "nativeQueryRef": "Regla"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalidadDatos"
+                    }
+                  },
+                  "Property": "Severidad"
+                }
+              },
+              "queryRef": "CalidadDatos.Severidad",
+              "nativeQueryRef": "Severidad"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalidadDatos"
+                    }
+                  },
+                  "Property": "Registros"
+                }
+              },
+              "queryRef": "CalidadDatos.Registros",
+              "nativeQueryRef": "Registros"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Calidad de datos de la ultima carga (RF-15)'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#131A17'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,131 @@
+table FactResena
+
+	isHidden
+
+	column 'ResenaId'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: ResenaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TiempoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TiempoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TourKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TourKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PaqueteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: PaqueteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoEntidad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoEntidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Calificacion'
+		dataType: int64
+		formatString: 0
+		summarizeBy: average
+		sourceColumn: Calificacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EsPositiva'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: EsPositiva
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EsNegativa'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: EsNegativa
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EsVerificada'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: EsVerificada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LongitudTexto'
+		dataType: int64
+		isHidden
+		summarizeBy: average
+		sourceColumn: LongitudTexto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Idioma'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Idioma
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Satisfaccion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Satisfaccion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ConteoResena'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: ConteoResena
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactResena = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactResena"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

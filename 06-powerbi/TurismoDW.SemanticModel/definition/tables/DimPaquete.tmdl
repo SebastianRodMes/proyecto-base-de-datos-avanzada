@@ -1,0 +1,92 @@
+table DimPaquete
+
+	column 'PaqueteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: PaqueteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PaqueteId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: PaqueteId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Nombre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoPaquete'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoPaquete
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DuracionDias'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: DuracionDias
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoDuracion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoDuracion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PrecioTotal'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: PrecioTotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoPrecio'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoPrecio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ServiciosAdicionales'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ServiciosAdicionales
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FuenteDatos'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: FuenteDatos
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimPaquete = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimPaquete"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

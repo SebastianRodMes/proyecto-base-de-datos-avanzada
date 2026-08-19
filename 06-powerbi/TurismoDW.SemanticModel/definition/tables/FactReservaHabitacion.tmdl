@@ -1,0 +1,111 @@
+table FactReservaHabitacion
+
+	isHidden
+
+	column 'ReservaHabitacionId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ReservaHabitacionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ReservaId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ReservaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaInicioKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: FechaInicioKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoHabitacionKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TipoHabitacionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EstadoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: EstadoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CantidadHabitaciones'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: CantidadHabitaciones
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TarifaAplicada'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: average
+		sourceColumn: TarifaAplicada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Noches'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Noches
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NochesHabitacion'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: NochesHabitacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'IngresoAlojamiento'
+		dataType: decimal
+		formatString: $#,0.00
+		isHidden
+		summarizeBy: sum
+		sourceColumn: IngresoAlojamiento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactReservaHabitacion = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactReservaHabitacion"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

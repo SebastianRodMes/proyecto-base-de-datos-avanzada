@@ -1,0 +1,107 @@
+table DimHotel
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Nombre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Categoria'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NumeroEstrellas'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: NumeroEstrellas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ciudad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Ciudad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Pais'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Pais
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PaisCiudad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PaisCiudad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Servicios'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Servicios
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CapacidadTotal'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: CapacidadTotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoCapacidad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoCapacidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Geografia'
+		level Pais
+			column: Pais
+		level Ciudad
+			column: Ciudad
+		level Hotel
+			column: Nombre
+
+	partition DimHotel = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimHotel"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

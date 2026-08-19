@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Configuracion local (no subir credenciales de maquina)
+05-etl/.env
+
+# Archivos intermedios del ETL (bcp)
+*.dat
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+desktop.ini

@@ -1,0 +1,1201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CatalogoPaquetes anio="2026" generado="2026-08-16" version="1.0">
+  <Paquete numeroRegistro="1" codigo="PKG-76">
+    <Nombre>Cultural Valencia</Nombre>
+    <Destino>
+      <Ciudad>Valencia</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">1244.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="2" codigo="PKG-77">
+    <Nombre>Familiar Valencia</Nombre>
+    <Destino>
+      <Ciudad>Valencia</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">2854.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="3" codigo="PKG-78">
+    <Nombre>Premium Valencia</Nombre>
+    <Destino>
+      <Ciudad>Valencia</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">2644.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="4" codigo="PKG-79">
+    <Nombre>Express Malaga</Nombre>
+    <Destino>
+      <Ciudad>Malaga</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">2290.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="5" codigo="PKG-80">
+    <Nombre>Descanso Malaga</Nombre>
+    <Destino>
+      <Ciudad>Malaga</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">2050.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="6" codigo="PKG-81">
+    <Nombre>Ecoturismo Malaga</Nombre>
+    <Destino>
+      <Ciudad>Malaga</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1810.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="7" codigo="PKG-82">
+    <Nombre>Luna de Miel Malaga</Nombre>
+    <Destino>
+      <Ciudad>Malaga</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1570.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="8" codigo="PKG-83">
+    <Nombre>Express Malaga</Nombre>
+    <Destino>
+      <Ciudad>Malaga</Ciudad>
+      <Pais>Espana</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1330.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="9" codigo="PKG-84">
+    <Nombre>Aventura Cancun</Nombre>
+    <Destino>
+      <Ciudad>Cancun</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">3022.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="10" codigo="PKG-85">
+    <Nombre>Cultural Cancun</Nombre>
+    <Destino>
+      <Ciudad>Cancun</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2752.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="11" codigo="PKG-86">
+    <Nombre>Familiar Cancun</Nombre>
+    <Destino>
+      <Ciudad>Cancun</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2482.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="12" codigo="PKG-87">
+    <Nombre>Premium Cancun</Nombre>
+    <Destino>
+      <Ciudad>Cancun</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2212.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="13" codigo="PKG-88">
+    <Nombre>Aventura Cancun</Nombre>
+    <Destino>
+      <Ciudad>Cancun</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">1942.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="14" codigo="PKG-89">
+    <Nombre>Descanso Tulum</Nombre>
+    <Destino>
+      <Ciudad>Tulum</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3860.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="15" codigo="PKG-90">
+    <Nombre>Ecoturismo Tulum</Nombre>
+    <Destino>
+      <Ciudad>Tulum</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3560.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="16" codigo="PKG-91">
+    <Nombre>Luna de Miel Tulum</Nombre>
+    <Destino>
+      <Ciudad>Tulum</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3260.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="17" codigo="PKG-92">
+    <Nombre>Express Tulum</Nombre>
+    <Destino>
+      <Ciudad>Tulum</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">2960.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="18" codigo="PKG-93">
+    <Nombre>Descanso Tulum</Nombre>
+    <Destino>
+      <Ciudad>Tulum</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">2660.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="19" codigo="PKG-94">
+    <Nombre>Cultural Playa del Carmen</Nombre>
+    <Destino>
+      <Ciudad>Playa del Carmen</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">1944.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="20" codigo="PKG-95">
+    <Nombre>Familiar Playa del Carmen</Nombre>
+    <Destino>
+      <Ciudad>Playa del Carmen</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">1614.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="21" codigo="PKG-96">
+    <Nombre>Premium Playa del Carmen</Nombre>
+    <Destino>
+      <Ciudad>Playa del Carmen</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">4144.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="22" codigo="PKG-97">
+    <Nombre>Aventura Playa del Carmen</Nombre>
+    <Destino>
+      <Ciudad>Playa del Carmen</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">3814.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="23" codigo="PKG-98">
+    <Nombre>Cultural Playa del Carmen</Nombre>
+    <Destino>
+      <Ciudad>Playa del Carmen</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">3484.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="24" codigo="PKG-99">
+    <Nombre>Ecoturismo Oaxaca</Nombre>
+    <Destino>
+      <Ciudad>Oaxaca</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">2734.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="25" codigo="PKG-100">
+    <Nombre>Luna de Miel Oaxaca</Nombre>
+    <Destino>
+      <Ciudad>Oaxaca</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">2374.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="26" codigo="PKG-101">
+    <Nombre>Express Oaxaca</Nombre>
+    <Destino>
+      <Ciudad>Oaxaca</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">2014.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="27" codigo="PKG-102">
+    <Nombre>Descanso Oaxaca</Nombre>
+    <Destino>
+      <Ciudad>Oaxaca</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">4774.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Gastronomia</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="28" codigo="PKG-103">
+    <Nombre>Ecoturismo Oaxaca</Nombre>
+    <Destino>
+      <Ciudad>Oaxaca</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">4414.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="29" codigo="PKG-104">
+    <Nombre>Familiar Ciudad de Mexico</Nombre>
+    <Destino>
+      <Ciudad>Ciudad de Mexico</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>3</DuracionDias>
+    <PrecioTotal moneda="USD">-150.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="30" codigo="PKG-105">
+    <Nombre>Premium Ciudad de Mexico</Nombre>
+    <Destino>
+      <Ciudad>Ciudad de Mexico</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>3</DuracionDias>
+    <PrecioTotal moneda="USD">940.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="31" codigo="PKG-106">
+    <Nombre>Aventura Ciudad de Mexico</Nombre>
+    <Destino>
+      <Ciudad>Ciudad de Mexico</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>3</DuracionDias>
+    <PrecioTotal moneda="USD">850.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="32" codigo="PKG-107">
+    <Nombre>Cultural Ciudad de Mexico</Nombre>
+    <Destino>
+      <Ciudad>Ciudad de Mexico</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>3</DuracionDias>
+    <PrecioTotal moneda="USD">760.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="33" codigo="PKG-108">
+    <Nombre>Familiar Ciudad de Mexico</Nombre>
+    <Destino>
+      <Ciudad>Ciudad de Mexico</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>3</DuracionDias>
+    <PrecioTotal moneda="USD">670.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="34" codigo="PKG-109">
+    <Nombre>Luna de Miel Puerto Vallarta</Nombre>
+    <Destino>
+      <Ciudad>Puerto Vallarta</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>4</DuracionDias>
+    <PrecioTotal moneda="USD">1502.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="35" codigo="PKG-110">
+    <Nombre>Express Puerto Vallarta</Nombre>
+    <Destino>
+      <Ciudad>Puerto Vallarta</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>4</DuracionDias>
+    <PrecioTotal moneda="USD">1382.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="36" codigo="PKG-111">
+    <Nombre>Descanso Puerto Vallarta</Nombre>
+    <Destino>
+      <Ciudad>Puerto Vallarta</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>4</DuracionDias>
+    <PrecioTotal moneda="USD">1262.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Gastronomia</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="37" codigo="PKG-112">
+    <Nombre>Ecoturismo Puerto Vallarta</Nombre>
+    <Destino>
+      <Ciudad>Puerto Vallarta</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>4</DuracionDias>
+    <PrecioTotal moneda="USD">1142.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="38" codigo="PKG-113">
+    <Nombre>Luna de Miel Puerto Vallarta</Nombre>
+    <Destino>
+      <Ciudad>Puerto Vallarta</Ciudad>
+      <Pais>Mexico</Pais>
+    </Destino>
+    <DuracionDias>4</DuracionDias>
+    <PrecioTotal moneda="USD">1022.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="39" codigo="PKG-114">
+    <Nombre>Premium Cartagena</Nombre>
+    <Destino>
+      <Ciudad>Cartagena</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>5</DuracionDias>
+    <PrecioTotal moneda="USD">2080.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="40" codigo="PKG-115">
+    <Nombre>Aventura Cartagena</Nombre>
+    <Destino>
+      <Ciudad>Cartagena</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>5</DuracionDias>
+    <PrecioTotal moneda="USD">1930.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="41" codigo="PKG-116">
+    <Nombre>Cultural Cartagena</Nombre>
+    <Destino>
+      <Ciudad>Cartagena</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>5</DuracionDias>
+    <PrecioTotal moneda="USD">1780.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="42" codigo="PKG-117">
+    <Nombre>Familiar Cartagena</Nombre>
+    <Destino>
+      <Ciudad>Cartagena</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>5</DuracionDias>
+    <PrecioTotal moneda="USD">1630.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="43" codigo="PKG-118">
+    <Nombre>Premium Cartagena</Nombre>
+    <Destino>
+      <Ciudad>Cartagena</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>5</DuracionDias>
+    <PrecioTotal moneda="USD">1480.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="44" codigo="PKG-119">
+    <Nombre>Express Santa Marta</Nombre>
+    <Destino>
+      <Ciudad>Santa Marta</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>6</DuracionDias>
+    <PrecioTotal moneda="USD">1204.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="45" codigo="PKG-120">
+    <Nombre>Descanso Santa Marta</Nombre>
+    <Destino>
+      <Ciudad>Santa Marta</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>6</DuracionDias>
+    <PrecioTotal moneda="USD">1024.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Vuelos, Todo incluido</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="46" codigo="PKG-121">
+    <Nombre>Ecoturismo Santa Marta</Nombre>
+    <Destino>
+      <Ciudad>Santa Marta</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>6</DuracionDias>
+    <PrecioTotal moneda="USD">2404.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="47" codigo="PKG-122">
+    <Nombre>Luna de Miel Santa Marta</Nombre>
+    <Destino>
+      <Ciudad>Santa Marta</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>6</DuracionDias>
+    <PrecioTotal moneda="USD">2224.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="48" codigo="PKG-123">
+    <Nombre>Express Santa Marta</Nombre>
+    <Destino>
+      <Ciudad>Santa Marta</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>6</DuracionDias>
+    <PrecioTotal moneda="USD">2044.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="49" codigo="PKG-124">
+    <Nombre>Aventura Medellin</Nombre>
+    <Destino>
+      <Ciudad>Medellin</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">1734.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="50" codigo="PKG-125">
+    <Nombre>Cultural Medellin</Nombre>
+    <Destino>
+      <Ciudad>Medellin</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">1524.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="51" codigo="PKG-126">
+    <Nombre>Familiar Medellin</Nombre>
+    <Destino>
+      <Ciudad>Medellin</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">1314.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="52" codigo="PKG-127">
+    <Nombre>Premium Medellin</Nombre>
+    <Destino>
+      <Ciudad>Medellin</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">1104.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="53" codigo="PKG-128">
+    <Nombre>Aventura Medellin</Nombre>
+    <Destino>
+      <Ciudad>Medellin</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>7</DuracionDias>
+    <PrecioTotal moneda="USD">2714.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="54" codigo="PKG-129">
+    <Nombre>Descanso Bogota</Nombre>
+    <Destino>
+      <Ciudad>Bogota</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">2370.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="55" codigo="PKG-130">
+    <Nombre>Ecoturismo Bogota</Nombre>
+    <Destino>
+      <Ciudad>Bogota</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">2130.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="56" codigo="PKG-131">
+    <Nombre>Luna de Miel Bogota</Nombre>
+    <Destino>
+      <Ciudad>Bogota</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1890.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="57" codigo="PKG-132">
+    <Nombre>Express Bogota</Nombre>
+    <Destino>
+      <Ciudad>Bogota</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1650.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Gastronomia</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="58" codigo="PKG-133">
+    <Nombre>Descanso Bogota</Nombre>
+    <Destino>
+      <Ciudad>Bogota</Ciudad>
+      <Pais>Colombia</Pais>
+    </Destino>
+    <DuracionDias>8</DuracionDias>
+    <PrecioTotal moneda="USD">1410.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="59" codigo="PKG-134">
+    <Nombre>Cultural Miami</Nombre>
+    <Destino>
+      <Ciudad>Miami</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">3112.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="60" codigo="PKG-135">
+    <Nombre>Familiar Miami</Nombre>
+    <Destino>
+      <Ciudad>Miami</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2842.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Cabalgata</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="61" codigo="PKG-136">
+    <Nombre>Premium Miami</Nombre>
+    <Destino>
+      <Ciudad>Miami</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2572.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="62" codigo="PKG-137">
+    <Nombre>Aventura Miami</Nombre>
+    <Destino>
+      <Ciudad>Miami</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2302.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="63" codigo="PKG-138">
+    <Nombre>Cultural Miami</Nombre>
+    <Destino>
+      <Ciudad>Miami</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>9</DuracionDias>
+    <PrecioTotal moneda="USD">2032.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="64" codigo="PKG-139">
+    <Nombre>Luna de Miel Orlando</Nombre>
+    <Destino>
+      <Ciudad>Orlando</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3660.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="65" codigo="PKG-140">
+    <Nombre>Express Orlando</Nombre>
+    <Destino>
+      <Ciudad>Orlando</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3360.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="66" codigo="PKG-141">
+    <Nombre>Descanso Orlando</Nombre>
+    <Destino>
+      <Ciudad>Orlando</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">3060.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Gastronomia</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="67" codigo="PKG-142">
+    <Nombre>Ecoturismo Orlando</Nombre>
+    <Destino>
+      <Ciudad>Orlando</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>10</DuracionDias>
+    <PrecioTotal moneda="USD">2760.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Rafting</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Verde</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="68" codigo="PKG-143">
+    <Nombre>Premium San Diego</Nombre>
+    <Destino>
+      <Ciudad>San Diego</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">1724.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Canopy</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Desayunos, Guia</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="69" codigo="PKG-144">
+    <Nombre>Aventura San Diego</Nombre>
+    <Destino>
+      <Ciudad>San Diego</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">4254.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Rafting</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Senderismo</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="70" codigo="PKG-145">
+    <Nombre>Cultural San Diego</Nombre>
+    <Destino>
+      <Ciudad>San Diego</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">3924.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Snorkel</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="71" codigo="PKG-146">
+    <Nombre>Familiar San Diego</Nombre>
+    <Destino>
+      <Ciudad>San Diego</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>11</DuracionDias>
+    <PrecioTotal moneda="USD">3594.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Kayak</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+      <Actividad>Senderismo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="72" codigo="PKG-147">
+    <Nombre>Express Nueva Orleans</Nombre>
+    <Destino>
+      <Ciudad>Nueva Orleans</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">2494.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Cabalgata</Actividad>
+      <Actividad>Gastronomia</Actividad>
+      <Actividad>Snorkel</Actividad>
+      <Actividad>Buceo</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Pension completa</ServiciosAdicionales>
+    <Temporada>Media</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="73" codigo="PKG-148">
+    <Nombre>Descanso Nueva Orleans</Nombre>
+    <Destino>
+      <Ciudad>Nueva Orleans</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">2134.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Tour de cafe</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Seca</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="74" codigo="PKG-149">
+    <Nombre>Ecoturismo Nueva Orleans</Nombre>
+    <Destino>
+      <Ciudad>Nueva Orleans</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">1774.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Canopy</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+      <Actividad>Kayak</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Desayunos, Seguro de viaje</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+  <Paquete numeroRegistro="75" codigo="PKG-150">
+    <Nombre>Luna de Miel Nueva Orleans</Nombre>
+    <Destino>
+      <Ciudad>Nueva Orleans</Ciudad>
+      <Pais>Estados Unidos</Pais>
+    </Destino>
+    <DuracionDias>12</DuracionDias>
+    <PrecioTotal moneda="USD">4534.00</PrecioTotal>
+    <Actividades>
+      <Actividad>Buceo</Actividad>
+      <Actividad>Avistamiento de aves</Actividad>
+    </Actividades>
+    <ServiciosAdicionales>Traslados, Media pension</ServiciosAdicionales>
+    <Temporada>Alta</Temporada>
+  </Paquete>
+</CatalogoPaquetes>

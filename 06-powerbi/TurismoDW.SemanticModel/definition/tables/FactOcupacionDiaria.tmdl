@@ -1,0 +1,72 @@
+table FactOcupacionDiaria
+
+	isHidden
+
+	column 'TiempoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TiempoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HotelKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: HotelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HabitacionesOcupadas'
+		dataType: int64
+		formatString: #,0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: HabitacionesOcupadas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HabitacionesDisponibles'
+		dataType: int64
+		formatString: #,0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: HabitacionesDisponibles
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PersonasAlojadas'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: PersonasAlojadas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'IngresoDia'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: sum
+		sourceColumn: IngresoDia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ReservasActivas'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: ReservasActivas
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactOcupacionDiaria = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactOcupacionDiaria"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

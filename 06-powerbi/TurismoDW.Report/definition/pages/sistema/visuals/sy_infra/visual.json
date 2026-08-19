@@ -1,0 +1,139 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "sy_infra",
+  "position": {
+    "x": 24,
+    "y": 190,
+    "z": 0,
+    "width": 612,
+    "height": 240
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "Instancia"
+                }
+              },
+              "queryRef": "EstadoSistema.Instancia",
+              "nativeQueryRef": "Instancia"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "Edicion"
+                }
+              },
+              "queryRef": "EstadoSistema.Edicion",
+              "nativeQueryRef": "Edicion"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "ModeloRecuperacion"
+                }
+              },
+              "queryRef": "EstadoSistema.ModeloRecuperacion",
+              "nativeQueryRef": "ModeloRecuperacion"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "RolMirroring"
+                }
+              },
+              "queryRef": "EstadoSistema.RolMirroring",
+              "nativeQueryRef": "RolMirroring"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "Socio"
+                }
+              },
+              "queryRef": "EstadoSistema.Socio",
+              "nativeQueryRef": "Socio"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "Testigo"
+                }
+              },
+              "queryRef": "EstadoSistema.Testigo",
+              "nativeQueryRef": "Testigo"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Infraestructura y alta disponibilidad'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#131A17'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

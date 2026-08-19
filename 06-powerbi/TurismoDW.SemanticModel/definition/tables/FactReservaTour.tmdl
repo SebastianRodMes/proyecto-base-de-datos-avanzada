@@ -1,0 +1,95 @@
+table FactReservaTour
+
+	isHidden
+
+	column 'ReservaTourId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ReservaTourId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ReservaId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ReservaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaInicioKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: FechaInicioKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ClienteKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TourKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TourKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EstadoKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: EstadoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CantidadPersonas'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: CantidadPersonas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PrecioAplicado'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: average
+		sourceColumn: PrecioAplicado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'IngresoTour'
+		dataType: decimal
+		formatString: $#,0.00
+		isHidden
+		summarizeBy: sum
+		sourceColumn: IngresoTour
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ConteoTour'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: ConteoTour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactReservaTour = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_FactReservaTour"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,168 @@
+table EstadoSistema
+
+	column 'NodoActual'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: NodoActual
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Instancia'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Instancia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Edicion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Edicion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'BaseDatos'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BaseDatos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ModeloRecuperacion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ModeloRecuperacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RolMirroring'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RolMirroring
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EstadoMirroring'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: EstadoMirroring
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Socio'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Socio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Testigo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Testigo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'InicioInstancia'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: InicioInstancia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HorasEnLinea'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: HorasEnLinea
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaId'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: UltimaCargaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaModo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: UltimaCargaModo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaEstado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: UltimaCargaEstado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaInicio'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: UltimaCargaInicio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaFin'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: UltimaCargaFin
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaSegundos'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: UltimaCargaSegundos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaFilas'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: UltimaCargaFilas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UltimaCargaRechazos'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: UltimaCargaRechazos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HorasDesdeUltimaCarga'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: HorasDesdeUltimaCarga
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FechaConsulta'
+		dataType: dateTime
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: FechaConsulta
+
+		annotation SummarizationSetBy = Automatic
+
+	partition EstadoSistema = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_EstadoSistema"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table

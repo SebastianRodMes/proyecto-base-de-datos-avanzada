@@ -1,0 +1,92 @@
+table DimTour
+
+	column 'TourKey'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TourKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TourId'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: TourId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Nombre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Destino'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Destino
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TipoActividad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TipoActividad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Proveedor'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Proveedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DuracionHoras'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: DuracionHoras
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RangoDuracion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RangoDuracion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CupoMaximo'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: CupoMaximo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Precio'
+		dataType: decimal
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: Precio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimTour = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Datos = Origen{[Schema="dw",Item="vw_DimTour"]}[Data]
+				in
+				    Datos
+
+	annotation PBI_ResultType = Table
