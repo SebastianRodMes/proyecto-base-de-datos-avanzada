@@ -1,0 +1,27 @@
+================================================================================
+ITI-821 Bases de Datos Avanzadas - Escenario 8: Turismo Inteligente
+EVIDENCIA DE ALTA DISPONIBILIDAD Y PRUEBA DE RECUPERACION (INTEGRANTE 3: ERICK)
+================================================================================
+Fecha de ejecucion : 2026-08-19 13:43:16
+Tipo de prueba     : Failover Sincronico con Testigo (Alta Seguridad)
+Tiempo de RTO      : 1.65 segundos
+
+--- 1. ESTADO ANTES DEL FAILOVER (Nodo Principal) ---
+Hora: 2026-08-19 13:43:14.827
+Se cambio el contexto de la base de datos a 'TurismoDW'.
+NodoActivo                                                                                                                       TotalReservas TotalIngresos                            PctOcupacion            
+-------------------------------------------------------------------------------------------------------------------------------- ------------- ---------------------------------------- ------------------------
+Erick                                                                                                                                        0                                      .00                      0.0
+
+--- 2. ESTADO DESPUES DEL FAILOVER (Nuevo Nodo Activo / Espejo) ---
+Hora: 2026-08-19 13:43:16.486
+Se cambio el contexto de la base de datos a 'TurismoDW'.
+NodoActivo                                                                                                                       TotalReservas TotalIngresos                            PctOcupacion            
+-------------------------------------------------------------------------------------------------------------------------------- ------------- ---------------------------------------- ------------------------
+Erick\MIRROR                                                                                                                                 0                                      .00                      0.0
+
+--- 3. RESULTADO DE CONSISTENCIA ---
+- Continuidad de Servicio : EXITOSA (Failover automatico sin perdida de conexion a nivel logico)
+- Integridad de Datos     : 100% CONSISTENTE (Totales de reservas, ingresos y ocupacion identicos)
+- Tiempo de Recuperacion  : 1.65 s
+================================================================================
