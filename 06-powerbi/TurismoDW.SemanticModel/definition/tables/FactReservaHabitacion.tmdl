@@ -1,99 +1,111 @@
 table FactReservaHabitacion
-
 	isHidden
+	lineageTag: 276f3e73-9e5a-4c2c-8c89-e228f01f846d
 
-	column 'ReservaHabitacionId'
+	column ReservaHabitacionId
 		dataType: int64
 		isHidden
+		lineageTag: 6fbadee0-d833-4a30-9021-b5abaa836d2a
 		summarizeBy: none
 		sourceColumn: ReservaHabitacionId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ReservaId'
+	column ReservaId
 		dataType: int64
 		isHidden
+		lineageTag: d8ea7764-2f95-4387-a802-1ea6833c098c
 		summarizeBy: none
 		sourceColumn: ReservaId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaInicioKey'
+	column FechaInicioKey
 		dataType: int64
 		isHidden
+		lineageTag: ecf93a9a-6f2a-43e7-bbc9-9b8f89fd7c15
 		summarizeBy: none
 		sourceColumn: FechaInicioKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ClienteKey'
+	column ClienteKey
 		dataType: int64
 		isHidden
+		lineageTag: d75b52a3-cd98-4693-86f2-0ec3f7e3b854
 		summarizeBy: none
 		sourceColumn: ClienteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HotelKey'
+	column HotelKey
 		dataType: int64
 		isHidden
+		lineageTag: ea56d646-2d49-4441-b2d4-0d766d6dc84d
 		summarizeBy: none
 		sourceColumn: HotelKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoHabitacionKey'
+	column TipoHabitacionKey
 		dataType: int64
 		isHidden
+		lineageTag: 4747d537-d586-4d81-9eb2-86da72fe00da
 		summarizeBy: none
 		sourceColumn: TipoHabitacionKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EstadoKey'
+	column EstadoKey
 		dataType: int64
 		isHidden
+		lineageTag: ffc622a7-4e93-4112-9b0d-62a68854b16e
 		summarizeBy: none
 		sourceColumn: EstadoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CantidadHabitaciones'
+	column CantidadHabitaciones
 		dataType: int64
 		formatString: #,0
+		lineageTag: 42c5de12-d410-4fac-8bf8-817128da0040
 		summarizeBy: sum
 		sourceColumn: CantidadHabitaciones
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TarifaAplicada'
-		dataType: decimal
+	column TarifaAplicada
+		dataType: double
 		formatString: $#,0.00
-		summarizeBy: average
+		lineageTag: 14105dd0-7a63-473a-8894-041c586155a1
+		summarizeBy: sum
 		sourceColumn: TarifaAplicada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Noches'
+	column Noches
 		dataType: int64
 		isHidden
+		lineageTag: fdcde411-a8e4-4ffc-bbd2-e9e031dc0bb4
 		summarizeBy: sum
 		sourceColumn: Noches
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NochesHabitacion'
+	column NochesHabitacion
 		dataType: int64
 		formatString: #,0
+		lineageTag: 9d4767b3-ca6a-4862-a19f-94fbef5293dc
 		summarizeBy: sum
 		sourceColumn: NochesHabitacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'IngresoAlojamiento'
-		dataType: decimal
-		formatString: $#,0.00
+	column IngresoAlojamiento
+		dataType: double
 		isHidden
+		formatString: $#,0.00
+		lineageTag: 59b029a6-af95-4d07-88a9-d3e20f2ef7be
 		summarizeBy: sum
 		sourceColumn: IngresoAlojamiento
 
@@ -103,9 +115,10 @@ table FactReservaHabitacion
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_FactReservaHabitacion"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

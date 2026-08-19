@@ -1,35 +1,17 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "oc_matriz",
   "position": {
     "x": 660,
     "y": 190,
     "z": 0,
-    "width": 596,
-    "height": 300
+    "height": 300,
+    "width": 596
   },
   "visual": {
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Rows": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimHotel"
-                    }
-                  },
-                  "Property": "Nombre"
-                }
-              },
-              "queryRef": "DimHotel.Nombre",
-              "nativeQueryRef": "Nombre"
-            }
-          ]
-        },
         "Columns": {
           "projections": [
             {
@@ -44,7 +26,27 @@
                 }
               },
               "queryRef": "DimTiempo.NombreMesCorto",
-              "nativeQueryRef": "NombreMesCorto"
+              "nativeQueryRef": "NombreMesCorto",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimHotel"
+                    }
+                  },
+                  "Property": "Nombre"
+                }
+              },
+              "queryRef": "DimHotel.Nombre",
+              "nativeQueryRef": "Nombre",
+              "active": true
             }
           ]
         },
@@ -67,39 +69,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Ocupacion por hotel y mes'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

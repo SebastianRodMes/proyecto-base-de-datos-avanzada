@@ -1,152 +1,176 @@
 table DimCliente
+	lineageTag: 9ae2be40-dbc7-4889-afdf-bbe213f981ac
 
-	column 'ClienteKey'
+	column ClienteKey
 		dataType: int64
 		isHidden
+		lineageTag: 8d35d729-dbf8-4d1d-9cba-fddbe9e465d3
 		summarizeBy: none
 		sourceColumn: ClienteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ClienteId'
+	column ClienteId
 		dataType: int64
 		isHidden
+		lineageTag: 6fc9b2fb-b523-4df1-a378-556dc0976882
 		summarizeBy: none
 		sourceColumn: ClienteId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Identificacion'
+	column Identificacion
 		dataType: string
+		lineageTag: fe1ba1b2-e8fb-4528-9448-6b23f47bfa25
 		summarizeBy: none
 		sourceColumn: Identificacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreCompleto'
+	column NombreCompleto
 		dataType: string
+		lineageTag: 9b26f029-bd55-4eb0-b54c-4cbcf41c694b
 		summarizeBy: none
 		sourceColumn: NombreCompleto
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Correo'
+	column Correo
 		dataType: string
+		lineageTag: 9339a5d4-22bc-4f0f-87aa-9f369d850e9f
 		summarizeBy: none
 		sourceColumn: Correo
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PaisOrigen'
+	column PaisOrigen
 		dataType: string
+		lineageTag: a58837b1-7500-48fa-84f2-4848833b0553
 		summarizeBy: none
 		sourceColumn: PaisOrigen
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Edad'
+	column Edad
 		dataType: int64
 		formatString: #,0
+		lineageTag: 57cef420-a3a3-43e1-b1f5-0825419c0362
 		summarizeBy: none
 		sourceColumn: Edad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoEdad'
+	column RangoEdad
 		dataType: string
+		lineageTag: 4cacd079-2552-4888-8308-10ed799f3eaf
 		summarizeBy: none
 		sourceColumn: RangoEdad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Estado'
+	column Estado
 		dataType: string
+		lineageTag: bd5b9d8a-5e75-4603-856a-d69a375d299a
 		summarizeBy: none
 		sourceColumn: Estado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaRegistro'
+	column FechaRegistro
 		dataType: dateTime
 		formatString: Short Date
+		lineageTag: a00683de-d836-4a22-8ad1-87568467c921
 		summarizeBy: none
 		sourceColumn: FechaRegistro
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DestinosPreferidos'
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DestinosPreferidos
 		dataType: string
+		lineageTag: 3428592f-4930-4831-8789-7d34f76c4441
 		summarizeBy: none
 		sourceColumn: DestinosPreferidos
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoAlojamiento'
+	column TipoAlojamiento
 		dataType: string
+		lineageTag: 979b3b02-acda-4ba7-a0e5-bb669da0772a
 		summarizeBy: none
 		sourceColumn: TipoAlojamiento
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ActividadesFavoritas'
+	column ActividadesFavoritas
 		dataType: string
+		lineageTag: 72020fd6-0a08-4e06-aae5-f3b4f5eec698
 		summarizeBy: none
 		sourceColumn: ActividadesFavoritas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PresupuestoEstimado'
-		dataType: decimal
+	column PresupuestoEstimado
+		dataType: double
 		formatString: $#,0
-		summarizeBy: none
+		lineageTag: ac978842-5054-42f3-9480-4e6749fad75a
+		summarizeBy: sum
 		sourceColumn: PresupuestoEstimado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RangoPresupuesto'
+	column RangoPresupuesto
 		dataType: string
+		lineageTag: 22bcaec8-0d35-4c09-b0e7-a0446921a869
 		summarizeBy: none
 		sourceColumn: RangoPresupuesto
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TemporadaViaje'
+	column TemporadaViaje
 		dataType: string
+		lineageTag: 529e4461-b5bc-47e3-a7a3-7abd4e2a7273
 		summarizeBy: none
 		sourceColumn: TemporadaViaje
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Idioma'
+	column Idioma
 		dataType: string
+		lineageTag: 99541f26-e138-461c-b334-634dd7a78d81
 		summarizeBy: none
 		sourceColumn: Idioma
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Dieta'
+	column Dieta
 		dataType: string
+		lineageTag: 176b5e41-3ae8-44c1-9a46-154af50e96b6
 		summarizeBy: none
 		sourceColumn: Dieta
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'GrupoViaje'
+	column GrupoViaje
 		dataType: string
+		lineageTag: b07de5bd-a3b1-432c-be98-d33e8c2c27a5
 		summarizeBy: none
 		sourceColumn: GrupoViaje
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'SegmentoVip'
+	column SegmentoVip
 		dataType: string
+		lineageTag: f2874a35-0759-4330-80ad-df0feee3abba
 		summarizeBy: none
 		sourceColumn: SegmentoVip
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FuenteDatos'
+	column FuenteDatos
 		dataType: string
+		lineageTag: 807a954f-374e-4fa4-aa38-51bec868d365
 		summarizeBy: none
 		sourceColumn: FuenteDatos
 
@@ -156,9 +180,10 @@ table DimCliente
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimCliente"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

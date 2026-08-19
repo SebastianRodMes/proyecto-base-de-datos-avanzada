@@ -1,119 +1,137 @@
 table FactResena
-
 	isHidden
+	lineageTag: af8cedc9-3d79-4e08-832f-b6cf3eff3d4c
 
-	column 'ResenaId'
+	column ResenaId
 		dataType: string
 		isHidden
+		lineageTag: 7ea47c30-7242-435b-8812-bea6afaa811a
 		summarizeBy: none
 		sourceColumn: ResenaId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TiempoKey'
+	column TiempoKey
 		dataType: int64
 		isHidden
+		lineageTag: dd67f28e-49f7-4f22-b82f-2c5cc343b201
 		summarizeBy: none
 		sourceColumn: TiempoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ClienteKey'
+	column ClienteKey
 		dataType: int64
 		isHidden
+		lineageTag: 294cbcba-c856-420b-8547-6fb3c754732f
 		summarizeBy: none
 		sourceColumn: ClienteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HotelKey'
+	column HotelKey
 		dataType: int64
 		isHidden
+		lineageTag: f1e3378e-12d7-4d14-80ad-d9c7ec6d8d57
 		summarizeBy: none
 		sourceColumn: HotelKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TourKey'
+	column TourKey
 		dataType: int64
 		isHidden
+		lineageTag: e50817cb-cf19-423b-8b33-fafe2435ad7f
 		summarizeBy: none
 		sourceColumn: TourKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PaqueteKey'
+	column PaqueteKey
 		dataType: int64
 		isHidden
+		lineageTag: 6331de89-726d-4834-a7f4-a00e771f04d2
 		summarizeBy: none
 		sourceColumn: PaqueteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoEntidad'
+	column TipoEntidad
 		dataType: string
+		lineageTag: 54dfdd94-8e8e-4423-ad12-ac90799caa9a
 		summarizeBy: none
 		sourceColumn: TipoEntidad
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Calificacion'
+	column Calificacion
 		dataType: int64
 		formatString: 0
+		lineageTag: 4e4d435e-db83-4858-a3d5-e9f2f5988d7f
 		summarizeBy: average
 		sourceColumn: Calificacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsPositiva'
-		dataType: int64
+	column EsPositiva
+		dataType: boolean
 		isHidden
-		summarizeBy: sum
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2163d4fd-e3c5-4574-9c2f-345e7c2360c2
+		summarizeBy: none
 		sourceColumn: EsPositiva
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsNegativa'
-		dataType: int64
+	column EsNegativa
+		dataType: boolean
 		isHidden
-		summarizeBy: sum
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fd0456cf-6b29-4f7a-a7ee-76276805fd51
+		summarizeBy: none
 		sourceColumn: EsNegativa
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsVerificada'
-		dataType: int64
+	column EsVerificada
+		dataType: boolean
 		isHidden
-		summarizeBy: sum
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 71d6f938-34fa-47d1-a8ec-f38eccd8ad16
+		summarizeBy: none
 		sourceColumn: EsVerificada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'LongitudTexto'
+	column LongitudTexto
 		dataType: int64
 		isHidden
+		lineageTag: 931a5d0b-0d1a-4bab-b60a-008a7a75cffb
 		summarizeBy: average
 		sourceColumn: LongitudTexto
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Idioma'
+	column Idioma
 		dataType: string
+		lineageTag: 48db0c3f-ce8b-4b3c-825a-bb486e5d7f03
 		summarizeBy: none
 		sourceColumn: Idioma
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Satisfaccion'
+	column Satisfaccion
 		dataType: string
+		lineageTag: 17b8c84c-293c-4c1b-ab5a-025f43b8252b
 		summarizeBy: none
 		sourceColumn: Satisfaccion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ConteoResena'
+	column ConteoResena
 		dataType: int64
 		isHidden
+		lineageTag: 1bbb09ce-7277-4172-ac04-5899ade2d51f
 		summarizeBy: sum
 		sourceColumn: ConteoResena
 
@@ -123,9 +141,10 @@ table FactResena
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_FactResena"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

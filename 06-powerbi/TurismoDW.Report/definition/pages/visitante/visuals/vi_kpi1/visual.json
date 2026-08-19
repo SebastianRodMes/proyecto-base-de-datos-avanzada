@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "vi_kpi1",
   "position": {
     "x": 296,
     "y": 70,
     "z": 0,
-    "width": 260,
-    "height": 100
+    "height": 100,
+    "width": 260
   },
   "visual": {
     "visualType": "card",
@@ -31,39 +31,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Calificacion media'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

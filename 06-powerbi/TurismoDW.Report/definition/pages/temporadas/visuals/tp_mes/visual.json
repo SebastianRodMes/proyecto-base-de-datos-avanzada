@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "tp_mes",
   "position": {
     "x": 660,
     "y": 190,
     "z": 0,
-    "width": 596,
-    "height": 280
+    "height": 280,
+    "width": 596
   },
   "visual": {
     "visualType": "columnChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimTiempo.NombreMes",
-              "nativeQueryRef": "NombreMes"
+              "nativeQueryRef": "NombreMes",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Estacionalidad mensual'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

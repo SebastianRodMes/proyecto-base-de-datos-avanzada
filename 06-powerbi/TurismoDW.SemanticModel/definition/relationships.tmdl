@@ -104,5 +104,7 @@ relationship rel_25_FactInteraccionWeb_DimCanal_CanalKey
 	toColumn: DimCanal.CanalKey
 
 relationship rel_26_DimTipoHabitacion_DimHotel_HotelKey
+	isActive: false
 	fromColumn: DimTipoHabitacion.HotelKey
 	toColumn: DimHotel.HotelKey
+

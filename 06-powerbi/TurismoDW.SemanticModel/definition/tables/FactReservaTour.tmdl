@@ -1,83 +1,93 @@
 table FactReservaTour
-
 	isHidden
+	lineageTag: 14d5fbc6-9c1f-480f-b8bd-8707a32bb892
 
-	column 'ReservaTourId'
+	column ReservaTourId
 		dataType: int64
 		isHidden
+		lineageTag: fcf97c23-be57-4482-a11d-d46cdefb39f8
 		summarizeBy: none
 		sourceColumn: ReservaTourId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ReservaId'
+	column ReservaId
 		dataType: int64
 		isHidden
+		lineageTag: e889b331-1b1a-4109-9447-7ba36ab9b628
 		summarizeBy: none
 		sourceColumn: ReservaId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaInicioKey'
+	column FechaInicioKey
 		dataType: int64
 		isHidden
+		lineageTag: 118c0d97-15b5-4fbd-b6d4-04dd1b7a12ff
 		summarizeBy: none
 		sourceColumn: FechaInicioKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ClienteKey'
+	column ClienteKey
 		dataType: int64
 		isHidden
+		lineageTag: 5a6851fb-98f8-4f3a-a3eb-caa6ced36a83
 		summarizeBy: none
 		sourceColumn: ClienteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TourKey'
+	column TourKey
 		dataType: int64
 		isHidden
+		lineageTag: b2ba52ea-98b6-4552-b57c-7fb6776c4de8
 		summarizeBy: none
 		sourceColumn: TourKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EstadoKey'
+	column EstadoKey
 		dataType: int64
 		isHidden
+		lineageTag: b9bb2032-afcc-457d-ae61-6a19d62f807f
 		summarizeBy: none
 		sourceColumn: EstadoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CantidadPersonas'
+	column CantidadPersonas
 		dataType: int64
 		formatString: #,0
+		lineageTag: ea09fdd8-9c89-4ec8-b0af-342a8c8e0d51
 		summarizeBy: sum
 		sourceColumn: CantidadPersonas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PrecioAplicado'
-		dataType: decimal
+	column PrecioAplicado
+		dataType: double
 		formatString: $#,0.00
-		summarizeBy: average
+		lineageTag: fe75f8dc-1a95-4a6a-83ac-df2d5050b33c
+		summarizeBy: sum
 		sourceColumn: PrecioAplicado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'IngresoTour'
-		dataType: decimal
-		formatString: $#,0.00
+	column IngresoTour
+		dataType: double
 		isHidden
+		formatString: $#,0.00
+		lineageTag: 1981ccd1-73c9-474b-98d0-13ea4a9a6c3e
 		summarizeBy: sum
 		sourceColumn: IngresoTour
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ConteoTour'
+	column ConteoTour
 		dataType: int64
 		isHidden
+		lineageTag: 2b2b5636-0622-4dee-a422-8c0669606c4b
 		summarizeBy: sum
 		sourceColumn: ConteoTour
 
@@ -87,9 +97,10 @@ table FactReservaTour
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_FactReservaTour"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

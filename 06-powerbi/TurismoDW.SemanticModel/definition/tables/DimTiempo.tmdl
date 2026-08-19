@@ -1,175 +1,207 @@
 table DimTiempo
-
+	lineageTag: e432edae-3d47-4a44-b3e3-ff1aac0ee99c
 	dataCategory: Time
 
-	column 'TiempoKey'
+	column TiempoKey
 		dataType: int64
 		isHidden
+		lineageTag: 5831ec8c-f3c9-4094-9f75-6c82239bd457
 		summarizeBy: none
 		sourceColumn: TiempoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Fecha'
+	column Fecha
 		dataType: dateTime
-		formatString: General Date
+		formatString: Long Date
+		lineageTag: 47a34950-d5fd-4bcd-8078-d86243ad8ca2
 		summarizeBy: none
 		sourceColumn: Fecha
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Anio'
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Anio
 		dataType: int64
+		lineageTag: 23594cff-acf0-42fd-b88a-3d6c359a1f3c
 		summarizeBy: none
 		sourceColumn: Anio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Trimestre'
+	column Trimestre
 		dataType: int64
 		isHidden
+		lineageTag: 8101b8fd-0815-40fe-b524-0675317ac396
 		summarizeBy: none
 		sourceColumn: Trimestre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreTrimestre'
+	column NombreTrimestre
 		dataType: string
+		lineageTag: be71b4c9-ba12-4f4b-87ed-6593430df0fb
 		summarizeBy: none
 		sourceColumn: NombreTrimestre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Mes'
+	column Mes
 		dataType: int64
 		isHidden
+		lineageTag: e59140a1-9a4e-4da5-8406-76ab790b1e14
 		summarizeBy: none
 		sourceColumn: Mes
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreMes'
+	column NombreMes
 		dataType: string
+		lineageTag: 2595f21b-94ed-402c-9fdf-efd776fc618f
 		summarizeBy: none
 		sourceColumn: NombreMes
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreMesCorto'
+	column NombreMesCorto
 		dataType: string
 		isHidden
+		lineageTag: 18cd4195-5766-440d-825a-8e3b9ca0d3a0
 		summarizeBy: none
 		sourceColumn: NombreMesCorto
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'AnioMes'
+	column AnioMes
 		dataType: int64
 		isHidden
+		lineageTag: 864cf1ad-1113-46f6-a419-22ffdca2cbae
 		summarizeBy: none
 		sourceColumn: AnioMes
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'AnioMesEtiqueta'
+	column AnioMesEtiqueta
 		dataType: string
+		lineageTag: 2b6b3e4c-304b-49de-a475-096c26ecfdef
 		summarizeBy: none
 		sourceColumn: AnioMesEtiqueta
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Semana'
+	column Semana
 		dataType: int64
 		isHidden
+		lineageTag: 464e5ea9-91ae-4917-9c8d-0f90f27d3e40
 		summarizeBy: none
 		sourceColumn: Semana
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DiaDelMes'
+	column DiaDelMes
 		dataType: int64
 		isHidden
+		lineageTag: 54576f65-fc9f-4ec3-bedf-cc1629a0412a
 		summarizeBy: none
 		sourceColumn: DiaDelMes
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DiaDelAnio'
+	column DiaDelAnio
 		dataType: int64
 		isHidden
+		lineageTag: 95db6f70-8472-402a-ab11-5119c96c0375
 		summarizeBy: none
 		sourceColumn: DiaDelAnio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DiaSemana'
+	column DiaSemana
 		dataType: int64
 		isHidden
+		lineageTag: b5ad995f-8220-4506-b609-d7c31f864b4b
 		summarizeBy: none
 		sourceColumn: DiaSemana
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreDiaSemana'
+	column NombreDiaSemana
 		dataType: string
+		lineageTag: 1a4d6410-b454-44bf-af0b-9d2f7162f97f
 		summarizeBy: none
 		sourceColumn: NombreDiaSemana
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoDia'
+	column TipoDia
 		dataType: string
+		lineageTag: c747c4c7-d94a-48d5-a184-61ef257b7c15
 		summarizeBy: none
 		sourceColumn: TipoDia
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TemporadaTuristica'
+	column TemporadaTuristica
 		dataType: string
+		lineageTag: f8be54f1-0ea0-484d-bf32-c01fdd69df37
 		summarizeBy: none
 		sourceColumn: TemporadaTuristica
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'TipoTemporada'
+	column TipoTemporada
 		dataType: string
+		lineageTag: 936d7a4d-3ea5-42fe-9b9e-27e27fc65336
 		summarizeBy: none
 		sourceColumn: TipoTemporada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Semestre'
+	column Semestre
 		dataType: int64
 		isHidden
+		lineageTag: 24db47df-1944-49a3-ac02-90c6823382a2
 		summarizeBy: none
 		sourceColumn: Semestre
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'NombreSemestre'
+	column NombreSemestre
 		dataType: string
+		lineageTag: 58a27ad2-e57f-4756-ae4f-f72e2577e00a
 		summarizeBy: none
 		sourceColumn: NombreSemestre
 
 		annotation SummarizationSetBy = Automatic
 
-	hierarchy 'Calendario'
+	hierarchy Calendario
+		lineageTag: d0d6be8f-9cc2-4aab-9b9f-44d8e4e3836e
+
 		level Anio
+			lineageTag: 6bfef310-a128-48b2-9650-e8989e770720
 			column: Anio
+
 		level Trimestre
+			lineageTag: d8e287a2-56cf-4cdb-acab-5b12314f9d6b
 			column: NombreTrimestre
+
 		level Mes
+			lineageTag: 590a8541-0c93-4f0a-83f0-79409e94df90
 			column: NombreMes
+
 		level Dia
+			lineageTag: 9788e622-9e0b-4d2b-86be-a43e6adb0073
 			column: DiaDelMes
 
 	partition DimTiempo = m
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimTiempo"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

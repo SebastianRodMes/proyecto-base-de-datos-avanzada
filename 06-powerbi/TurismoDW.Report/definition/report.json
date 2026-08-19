@@ -1,12 +1,16 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
   "themeCollection": {
     "customTheme": {
       "name": "TurismoDW",
+      "reportVersionAtImport": {
+        "visual": "1.8.91",
+        "report": "2.0.91",
+        "page": "1.3.91"
+      },
       "type": "RegisteredResources"
     }
   },
-  "layoutOptimization": "None",
   "resourcePackages": [
     {
       "name": "RegisteredResources",
@@ -14,13 +18,14 @@
       "items": [
         {
           "name": "TurismoDW",
-          "path": "tema.json",
+          "path": "TurismoDW",
           "type": "CustomTheme"
         }
       ]
     }
   ],
   "settings": {
-    "useStylableVisualContainerHeader": true
+    "useStylableVisualContainerHeader": true,
+    "useEnhancedTooltips": false
   }
 }

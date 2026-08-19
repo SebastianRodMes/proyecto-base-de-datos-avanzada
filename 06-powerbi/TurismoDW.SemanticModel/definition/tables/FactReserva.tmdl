@@ -1,115 +1,130 @@
 table FactReserva
-
 	isHidden
+	lineageTag: 289125b5-5216-4484-b62f-56aa57a20a28
 
-	column 'ReservaId'
+	column ReservaId
 		dataType: int64
 		isHidden
+		lineageTag: 3d7c8182-1b92-4596-b506-20af7da24d58
 		summarizeBy: none
 		sourceColumn: ReservaId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaReservaKey'
+	column FechaReservaKey
 		dataType: int64
 		isHidden
+		lineageTag: 13f76a5d-8515-4cc9-bdea-264afcf1d0d2
 		summarizeBy: none
 		sourceColumn: FechaReservaKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaInicioKey'
+	column FechaInicioKey
 		dataType: int64
 		isHidden
+		lineageTag: 9b832f4a-5d76-4ae2-88a9-ca84c8c5156d
 		summarizeBy: none
 		sourceColumn: FechaInicioKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaFinKey'
+	column FechaFinKey
 		dataType: int64
 		isHidden
+		lineageTag: 3feb7d9d-2791-4fca-9be4-d0d6a92c7e16
 		summarizeBy: none
 		sourceColumn: FechaFinKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ClienteKey'
+	column ClienteKey
 		dataType: int64
 		isHidden
+		lineageTag: 89d18817-1ee2-4e6c-901d-045b12566f8c
 		summarizeBy: none
 		sourceColumn: ClienteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'PaqueteKey'
+	column PaqueteKey
 		dataType: int64
 		isHidden
+		lineageTag: 2731dc71-c1d1-4ae9-85f6-1eff57e093d2
 		summarizeBy: none
 		sourceColumn: PaqueteKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EstadoKey'
+	column EstadoKey
 		dataType: int64
 		isHidden
+		lineageTag: 71080863-de69-4966-863e-76a20a751703
 		summarizeBy: none
 		sourceColumn: EstadoKey
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'CantidadPersonas'
+	column CantidadPersonas
 		dataType: int64
 		formatString: #,0
+		lineageTag: bd1e14dc-0484-414b-8c0c-7145a6a15b0d
 		summarizeBy: sum
 		sourceColumn: CantidadPersonas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'MontoTotal'
-		dataType: decimal
+	column MontoTotal
+		dataType: double
 		formatString: $#,0.00
+		lineageTag: 05791eca-5371-45dc-8c84-6d54b82621bc
 		summarizeBy: sum
 		sourceColumn: MontoTotal
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Noches'
+	column Noches
 		dataType: int64
 		formatString: #,0
+		lineageTag: 2c50af65-518d-491f-8d8a-f4a6cb0012bb
 		summarizeBy: sum
 		sourceColumn: Noches
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'DiasAnticipacion'
+	column DiasAnticipacion
 		dataType: int64
 		formatString: #,0
+		lineageTag: b89732ed-66a1-47e3-9130-6e2cc9e582f2
 		summarizeBy: sum
 		sourceColumn: DiasAnticipacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'MontoConfirmado'
-		dataType: decimal
-		formatString: $#,0.00
+	column MontoConfirmado
+		dataType: double
 		isHidden
+		formatString: $#,0.00
+		lineageTag: 6e692ff9-5a6f-4058-a945-4e88618f7534
 		summarizeBy: sum
 		sourceColumn: MontoConfirmado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EsCancelada'
-		dataType: int64
+	column EsCancelada
+		dataType: boolean
 		isHidden
-		summarizeBy: sum
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 87cb662b-e1be-429d-9653-969ea5c36f72
+		summarizeBy: none
 		sourceColumn: EsCancelada
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ConteoReserva'
+	column ConteoReserva
 		dataType: int64
 		isHidden
+		lineageTag: 8e04d694-9701-46c5-a3bc-b985674cb2cf
 		summarizeBy: sum
 		sourceColumn: ConteoReserva
 
@@ -119,9 +134,10 @@ table FactReserva
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_FactReserva"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+

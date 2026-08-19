@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "tp_cancel",
   "position": {
     "x": 24,
     "y": 486,
     "z": 0,
-    "width": 620,
-    "height": 210
+    "height": 210,
+    "width": 620
   },
   "visual": {
     "visualType": "lineChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimTiempo.AnioMesEtiqueta",
-              "nativeQueryRef": "AnioMesEtiqueta"
+              "nativeQueryRef": "AnioMesEtiqueta",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Cancelaciones en el tiempo'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

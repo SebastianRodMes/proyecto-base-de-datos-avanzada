@@ -1,312 +1,254 @@
 table _Medidas
-
 	lineageTag: 4417f70b-cf84-40b1-88a1-cb3d6eaf64ca
 
-	column Marcador
-		dataType: string
-		isHidden
-		summarizeBy: none
-		sourceColumn: Marcador
-
-	measure 'Reservas' =
-			SUM ( FactReserva[ConteoReserva] )
+	measure Reservas = SUM ( FactReserva[ConteoReserva] )
 		formatString: #,0
 		displayFolder: 1 Reservas
 		lineageTag: ba7d554f-5f2f-456c-8b8b-ade73667bc2d
 
-	measure 'Reservas confirmadas' =
-			CALCULATE ( [Reservas], DimEstadoReserva[EsConfirmada] = TRUE () )
+	measure 'Reservas confirmadas' = CALCULATE ( [Reservas], DimEstadoReserva[EsConfirmada] = TRUE () )
 		formatString: #,0
 		displayFolder: 1 Reservas
 		lineageTag: dddf76ca-5d8b-4e19-b1cf-d1139ecaa46b
 
-	measure 'Reservas canceladas' =
-			CALCULATE ( [Reservas], DimEstadoReserva[EsCancelada] = TRUE () )
+	measure 'Reservas canceladas' = CALCULATE ( [Reservas], DimEstadoReserva[EsCancelada] = TRUE () )
 		formatString: #,0
 		displayFolder: 1 Reservas
 		lineageTag: 2b8511e8-4d5d-499c-957f-c642b1467e2d
 
-	measure 'Personas atendidas' =
-			SUM ( FactReserva[CantidadPersonas] )
+	measure 'Personas atendidas' = SUM ( FactReserva[CantidadPersonas] )
 		formatString: #,0
 		displayFolder: 1 Reservas
 		lineageTag: a23d9fa4-0e2d-483d-a301-e6846a784480
 
-	measure 'Reservas alojamiento' =
-			DISTINCTCOUNT ( FactReservaHabitacion[ReservaId] )
+	measure 'Reservas alojamiento' = DISTINCTCOUNT ( FactReservaHabitacion[ReservaId] )
 		formatString: #,0
 		displayFolder: 1 Reservas
 		lineageTag: 7ee301df-c7e4-473b-b8d5-c921a23da18a
 
-	measure 'Ingresos confirmados' =
-			SUM ( FactReserva[MontoConfirmado] )
+	measure 'Ingresos confirmados' = SUM ( FactReserva[MontoConfirmado] )
 		formatString: $#,0;-$#,0
 		displayFolder: 2 Ingresos
 		lineageTag: 6f2d6b74-17e3-46f5-8869-448c12dacaef
 
-	measure 'Ingresos totales' =
-			SUM ( FactReserva[MontoTotal] )
+	measure 'Ingresos totales' = SUM ( FactReserva[MontoTotal] )
 		formatString: $#,0;-$#,0
 		displayFolder: 2 Ingresos
 		lineageTag: 296bd6b5-dda6-4f75-9e61-c0905c218065
 
-	measure 'Ingresos por hotel' =
-			SUM ( FactReservaHabitacion[IngresoAlojamiento] )
+	measure 'Ingresos por hotel' = SUM ( FactReservaHabitacion[IngresoAlojamiento] )
 		formatString: $#,0;-$#,0
 		displayFolder: 2 Ingresos
 		lineageTag: 28a16006-02ef-4275-845f-b0162e8c3811
 
-	measure 'Ingresos por paquete' =
-			CALCULATE ( [Ingresos confirmados], DimPaquete[PaqueteId] <> -1 )
+	measure 'Ingresos por paquete' = CALCULATE ( [Ingresos confirmados], DimPaquete[PaqueteId] <> -1 )
 		formatString: $#,0;-$#,0
 		displayFolder: 2 Ingresos
 		lineageTag: 53e436ac-a7a0-406f-ba6c-240b8ccc1910
 
-	measure 'Ticket promedio' =
-			DIVIDE ( [Ingresos confirmados], [Reservas confirmadas] )
+	measure 'Ticket promedio' = DIVIDE ( [Ingresos confirmados], [Reservas confirmadas] )
 		formatString: $#,0.00
 		displayFolder: 2 Ingresos
 		lineageTag: 597e9da9-ebfb-4ef8-bdde-b03218175ae1
 
-	measure 'Habitaciones ocupadas' =
-			SUM ( FactOcupacionDiaria[HabitacionesOcupadas] )
+	measure 'Habitaciones ocupadas' = SUM ( FactOcupacionDiaria[HabitacionesOcupadas] )
 		formatString: #,0
 		displayFolder: 3 Ocupacion
 		lineageTag: ed3d28e3-4d87-4988-a2e9-4c3ff904ef3c
 
-	measure 'Habitaciones disponibles' =
-			SUM ( FactOcupacionDiaria[HabitacionesDisponibles] )
+	measure 'Habitaciones disponibles' = SUM ( FactOcupacionDiaria[HabitacionesDisponibles] )
 		formatString: #,0
 		displayFolder: 3 Ocupacion
 		lineageTag: 18d7d3de-bdcf-4a02-a767-8268b96736fc
 
-	measure '% Ocupacion hotelera' =
-			DIVIDE ( [Habitaciones ocupadas], [Habitaciones disponibles] )
+	measure '% Ocupacion hotelera' = DIVIDE ( [Habitaciones ocupadas], [Habitaciones disponibles] )
 		formatString: 0.0%
 		displayFolder: 3 Ocupacion
 		lineageTag: 19153a92-bcad-46fc-8dca-910ad5e954df
 
-	measure '% Ocupacion mes anterior' =
-			CALCULATE ( [% Ocupacion hotelera], DATEADD ( DimTiempo[Fecha], -1, MONTH ) )
+	measure '% Ocupacion mes anterior' = CALCULATE ( [% Ocupacion hotelera], DATEADD ( DimTiempo[Fecha], -1, MONTH ) )
 		formatString: 0.0%
 		displayFolder: 3 Ocupacion
 		lineageTag: 2a43f4ce-37ca-452a-be33-edc4b63dbb45
 
-	measure 'Variacion de ocupacion' =
-			[% Ocupacion hotelera] - [% Ocupacion mes anterior]
+	measure 'Variacion de ocupacion' = [% Ocupacion hotelera] - [% Ocupacion mes anterior]
 		formatString: 0.0%
 		displayFolder: 3 Ocupacion
 		lineageTag: eedf71a8-f9e1-4da2-b2ed-b77f07fbce5f
 
-	measure 'Promedio de estadia (noches)' =
-			DIVIDE ( SUM ( FactReserva[Noches] ), [Reservas] )
+	measure 'Promedio de estadia (noches)' = DIVIDE ( SUM ( FactReserva[Noches] ), [Reservas] )
 		formatString: 0.00
 		displayFolder: 4 Comportamiento
 		lineageTag: d4200665-394c-4b57-a04a-6fa60cd86088
 
-	measure 'Dias de anticipacion promedio' =
-			DIVIDE ( SUM ( FactReserva[DiasAnticipacion] ), [Reservas] )
+	measure 'Dias de anticipacion promedio' = DIVIDE ( SUM ( FactReserva[DiasAnticipacion] ), [Reservas] )
 		formatString: 0.00
 		displayFolder: 4 Comportamiento
 		lineageTag: 1d9045f1-fbdb-42c1-aa7d-6adc6dbc5234
 
-	measure 'Tasa de cancelacion' =
-			DIVIDE ( [Reservas canceladas], [Reservas] )
+	measure 'Tasa de cancelacion' = DIVIDE ( [Reservas canceladas], [Reservas] )
 		formatString: 0.0%
 		displayFolder: 4 Comportamiento
 		lineageTag: be25195c-ab3a-4ee2-a61b-f60f80b2975f
 
-	measure 'Personas por reserva' =
-			DIVIDE ( [Personas atendidas], [Reservas] )
+	measure 'Personas por reserva' = DIVIDE ( [Personas atendidas], [Reservas] )
 		formatString: 0.00
 		displayFolder: 4 Comportamiento
 		lineageTag: 5bef7b83-4344-4c32-a7ef-ce4543603302
 
-	measure 'Reservas en temporada alta' =
-			CALCULATE ( [Reservas], DimTiempo[TipoTemporada] = "Temporada alta" )
+	measure 'Reservas en temporada alta' = CALCULATE ( [Reservas], DimTiempo[TipoTemporada] = "Temporada alta" )
 		formatString: #,0
 		displayFolder: 5 Temporadas
 		lineageTag: bff4f56f-0078-493d-8c7b-d17a1824d93e
 
-	measure 'Reservas en temporada verde' =
-			CALCULATE ( [Reservas], DimTiempo[TipoTemporada] = "Temporada verde" )
+	measure 'Reservas en temporada verde' = CALCULATE ( [Reservas], DimTiempo[TipoTemporada] = "Temporada verde" )
 		formatString: #,0
 		displayFolder: 5 Temporadas
 		lineageTag: 3bc7ca88-41d9-4474-bf60-11452bd0e4b5
 
-	measure 'Concentracion en temporada alta' =
-			DIVIDE ( [Reservas en temporada alta], [Reservas] )
+	measure 'Concentracion en temporada alta' = DIVIDE ( [Reservas en temporada alta], [Reservas] )
 		formatString: 0.0%
 		displayFolder: 5 Temporadas
 		lineageTag: 9bb5358f-a86f-455f-8f11-8a2f8bbd5175
 
-	measure 'Destinos visitados' =
-			DISTINCTCOUNT ( DimHotel[Ciudad] )
+	measure 'Destinos visitados' = DISTINCTCOUNT ( DimHotel[Ciudad] )
 		formatString: #,0
 		displayFolder: 5 Temporadas
 		lineageTag: c5b85047-d110-45fc-9888-961d07749df7
 
-	measure 'Tours solicitados' =
-			SUM ( FactReservaTour[ConteoTour] )
+	measure 'Tours solicitados' = SUM ( FactReservaTour[ConteoTour] )
 		formatString: #,0
 		displayFolder: 6 Tours
 		lineageTag: c975f8dc-976c-4bb9-8ed9-cc54b8632712
 
-	measure 'Ingresos por tour' =
-			SUM ( FactReservaTour[IngresoTour] )
+	measure 'Ingresos por tour' = SUM ( FactReservaTour[IngresoTour] )
 		formatString: $#,0;-$#,0
 		displayFolder: 6 Tours
 		lineageTag: d103bd9b-40c5-4987-8562-b212639c3253
 
-	measure 'Personas en tours' =
-			SUM ( FactReservaTour[CantidadPersonas] )
+	measure 'Personas en tours' = SUM ( FactReservaTour[CantidadPersonas] )
 		formatString: #,0
 		displayFolder: 6 Tours
 		lineageTag: 505ac484-15de-4a26-ab43-ce4cbe1e9a6a
 
-	measure 'Resenas' =
-			SUM ( FactResena[ConteoResena] )
+	measure Resenas = SUM ( FactResena[ConteoResena] )
 		formatString: #,0
 		displayFolder: 7 Satisfaccion
 		lineageTag: 73e59296-dfe5-4c6b-916e-1e424f31adcf
 
-	measure 'Calificacion promedio' =
-			DIVIDE ( SUMX ( FactResena, FactResena[Calificacion] ), [Resenas] )
+	measure 'Calificacion promedio' = DIVIDE ( SUMX ( FactResena, FactResena[Calificacion] ), [Resenas] )
 		formatString: 0.00
 		displayFolder: 7 Satisfaccion
 		lineageTag: 5727bda9-8159-46c0-83b0-53af97417ff4
 
-	measure 'Resenas positivas' =
-			SUM ( FactResena[EsPositiva] )
+	measure 'Resenas positivas' = CALCULATE ( COUNTROWS ( FactResena ), FactResena[EsPositiva] = TRUE () )
 		formatString: #,0
 		displayFolder: 7 Satisfaccion
 		lineageTag: 1dca9956-03ad-404f-86e6-7280d93532d3
 
-	measure 'Resenas negativas' =
-			SUM ( FactResena[EsNegativa] )
+	measure 'Resenas negativas' = CALCULATE ( COUNTROWS ( FactResena ), FactResena[EsNegativa] = TRUE () )
 		formatString: #,0
 		displayFolder: 7 Satisfaccion
 		lineageTag: 0d73dad7-0b29-47dd-a8d5-00fe8678cf09
 
-	measure 'Indice de satisfaccion' =
-			DIVIDE ( [Resenas positivas], [Resenas] )
+	measure 'Indice de satisfaccion' = DIVIDE ( [Resenas positivas], [Resenas] )
 		formatString: 0.0%
 		displayFolder: 7 Satisfaccion
 		lineageTag: 9df4e0e2-ef75-4fa2-bac4-1cac0da99678
 
-	measure 'NPS aproximado' =
-			DIVIDE ( [Resenas positivas] - [Resenas negativas], [Resenas] )
+	measure 'NPS aproximado' = DIVIDE ( [Resenas positivas] - [Resenas negativas], [Resenas] )
 		formatString: 0.0%
 		displayFolder: 7 Satisfaccion
 		lineageTag: 0d66035f-1194-4d52-af12-ca0f0eec2b3e
 
-	measure '% Resenas verificadas' =
-			DIVIDE ( SUM ( FactResena[EsVerificada] ), [Resenas] )
+	measure '% Resenas verificadas' = DIVIDE ( CALCULATE ( COUNTROWS ( FactResena ), FactResena[EsVerificada] = TRUE () ), [Resenas] )
 		formatString: 0.0%
 		displayFolder: 7 Satisfaccion
 		lineageTag: ebd5a455-d604-4b36-9132-c17993161a6d
 
-	measure 'Interacciones' =
-			SUM ( FactInteraccionWeb[ConteoEvento] )
+	measure Interacciones = SUM ( FactInteraccionWeb[ConteoEvento] )
 		formatString: #,0
 		displayFolder: 8 Web
 		lineageTag: 8d8f81fc-8b4d-41a7-808f-f6dc25736c94
 
-	measure 'Conversiones' =
-			SUM ( FactInteraccionWeb[EsConversion] )
+	measure Conversiones = CALCULATE ( COUNTROWS ( FactInteraccionWeb ), FactInteraccionWeb[EsConversion] = TRUE () )
 		formatString: #,0
 		displayFolder: 8 Web
 		lineageTag: b407dd08-bae2-42d6-bded-d0e3195434cc
 
-	measure 'Tasa de conversion web' =
-			DIVIDE ( [Conversiones], [Interacciones] )
+	measure 'Tasa de conversion web' = DIVIDE ( [Conversiones], [Interacciones] )
 		formatString: 0.0%
 		displayFolder: 8 Web
 		lineageTag: 2c1d15fe-6206-4be9-aa50-113e6616aaec
 
-	measure 'Duracion media de sesion (seg)' =
-			DIVIDE ( SUM ( FactInteraccionWeb[DuracionSegundos] ), [Interacciones] )
+	measure 'Duracion media de sesion (seg)' = DIVIDE ( SUM ( FactInteraccionWeb[DuracionSegundos] ), [Interacciones] )
 		formatString: #,0
 		displayFolder: 8 Web
 		lineageTag: 19a15d07-1fe4-4332-a6ba-920dc858c3ea
 
-	measure 'Busquedas' =
-			CALCULATE ( [Interacciones], FactInteraccionWeb[TipoEvento] = "busqueda" )
+	measure Busquedas = CALCULATE ( [Interacciones], FactInteraccionWeb[TipoEvento] = "busqueda" )
 		formatString: #,0
 		displayFolder: 8 Web
 		lineageTag: e980ac27-fec9-4a94-950c-5f02513c965c
 
-	measure 'Abandonos de carrito' =
-			CALCULATE ( [Interacciones], FactInteraccionWeb[TipoEvento] = "abandono_carrito" )
+	measure 'Abandonos de carrito' = CALCULATE ( [Interacciones], FactInteraccionWeb[TipoEvento] = "abandono_carrito" )
 		formatString: #,0
 		displayFolder: 8 Web
 		lineageTag: 68b38985-6b9a-4230-9c63-f3b8451f1f2d
 
-	measure 'Clientes activos' =
-			CALCULATE ( DISTINCTCOUNT ( DimCliente[ClienteId] ), DimCliente[Estado] = "Activo" )
+	measure 'Clientes activos' = CALCULATE ( DISTINCTCOUNT ( DimCliente[ClienteId] ), DimCliente[Estado] = "Activo" )
 		formatString: #,0
 		displayFolder: 9 Visitantes
 		lineageTag: f621c700-22ad-41c8-bc04-b3ad3ce6795e
 
-	measure 'Clientes con reserva' =
-			DISTINCTCOUNT ( FactReserva[ClienteKey] )
+	measure 'Clientes con reserva' = DISTINCTCOUNT ( FactReserva[ClienteKey] )
 		formatString: #,0
 		displayFolder: 9 Visitantes
 		lineageTag: fc62eed9-a20c-41b6-8b75-181dbb2c9c81
 
-	measure 'Presupuesto promedio declarado' =
-			AVERAGE ( DimCliente[PresupuestoEstimado] )
+	measure 'Presupuesto promedio declarado' = AVERAGE ( DimCliente[PresupuestoEstimado] )
 		formatString: $#,0.00
 		displayFolder: 9 Visitantes
 		lineageTag: c3d12bb4-c78b-4143-a1d5-9f57dd52335c
 
-	measure 'Brecha presupuesto vs gasto' =
-			[Ticket promedio] - [Presupuesto promedio declarado]
+	measure 'Brecha presupuesto vs gasto' = [Ticket promedio] - [Presupuesto promedio declarado]
 		formatString: $#,0.00
 		displayFolder: 9 Visitantes
 		lineageTag: 41291220-bd0c-4ee8-9440-ebea07f98dc8
 
-	measure 'Reservas ano anterior' =
-			CALCULATE ( [Reservas], SAMEPERIODLASTYEAR ( DimTiempo[Fecha] ) )
+	measure 'Reservas ano anterior' = CALCULATE ( [Reservas], SAMEPERIODLASTYEAR ( DimTiempo[Fecha] ) )
 		formatString: #,0
 		displayFolder: A Tendencias
 		lineageTag: f3266931-4b5a-40ce-ac33-d4ae1d84d972
 
-	measure 'Ingresos ano anterior' =
-			CALCULATE ( [Ingresos confirmados], SAMEPERIODLASTYEAR ( DimTiempo[Fecha] ) )
+	measure 'Ingresos ano anterior' = CALCULATE ( [Ingresos confirmados], SAMEPERIODLASTYEAR ( DimTiempo[Fecha] ) )
 		formatString: $#,0;-$#,0
 		displayFolder: A Tendencias
 		lineageTag: b7117a6e-39da-4dde-bb18-b72ab516f5f0
 
-	measure 'Crecimiento de ingresos YoY' =
-			DIVIDE ( [Ingresos confirmados] - [Ingresos ano anterior], [Ingresos ano anterior] )
+	measure 'Crecimiento de ingresos YoY' = DIVIDE ( [Ingresos confirmados] - [Ingresos ano anterior], [Ingresos ano anterior] )
 		formatString: 0.0%
 		displayFolder: A Tendencias
 		lineageTag: a8ace1ea-7366-4b9b-ae48-af8d70e8d43b
 
-	measure 'Ingresos acumulados del ano' =
-			TOTALYTD ( [Ingresos confirmados], DimTiempo[Fecha] )
+	measure 'Ingresos acumulados del ano' = TOTALYTD ( [Ingresos confirmados], DimTiempo[Fecha] )
 		formatString: $#,0;-$#,0
 		displayFolder: A Tendencias
 		lineageTag: 2df6cad5-f54b-4df9-94c6-25cdeb4a2f8d
 
-	measure 'Nodo activo' =
-			SELECTEDVALUE ( EstadoSistema[NodoActual] )
+	measure 'Nodo activo' = SELECTEDVALUE ( EstadoSistema[NodoActual] )
 		displayFolder: B Sistema
 		lineageTag: 3e6d73ec-3509-4abc-b31c-41c18fb58185
 
-	measure 'Estado del mirroring' =
-			SELECTEDVALUE ( EstadoSistema[EstadoMirroring] )
+	measure 'Estado del mirroring' = SELECTEDVALUE ( EstadoSistema[EstadoMirroring] )
 		displayFolder: B Sistema
 		lineageTag: 74fa8fe2-619f-43a0-9158-bf4625179c24
 
-	measure 'Ultima carga' =
-			SELECTEDVALUE ( EstadoSistema[UltimaCargaFin] )
+	measure 'Ultima carga' = SELECTEDVALUE ( EstadoSistema[UltimaCargaFin] )
 		displayFolder: B Sistema
 		lineageTag: 3af0ad2b-5b24-4388-8f3d-a164636b5b09
 
-	measure 'Registros rechazados en la ultima carga' =
-			SELECTEDVALUE ( EstadoSistema[UltimaCargaRechazos] )
+	measure 'Registros rechazados en la ultima carga' = SELECTEDVALUE ( EstadoSistema[UltimaCargaRechazos] )
 		formatString: #,0
 		displayFolder: B Sistema
 		lineageTag: dbd23fa7-5b68-4822-80e3-597882389fa2
@@ -324,6 +266,13 @@ table _Medidas
 		displayFolder: B Sistema
 		lineageTag: 3f431962-e56b-47d8-8c4f-b798ff020080
 
+	column Marcador
+		dataType: string
+		isHidden
+		lineageTag: 49d9c94f-4a22-4c12-91f2-26d9020c92d8
+		summarizeBy: none
+		sourceColumn: Marcador
+
 	partition _Medidas = m
 		mode: import
 		source =
@@ -331,3 +280,4 @@ table _Medidas
 				    Origen = #table({"Marcador"}, {{"x"}})
 				in
 				    Origen
+

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "mix_estado",
   "position": {
     "x": 840,
     "y": 190,
     "z": 0,
-    "width": 416,
-    "height": 260
+    "height": 260,
+    "width": 416
   },
   "visual": {
     "visualType": "donutChart",
@@ -26,7 +26,8 @@
                 }
               },
               "queryRef": "DimEstadoReserva.Estado",
-              "nativeQueryRef": "Estado"
+              "nativeQueryRef": "Estado",
+              "active": true
             }
           ]
         },
@@ -49,39 +50,6 @@
           ]
         }
       }
-    },
-    "objects": {
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Reservas por estado'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#131A17'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }

@@ -1,156 +1,178 @@
 table EstadoSistema
+	lineageTag: 5eea0edd-0946-4757-834c-c602c75ccc9c
 
-	column 'NodoActual'
+	column NodoActual
 		dataType: string
+		lineageTag: 3066a98b-e795-4c46-8b74-8ec8ffc0eb28
 		summarizeBy: none
 		sourceColumn: NodoActual
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Instancia'
+	column Instancia
 		dataType: string
+		lineageTag: 401dbf6b-bad6-4520-89f4-3c90731abbf9
 		summarizeBy: none
 		sourceColumn: Instancia
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Edicion'
+	column Edicion
 		dataType: string
+		lineageTag: 22b3cc21-d138-45f6-bf15-45d6967b8c45
 		summarizeBy: none
 		sourceColumn: Edicion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'BaseDatos'
+	column BaseDatos
 		dataType: string
+		lineageTag: e8401efd-8945-4d9f-866e-896f5b3cfe8c
 		summarizeBy: none
 		sourceColumn: BaseDatos
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'ModeloRecuperacion'
+	column ModeloRecuperacion
 		dataType: string
+		lineageTag: feff681b-7c91-45f1-9e10-78e7eee84623
 		summarizeBy: none
 		sourceColumn: ModeloRecuperacion
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'RolMirroring'
+	column RolMirroring
 		dataType: string
+		lineageTag: a1d70887-2508-4169-b293-ad1266884440
 		summarizeBy: none
 		sourceColumn: RolMirroring
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'EstadoMirroring'
+	column EstadoMirroring
 		dataType: string
+		lineageTag: 73444114-060c-4c85-a6f0-c03b5494238c
 		summarizeBy: none
 		sourceColumn: EstadoMirroring
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Socio'
+	column Socio
 		dataType: string
+		lineageTag: abb429fd-ab9e-4caf-8f2f-a8b7b816c57f
 		summarizeBy: none
 		sourceColumn: Socio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Testigo'
+	column Testigo
 		dataType: string
+		lineageTag: 12230a51-9b6e-44c6-aa62-a12c506d740c
 		summarizeBy: none
 		sourceColumn: Testigo
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'InicioInstancia'
+	column InicioInstancia
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: 578a769b-0bfe-4d07-ac7c-0cad44527500
 		summarizeBy: none
 		sourceColumn: InicioInstancia
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HorasEnLinea'
+	column HorasEnLinea
 		dataType: int64
 		formatString: #,0
+		lineageTag: 87840998-3ced-4992-b937-052664ce6ca1
 		summarizeBy: none
 		sourceColumn: HorasEnLinea
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaId'
+	column UltimaCargaId
 		dataType: int64
+		lineageTag: 12d772e6-ce21-496d-8b2b-d1bd517cbb51
 		summarizeBy: none
 		sourceColumn: UltimaCargaId
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaModo'
+	column UltimaCargaModo
 		dataType: string
+		lineageTag: 901f7d65-5e40-4e40-a801-6359a80ac65e
 		summarizeBy: none
 		sourceColumn: UltimaCargaModo
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaEstado'
+	column UltimaCargaEstado
 		dataType: string
+		lineageTag: 0396cf89-bb85-4223-8250-1a7729d2b73b
 		summarizeBy: none
 		sourceColumn: UltimaCargaEstado
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaInicio'
+	column UltimaCargaInicio
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: e5683c5c-a844-4e19-b46c-f660d66a3546
 		summarizeBy: none
 		sourceColumn: UltimaCargaInicio
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaFin'
+	column UltimaCargaFin
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: ceebf94f-ac03-40d2-afb7-e83a1b93f501
 		summarizeBy: none
 		sourceColumn: UltimaCargaFin
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaSegundos'
+	column UltimaCargaSegundos
 		dataType: int64
 		formatString: #,0
+		lineageTag: 8fa6a904-6eee-4320-a4cd-4c1f37f5dd0f
 		summarizeBy: none
 		sourceColumn: UltimaCargaSegundos
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaFilas'
+	column UltimaCargaFilas
 		dataType: int64
 		formatString: #,0
+		lineageTag: 2ced5bf1-8310-4787-bc72-ac17a216820e
 		summarizeBy: none
 		sourceColumn: UltimaCargaFilas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'UltimaCargaRechazos'
+	column UltimaCargaRechazos
 		dataType: int64
 		formatString: #,0
+		lineageTag: 31468de6-a92a-49e1-bb7c-97cab64d0e78
 		summarizeBy: none
 		sourceColumn: UltimaCargaRechazos
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'HorasDesdeUltimaCarga'
+	column HorasDesdeUltimaCarga
 		dataType: int64
 		formatString: #,0
+		lineageTag: 6a33b1a5-4880-4d55-8a32-9bf1ca0382cb
 		summarizeBy: none
 		sourceColumn: HorasDesdeUltimaCarga
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'FechaConsulta'
+	column FechaConsulta
 		dataType: dateTime
 		formatString: General Date
+		lineageTag: b445078e-07c0-4b7c-b241-43211d475911
 		summarizeBy: none
 		sourceColumn: FechaConsulta
 
@@ -160,9 +182,10 @@ table EstadoSistema
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database(".\SQLEXPRESS", "TurismoDW"),
+				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_EstadoSistema"]}[Data]
 				in
 				    Datos
 
 	annotation PBI_ResultType = Table
+
