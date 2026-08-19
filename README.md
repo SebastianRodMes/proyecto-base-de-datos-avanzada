@@ -5,6 +5,28 @@
 
 ---
 
+## 🚀 ¿Cómo levanto todo el proyecto?
+
+Para montar la base completa con datos en tu computadora, seguí la guía paso a
+paso (pensada para todo el equipo, no hace falta saber Docker):
+
+👉 **[docker/README.md](docker/README.md)**
+
+En resumen: instalás Docker Desktop + SSMS, clonás el repo y corrés un comando
+(`docker compose up -d --build`). El primer arranque tarda ~20 min y deja
+`TurismoDW` lista en `localhost,1433`.
+
+## 👥 Equipo
+
+| Integrante | Persona | Parte |
+|---|---|---|
+| 1 | Alex Herrera | Modelo analítico, ETL y Power BI *(entregado)* |
+| 2 | **Sebastián** | Filegroups, particionamiento e índices |
+| 3 | **Erick** | Alta disponibilidad (Mirroring) y prueba de falla |
+| 4 | **Sergio** | Rendimiento, consistencia y documentación |
+
+---
+
 ## Qué hay aquí
 
 El modelo analítico completo del escenario: una base `TurismoDW` en SQL Server con modelo estrella, alimentada por un ETL que integra las cuatro fuentes del proyecto, y el modelo semántico de Power BI que la consume.
