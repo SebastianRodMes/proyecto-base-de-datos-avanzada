@@ -1,0 +1,4 @@
+# Los scripts que corren dentro de contenedores Linux deben conservar
+# finales de linea LF aunque se clonen en Windows, o el shell falla.
+*.sh   text eol=lf
+Dockerfile text eol=lf
