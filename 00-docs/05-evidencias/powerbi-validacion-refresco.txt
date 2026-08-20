@@ -1,0 +1,56 @@
+================================================================================
+VALIDACION DEL REFRESCO POWER BI - TURISMODW
+================================================================================
+Fecha local                    : 2026-08-19 20:07:55 -06:00
+Power BI Desktop               : 2.157.879.0
+Proceso validado               : PBIDesktop PID 24928 - TurismoDW
+Modo del modelo                : Import
+Endpoint configurado           : localhost,14330
+Nodo devuelto por el modelo    : sql-secondary
+Rol devuelto por el modelo     : AG PRIMARY
+Estado HA devuelto             : SYNCHRONIZED
+Replica asociada               : caf7e3e81503
+Tipo de cluster                : Cluster: none
+
+La validacion se ejecuto contra el modelo tabular vivo de Power BI mediante una
+consulta DAX y se comparo con las vistas dw.vw_* de SQL Server.
+
+Objeto                         SQL Server       Power BI         Diferencia
+-----------------------------  ---------------  ---------------  ----------
+DimTiempo                                2,922            2,922           0
+DimCliente                              50,006           50,006           0
+DimHotel                                   201              201           0
+DimTipoHabitacion                          792              792           0
+DimTour                                    401              401           0
+DimPaquete                                 151              151           0
+DimEstadoReserva                             4                4           0
+DimCanal                                    16               16           0
+FactReserva                          2,000,005        2,000,005           0
+FactReservaHabitacion               1,632,453        1,632,453           0
+FactReservaTour                     2,577,212        2,577,212           0
+FactOcupacionDiaria                   431,313          431,313           0
+FactResena                             500,000          500,000           0
+FactInteraccionWeb                   1,500,000        1,500,000           0
+EstadoSistema                                1                1           0
+CalidadDatos                                 6                6           0
+
+Resultado de conteos             : 16 de 16 objetos coinciden
+
+KPI                              SQL Server              Power BI
+-------------------------------  ----------------------  ----------------------
+Reservas                         2,000,005               2,000,005
+Ingresos confirmados             13,425,538,311.48       13,425,538,311.48
+Ocupacion hotelera               30.1854251101893%       30.1854251101893%
+Resenas                          500,000                 500,000
+Interacciones                    1,500,000               1,500,000
+Ultima carga                     2026-08-20 01:25:05     2026-08-20 01:25:05
+Rechazos de ultima carga         84                      84
+
+CalidadDatos conserva dos ejecuciones trazables. Cada ejecucion contiene los
+mismos 84 rechazos controlados: JSON/no_nulo=44,
+JSON/numerico_positivo=38 y XML/numerico_positivo=2.
+
+Resultado final                 : REFRESCO CORRECTO
+Consistencia                    : SIN DIFERENCIAS
+Conexion al modelo HA           : CONFIRMADA
+================================================================================

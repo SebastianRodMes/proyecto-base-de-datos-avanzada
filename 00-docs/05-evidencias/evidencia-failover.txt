@@ -1,27 +1,52 @@
 ================================================================================
-ITI-821 Bases de Datos Avanzadas - Escenario 8: Turismo Inteligente
-EVIDENCIA DE ALTA DISPONIBILIDAD Y PRUEBA DE RECUPERACION (INTEGRANTE 3: ERICK)
+ITI-821 - EVIDENCIA REAL DE FAILOVER Y RECUPERACION
 ================================================================================
-Fecha de ejecucion : 2026-08-19 13:43:16
-Tipo de prueba     : Failover Sincronico con Testigo (Alta Seguridad)
-Tiempo de RTO      : 1.65 segundos
+Fecha de ejecucion      : 2026-08-19 19:51:53
+Estrategia              : Always On, 2 replicas sincronicas, CLUSTER_TYPE=NONE
+Tipo de prueba          : Reemplazo controlado + caida del nodo anterior
+Endpoint de Power BI    : localhost,14330
+Hora antes              : 2026-08-19 19:51:26.873
+Hora recuperacion       : 2026-08-19 19:51:30.549
+RTO medido              : 3.667 segundos
+Nodo cambio             : True (caf7e3e81503 -> sql-secondary)
+Consistencia de KPIs    : True
+Campos diferentes       : ninguno
+Caida nodo anterior     : EXITOSA
+RESULTADO FINAL         : EXITOSO
 
---- 1. ESTADO ANTES DEL FAILOVER (Nodo Principal) ---
-Hora: 2026-08-19 13:43:14.827
-Se cambio el contexto de la base de datos a 'TurismoDW'.
-NodoActivo                                                                                                                       TotalReservas TotalIngresos                            PctOcupacion            
--------------------------------------------------------------------------------------------------------------------------------- ------------- ---------------------------------------- ------------------------
-Erick                                                                                                                                        0                                      .00                      0.0
+--- ANTES DEL FAILOVER ---
+Nodo             : caf7e3e81503
+Reservas         : 2000005
+MontoTotal       : 16709495659.28
+MontoConfirmado  : 13425538311.48
+PctOcupacion     : 30.1854
+Resenas          : 500000
+Interacciones    : 1500000
+ChecksumReservas : 406050629
 
---- 2. ESTADO DESPUES DEL FAILOVER (Nuevo Nodo Activo / Espejo) ---
-Hora: 2026-08-19 13:43:16.486
-Se cambio el contexto de la base de datos a 'TurismoDW'.
-NodoActivo                                                                                                                       TotalReservas TotalIngresos                            PctOcupacion            
--------------------------------------------------------------------------------------------------------------------------------- ------------- ---------------------------------------- ------------------------
-Erick\MIRROR                                                                                                                                 0                                      .00                      0.0
+--- DESPUES DEL FAILOVER ---
+Nodo             : sql-secondary
+Reservas         : 2000005
+MontoTotal       : 16709495659.28
+MontoConfirmado  : 13425538311.48
+PctOcupacion     : 30.1854
+Resenas          : 500000
+Interacciones    : 1500000
+ChecksumReservas : 406050629
 
---- 3. RESULTADO DE CONSISTENCIA ---
-- Continuidad de Servicio : EXITOSA (Failover automatico sin perdida de conexion a nivel logico)
-- Integridad de Datos     : 100% CONSISTENTE (Totales de reservas, ingresos y ocupacion identicos)
-- Tiempo de Recuperacion  : 1.65 s
+--- CON EL NODO ANTERIOR DETENIDO ---
+Nodo             : sql-secondary
+Reservas         : 2000005
+MontoTotal       : 16709495659.28
+MontoConfirmado  : 13425538311.48
+PctOcupacion     : 30.1854
+Resenas          : 500000
+Interacciones    : 1500000
+ChecksumReservas : 406050629
+
+--- ESTADO DEL NUEVO PRINCIPAL ---
+sql-secondary | PRIMARY | SYNCHRONIZED | HEALTHY
+
+--- RESTAURACION DE REDUNDANCIA ---
+caf7e3e81503 | SECONDARY | SYNCHRONIZED | HEALTHY | is_suspended=0
 ================================================================================

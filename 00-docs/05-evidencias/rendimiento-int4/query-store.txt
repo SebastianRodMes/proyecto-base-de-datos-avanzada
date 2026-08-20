@@ -1,0 +1,35 @@
+query_id|plan_id|ejecuciones|ms_promedio|cpu_ms_promedio|lecturas_promedio|consulta
+--------|-------|-----------|-----------|---------------|-----------------|--------
+361|366|2|53.10|613.92|9134.00|(@FactReservas bigint)DECLARE @FactReservas bigint = (SELECT COUNT_BIG(*) FROM dw.FactReserva)
+362|367|2|61.44|810.47|27287.00|(@MontoDW decimal(20,2))DECLARE @MontoDW decimal(20,2) = (SELECT SUM(MontoTotal) FROM dw.FactReserva)
+365|370|2|83.48|83.48|4051.00|(@OcupMax decimal(8,2))DECLARE @OcupMax decimal(8,2) = (      SELECT MAX(100.0 * HabitacionesOcupadas / NULLIF(HabitacionesDisponibles, 0))      FROM dw.FactOcupacionDiaria)
+366|371|2|75.96|843.85|27381.00|(@AniosCubiertos int)DECLARE @AniosCubiertos int = (      SELECT COUNT(DISTINCT t.Anio)      FROM dw.FactReserva f JOIN dw.DimTiempo t ON t.TiempoKey = f.FechaInicioKey)
+367|372|3|390.67|389.17|17.00|(@ReservasOrigen bigint,@FactReservas bigint)INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT      'Conteo de reservas: PostgreSQL vs dw.FactRese
+368|373|3|7.28|7.16|3.00|(@MontoOrigen decimal(20,2),@MontoDW decimal(20,2))INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT      'Suma de monto_total: PostgreSQL vs dw.F
+371|376|2|240.28|240.27|26794.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'FactReserva sin ClienteKey resuelta', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN CO
+372|377|2|236.38|236.38|26794.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'FactReserva sin EstadoKey resuelta', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN COU
+373|378|2|240.62|240.62|26794.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'FactReserva con FechaInicioKey invalida', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHE
+374|379|3|194.73|194.72|21847.33|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'FactReservaHabitacion sin HotelKey resuelta', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE
+375|380|2|354.11|353.93|31199.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'FactReservaTour sin TourKey resuelta', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN C
+376|381|2|341.56|341.55|26994.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Huerfanos FactReserva -> DimCliente', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN CO
+377|382|2|307.81|307.80|26827.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Huerfanos FactReserva -> DimTiempo', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN COU
+378|383|2|62.71|62.71|1939.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Huerfanos FactOcupacionDiaria -> DimHotel', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE W
+380|385|2|212.31|212.30|8973.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'ReservaId duplicados en dw.FactReserva', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN
+382|387|2|.11|.11|1.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Pares (dia, hotel) duplicados en FactOcupacionDiaria', '0',         FORMAT(COUNT_BIG(*), 'N0'),
+384|389|2|239.29|239.29|26794.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Reservas con noches negativas', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN COUNT_BI
+385|390|2|270.07|270.06|26794.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Reservas con monto negativo', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE WHEN COUNT_BIG(
+387|392|2|320.91|320.90|26796.00|INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'MontoConfirmado en reservas no confirmadas', '0',         FORMAT(COUNT_BIG(*), 'N0'), '', CASE 
+388|393|3|.10|.10|1.00|(@AniosCubiertos int)INSERT INTO @Resultados (Prueba, Esperado, Obtenido, Diferencia, Veredicto)  SELECT 'Anios cubiertos por FactReserva', '6 (2021-2026)',         CAST(@AniosCubi
+393|398|2|588.71|7371.01|221163.00|SELECT [KPI] = 'Reservas totales',         [Valor] = FORMAT(COUNT_BIG(*), 'N0')  FROM dw.FactReserva  UNION ALL  SELECT 'Reservas confirmadas',         FORMAT(COUNT_BIG(*), 'N0')  
+394|399|3|288.02|2691.29|22221.67|SELECT TOP (10)      [Destino]  = h.Ciudad + ', ' + h.Pais,      [Reservas] = FORMAT(COUNT_BIG(DISTINCT f.ReservaId), 'N0'),      [Ingresos] = FORMAT(SUM(f.IngresoAlojamiento), 'N2
+395|400|2|134.64|1385.54|27381.00|SELECT      t.Anio,      t.TemporadaTuristica,      [Reservas] = FORMAT(COUNT_BIG(*), 'N0'),      [Ingresos] = FORMAT(SUM(f.MontoConfirmado), 'N2')  FROM dw.FactReserva f  JOIN dw.
+396|401|6|78.56|978.00|27287.00|SELECT COUNT_BIG(*) AS Reservas, SUM(MontoConfirmado) AS Ingreso  FROM dw.FactReserva  WHERE FechaInicioKey BETWEEN 20240101 AND 20241231
+396|480|6|3.46|3.46|268.00|SELECT COUNT_BIG(*) AS Reservas, SUM(MontoConfirmado) AS Ingreso  FROM dw.FactReserva  WHERE FechaInicioKey BETWEEN 20240101 AND 20241231
+397|402|6|50.54|362.83|4372.00|SELECT h.Pais, t.Anio, t.Mes,         100.0 * SUM(CAST(o.HabitacionesOcupadas AS bigint))               / NULLIF(SUM(CAST(o.HabitacionesDisponibles AS bigint)), 0) AS PctOcupacion 
+397|481|6|16.08|16.08|257.00|SELECT h.Pais, t.Anio, t.Mes,         100.0 * SUM(CAST(o.HabitacionesOcupadas AS bigint))               / NULLIF(SUM(CAST(o.HabitacionesDisponibles AS bigint)), 0) AS PctOcupacion 
+398|403|6|160.41|1730.71|31811.00|SELECT TOP (20) tr.Nombre, tr.Destino,         COUNT_BIG(*) AS Veces, SUM(ft.IngresoTour) AS Ingreso  FROM dw.FactReservaTour ft  JOIN dw.DimTour tr ON tr.TourKey = ft.TourKey  JOI
+398|482|6|43.70|43.69|2400.67|SELECT TOP (20) tr.Nombre, tr.Destino,         COUNT_BIG(*) AS Veces, SUM(ft.IngresoTour) AS Ingreso  FROM dw.FactReservaTour ft  JOIN dw.DimTour tr ON tr.TourKey = ft.TourKey  JOI
+399|404|6|710.54|9669.97|38994.00|SELECT c.PaisOrigen, c.RangoEdad,         COUNT_BIG(DISTINCT f.ReservaId) AS Reservas,         AVG(CAST(r.Calificacion AS decimal(10,4))) AS CalifPromedio  FROM dw.FactReserva f  J
+399|483|6|869.84|8921.58|10374.67|SELECT c.PaisOrigen, c.RangoEdad,         COUNT_BIG(DISTINCT f.ReservaId) AS Reservas,         AVG(CAST(r.Calificacion AS decimal(10,4))) AS CalifPromedio  FROM dw.FactReserva f  J
+400|405|6|140.16|1454.93|27381.00|SELECT t.Anio, t.Mes,         COUNT_BIG(*) AS Reservas,         SUM(f.MontoConfirmado) AS Ingresos,         AVG(CAST(f.Noches AS decimal(10,4))) AS EstadiaPromedio  FROM dw.FactRes
+400|484|6|60.79|60.79|1662.00|SELECT t.Anio, t.Mes,         COUNT_BIG(*) AS Reservas,         SUM(f.MontoConfirmado) AS Ingresos,         AVG(CAST(f.Noches AS decimal(10,4))) AS EstadiaPromedio  FROM dw.FactRes

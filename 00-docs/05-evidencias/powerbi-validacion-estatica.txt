@@ -1,0 +1,29 @@
+================================================================================
+VALIDACION ESTATICA POWER BI - TURISMODW
+================================================================================
+Fecha                          : 2026-08-19
+Power BI Desktop               : 2.157.879.0
+Compatibilidad del modelo      : 1606
+PBIP aceptado por Power BI     : SI
+Tablas                         : 17
+Relaciones                     : 26
+Medidas DAX                    : 52
+Particiones M con endpoint HA  : 16 de 16
+Endpoint                       : localhost,14330
+Paginas                        : 6
+Visuales                       : 55
+Archivos JSON PBIR             : 65
+Errores de parseo JSON         : 0
+Referencias de campos          : 89
+Referencias invalidas          : 0
+
+Estado del refresco de datos   : COMPLETADO Y VALIDADO MEDIANTE DAX
+Tablas reconciliadas con SQL   : 16 de 16
+Nodo observado por Power BI    : sql-secondary
+Rol observado                  : AG PRIMARY
+Estado HA observado            : SYNCHRONIZED
+Reservas observadas            : 2,000,005
+Resenas observadas             : 500,000
+Interacciones observadas       : 1,500,000
+Evidencia detallada            : powerbi-validacion-refresco.txt
+================================================================================

@@ -1,144 +1,134 @@
-# Semana 3 — Integrante 1: ingreso de datos al modelo analítico y reporte Power BI
+# TurismoDW - Semana 3
 
-**ITI-821 Bases de Datos Avanzadas · Escenario 8: Turismo Inteligente**
-**Alex Herrera**
+Proyecto on-premise de Bases de Datos Avanzadas: PostgreSQL y MongoDB alimentan un modelo estrella en SQL Server 2022; Power BI lo consume mediante un endpoint de alta disponibilidad.
 
----
+## Resultado actual
 
-## 🚀 ¿Cómo levanto todo el proyecto?
+| Componente | Estado |
+|---|---|
+| PostgreSQL 16 | 2,000,005 reservas cargadas |
+| MongoDB 7 | 500,000 resenas y 1,500,000 interacciones |
+| SQL Server 2022 Developer | `TurismoDW` poblada y particionada |
+| Consistencia | 22/22 controles correctos |
+| Rendimiento | 4 de 5 consultas testigo mejoran |
+| Always On | 2 replicas sincronizadas y failover probado |
+| Recuperacion | RTO 3.667 s, 0 diferencias en 7 controles |
+| Power BI | 17 tablas, 26 relaciones, 52 medidas, 6 paginas y 55 visuales |
 
-Para montar la base completa con datos en tu computadora, seguí la guía paso a
-paso (pensada para todo el equipo, no hace falta saber Docker):
+El informe completo del Integrante 4 esta en [00-docs/06-informe-integrante4.md](00-docs/06-informe-integrante4.md).
 
-👉 **[docker/README.md](docker/README.md)**
+## Puesta en marcha
 
-En resumen: instalás Docker Desktop + SSMS, clonás el repo y corrés un comando
-(`docker compose up -d --build`). El primer arranque tarda ~20 min y deja
-`TurismoDW` lista en `localhost,1433`.
+Requisitos: Docker Desktop, Power BI Desktop, SSMS, `sqlcmd` y `bcp`.
 
-## 👥 Equipo
+```powershell
+# Levanta PostgreSQL, MongoDB y SQL Server; la primera vez genera y carga todo.
+docker compose -f docker\docker-compose.yml up -d --build
 
-| Integrante | Persona | Parte |
-|---|---|---|
-| 1 | Alex Herrera | Modelo analítico, ETL y Power BI *(entregado)* |
-| 2 | **Sebastián** | Filegroups, particionamiento e índices |
-| 3 | **Erick** | Alta disponibilidad (Mirroring) y prueba de falla |
-| 4 | **Sergio** | Rendimiento, consistencia y documentación |
-
----
-
-## Qué hay aquí
-
-El modelo analítico completo del escenario: una base `TurismoDW` en SQL Server con modelo estrella, alimentada por un ETL que integra las cuatro fuentes del proyecto, y el modelo semántico de Power BI que la consume.
-
-```
-Requerimiento del enunciado                                    Dónde está
-─────────────────────────────────────────────────────────────  ────────────────────────────
-Crear base analítica y modelo estrella                         04-sqlserver/40, 42
-Cargar información desde PostgreSQL y MongoDB                  05-etl/run_etl.py
-Dashboard PBI conectado al modelo de alta disponibilidad       06-powerbi/ + 00-docs/04
+# Estado. El orquestador termina con codigo 0 cuando finaliza la carga.
+docker compose -f docker\docker-compose.yml ps -a
 ```
 
----
+Servicios base:
 
-## Estructura
+| Servicio | Direccion |
+|---|---|
+| SQL Server principal inicial | `localhost,1433` |
+| PostgreSQL, interno a Docker | `postgres:5432` |
+| MongoDB, interno a Docker | `mongo:27017` |
+
+Credenciales SQL del laboratorio: autenticacion de base de datos, usuario `sa`, contraseña definida en `docker/docker-compose.yml`.
+
+## Orden de scripts SQL
+
+| Fase | Script |
+|---|---|
+| Base y filegroups por proposito | `40-crear-basedatos.sql` |
+| Staging | `41-esquema-staging.sql` |
+| Modelo estrella | `42-esquema-estrella.sql` |
+| Control ETL | `43-etl-control.sql` |
+| Transformacion | `44-transformacion.sql` |
+| Vistas Power BI | `45-vistas-powerbi.sql` |
+| Consistencia | `46-validacion-consistencia.sql` |
+| Consultas testigo | `47a-medicion-testigo.sql` |
+| Particionamiento anual | `47b-particionamiento.sql` |
+| Indices | `47c-indices-tuning.sql` |
+
+La primera medicion de `47a` debe ejecutarse antes de `47b` y `47c`. La comparacion final usa cinco corridas por estado y la mediana.
+
+## Alta disponibilidad local
+
+La alternativa reproducible en esta computadora usa Always On entre dos contenedores SQL Server 2022 Developer. El endpoint fijo del cliente es `localhost,14330`.
+
+```powershell
+# Crea certificados, endpoints, AG y replica la base real.
+.\04-sqlserver\50-configurar-alwayson-docker.ps1
+
+# Cambia de principal, repunta el endpoint, mide RTO y compara los datos.
+.\04-sqlserver\51-prueba-failover-alwayson-docker.ps1
+```
+
+La topologia queda asi:
+
+```text
+Power BI --> localhost:14330 --> proxy --> SQL con rol PRIMARY
+                                      +--> caf7e3e81503
+                                      `--> sql-secondary
+```
+
+Es una prueba de recuperacion manual con `CLUSTER_TYPE=NONE`, adecuada para el laboratorio en una sola maquina. No se presenta como reemplazo de WSFC o Pacemaker ni como failover automatico de produccion.
+
+Los scripts `48a` a `49` se conservan como la alternativa de Database Mirroring para instancias SQL Server sobre Windows.
+
+## Power BI
+
+Abrir:
+
+```powershell
+Start-Process .\06-powerbi\TurismoDW.pbip
+```
+
+Las 16 consultas M usan `localhost,14330`, por lo que un cambio de replica no modifica el PBIP. En el primer refresco seleccionar:
+
+- autenticacion: **Base de datos**;
+- usuario: `sa`;
+- contraseña: la configurada para SQL Server;
+- confiar en el certificado del servidor, si Power BI muestra la opcion.
+
+La pagina 6 lee `dw.vw_EstadoSistema` y muestra el nodo actual, rol del AG, sincronizacion, ultima carga y calidad de datos.
+
+## Validaciones reproducibles
+
+```powershell
+# Origen PostgreSQL
+docker exec turismodw-postgres-1 psql -U postgres -d turismo -f /ruta/11-verificacion-origen.sql
+
+# Consistencia DW (valores de esta carga determinista)
+sqlcmd -S localhost,14330 -U sa -C -d TurismoDW `
+  -i 04-sqlserver\46-validacion-consistencia.sql `
+  -v ReservasOrigen=2000005 MontoOrigen=16709495659.28 `
+     ResenasOrigen=500000 InteraccionesOrigen=1500000
+```
+
+## Estructura del repositorio
 
 | Carpeta | Contenido |
 |---|---|
-| `00-docs/` | Arquitectura y justificación del ETL, diccionario del modelo, **contrato para el Integrante 2**, guía de Power BI con el procedimiento de failover |
-| `01-postgres/` | Generador de volumen (2 M reservas), verificación del origen, script de limpieza, y el DDL/CRUD original de las semanas 1–2 |
-| `02-mongodb/` | Siembra de reseñas e interacciones web, verificación |
-| `03-archivos/` | Generador de las fuentes JSON (RF-10) y XML (RF-11), más los archivos generados |
-| `04-sqlserver/` | Los 7 scripts de la base analítica, en orden 40 → 46 |
-| `05-etl/` | Paquete Python del ETL y su orquestador |
-| `06-powerbi/` | Proyecto PBIP: modelo semántico en TMDL (17 tablas, 26 relaciones, 52 medidas DAX) y lienzo en PBIR (6 páginas, 56 visuales), más el catálogo de medidas |
-| `99-setup/` | Preparación de la instancia y **migración a Developer Edition** |
+| `00-docs/` | Arquitectura, diccionario, guia de Power BI, informe y evidencias |
+| `01-postgres/` | DDL, CRUD y generador relacional |
+| `02-mongodb/` | Generador y validacion NoSQL |
+| `03-archivos/` | Fuentes JSON y XML |
+| `04-sqlserver/` | Modelo, tuning, consistencia y alta disponibilidad |
+| `05-etl/` | Orquestador ETL Python + bcp |
+| `06-powerbi/` | Proyecto PBIP/TMDL/PBIR |
+| `docker/` | Stack reproducible y replica HA opcional |
 
----
+## Evidencia principal
 
-## Ejecución completa, en orden
-
-```powershell
-# 0. Preparar la instancia (una vez, como Administrador)
-.\99-setup\00-setup-admin.ps1
-
-# 1. Origen relacional: escalar a volumen productivo
-psql -h 127.0.0.1 -p 5433 -U postgres -d turismo -f 01-postgres\10-generador-volumen.sql
-psql -h 127.0.0.1 -p 5433 -U postgres -d turismo -f 01-postgres\11-verificacion-origen.sql
-
-# 2. Origen NoSQL
-python 02-mongodb\20-seed_resenas.py --limpiar
-mongosh --quiet --file 02-mongodb\21-verificacion-mongo.js
-
-# 3. Fuentes de archivo
-python 03-archivos\30-gen_json_xml.py
-
-# 4. Base analítica
-sqlcmd -S TURISMODW -E -C            -i 04-sqlserver\40-crear-basedatos.sql
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\41-esquema-staging.sql
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\42-esquema-estrella.sql
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\43-etl-control.sql
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\44-transformacion.sql
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\45-vistas-powerbi.sql
-
-# 5. ETL
-pip install -r 05-etl\requirements.txt
-python 05-etl\run_etl.py
-
-# 6. Validación
-sqlcmd -S TURISMODW -E -C -d TurismoDW -i 04-sqlserver\46-validacion-consistencia.sql
-
-# 7. Reporte (sólo si hay que regenerarlo; ya viene armado en el entregable)
-python 06-powerbi\60-generar-pbip.py      # modelo semántico: tablas, relaciones, medidas
-python 06-powerbi\61-generar-reporte.py   # lienzo: 6 páginas y 56 visuales
-#   luego abrir 06-powerbi\TurismoDW.pbip en Power BI Desktop
-```
-
-Toda la configuración vive en `05-etl/.env`. Para apuntar a otra instancia sólo cambia `SQL_SERVIDOR`.
-
----
-
-## Volumen del modelo
-
-| Origen | Contenido |
-|---|---|
-| PostgreSQL 15 @5433 · `turismo` | 2 000 005 reservas · 1 700 004 líneas de habitación · 2 680 006 líneas de tour · 50 005 clientes · 200 hoteles · 400 tours · 150 paquetes · periodo 2021-2026 |
-| MongoDB @27017 · `turismo_nosql` | 500 000 reseñas · 1 500 000 interacciones web |
-| JSON (RF-10) | 6 000 preferencias en 3 lotes |
-| XML (RF-11) | 150 paquetes en 2 documentos |
-
-Un ~2 % de los registros JSON y XML es inválido **a propósito**: sin ellos `etl.Error` quedaría vacío y no habría evidencia de que la validación de RF-15 funciona.
-
----
-
-## Estado de la infraestructura
-
-**Pendiente y bloqueante: instalar SQL Server Developer Edition.** Nadie lo ha hecho todavía.
-
-Estado verificado de la máquina:
-
-| Instancia | Edición | Servicio |
-|---|---|---|
-| `MSSQLSERVER` | Enterprise Evaluation | **Detenida** (licencia vencida) |
-| `SQLEXPRESS` | Express | Corriendo |
-| `SQLEXPRESS01` | Express | Corriendo |
-| `SQLEXPRESS02` | Express | Corriendo |
-| Developer Edition | — | **No instalada** |
-
-`MSSQLSERVER` se instaló el **1 de agosto de 2025**; la licencia Evaluation caducó a los 180 días, el **28 de enero de 2026**, y el servicio ya no arranca. Las tres Express **sólo pueden ser testigo** de Mirroring, nunca principal ni espejo.
-
-Por eso el modelo analítico y el ETL se construyeron y validaron sobre `.\SQLEXPRESS`, que estaba corriendo y no exige privilegios de administrador. Ahí funciona todo salvo el Mirroring y el tope de 10 GB.
-
-Para la entrega final hay que migrar a **SQL Server 2022 Developer Edition** — gratuita, funcionalidad idéntica a Enterprise y sin caducidad. Procedimiento completo, incluida la configuración de Mirroring con las dos instancias Developer y `SQLEXPRESS` como testigo, en `99-setup/01-instalar-developer.md`.
-
-Migrar no repite trabajo: `40-crear-basedatos.sql` detecta la edición y ajusta los tamaños de archivo solo, y `00-setup-admin.ps1` recibe la instancia por parámetro (`-Instancia DW`). Basta cambiar `SQL_SERVIDOR` en `05-etl/.env` y volver a correr la secuencia.
-
----
-
-## Para los demás integrantes
-
-| Integrante | Qué necesita de aquí |
-|---|---|
-| **2** — filegroups, particionamiento, índices | `00-docs/03-contrato-integrante2.md`: clave de partición acordada, límites sugeridos, 5 consultas testigo y qué no tocar |
-| **3** — alta disponibilidad | `99-setup/01-instalar-developer.md` §6: scripts de Mirroring listos, con los 6 archivos de datos en el `MOVE` |
-| **4** — rendimiento y documentación | `etl.Etapa` (tiempos por etapa), Query Store activo, `46-validacion-consistencia.sql` (22 pruebas de consistencia) |
+- `00-docs/05-evidencias/validacion-consistencia.txt`
+- `00-docs/05-evidencias/rendimiento-int4/comparacion-rendimiento.md`
+- `00-docs/05-evidencias/rendimiento-int4/planes-query-store/`
+- `00-docs/05-evidencias/alwayson-configuracion.txt`
+- `00-docs/05-evidencias/evidencia-failover.txt`
+- `00-docs/05-evidencias/validacion-post-failover.txt`
+- `00-docs/05-evidencias/powerbi-validacion-estatica.txt`

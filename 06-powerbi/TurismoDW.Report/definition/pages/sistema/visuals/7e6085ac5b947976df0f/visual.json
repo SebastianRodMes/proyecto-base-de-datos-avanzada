@@ -1,0 +1,111 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "7e6085ac5b947976df0f",
+  "position": {
+    "x": 568.09795808975025,
+    "y": 334.821018777534,
+    "z": 1,
+    "height": 94.682993014958384,
+    "width": 300.51558652573749,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "RolMirroring"
+                }
+              },
+              "queryRef": "EstadoSistema.RolMirroring",
+              "nativeQueryRef": "RolMirroring"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "NodoActual"
+                }
+              },
+              "queryRef": "EstadoSistema.NodoActual",
+              "nativeQueryRef": "NodoActual"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EstadoSistema"
+                    }
+                  },
+                  "Property": "EstadoMirroring"
+                }
+              },
+              "queryRef": "EstadoSistema.EstadoMirroring",
+              "nativeQueryRef": "EstadoMirroring"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "bbcdb2a1ab53b93fad78",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "EstadoSistema"
+              }
+            },
+            "Property": "RolMirroring"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "d2d0939820314d7d680e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "EstadoSistema"
+              }
+            },
+            "Property": "NodoActual"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "0df4dbad65b826f4c940",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "EstadoSistema"
+              }
+            },
+            "Property": "EstadoMirroring"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}
