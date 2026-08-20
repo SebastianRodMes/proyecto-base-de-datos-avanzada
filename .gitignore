@@ -19,3 +19,4 @@ desktop.ini
 # Power BI: cache y ajustes locales (no versionar)
 .pbi/
 *.abf
+*.pbix

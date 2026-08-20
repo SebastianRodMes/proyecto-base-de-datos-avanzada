@@ -318,10 +318,11 @@ GO
    dw.vw_EstadoSistema
 
    Es la evidencia de que el dashboard esta conectado al modelo de alta
-   disponibilidad: muestra a que nodo se conecto el ultimo refresco, si es
-   el principal o el espejo, y cuando fue la ultima carga correcta.
-   Tras el failover del Integrante 3 el valor de NodoActual cambia solo,
-   sin tocar el .pbix, porque el alias TURISMODW apunta al nodo vivo.
+   disponibilidad: muestra a que nodo se conecto el ultimo refresco, su rol
+   y cuando fue la ultima carga correcta. Admite tanto el mirroring original
+   de Windows como el grupo Always On usado por el laboratorio Docker.
+   Tras el failover el valor de NodoActual cambia sin tocar el reporte,
+   porque Power BI usa un endpoint logico que se repunta al nodo vivo.
    --------------------------------------------------------------------- */
 CREATE VIEW dw.vw_EstadoSistema
 AS
@@ -331,11 +332,20 @@ SELECT
     [Edicion]           = CONVERT(nvarchar(60),  SERVERPROPERTY('Edition')),
     [BaseDatos]         = DB_NAME(),
     [ModeloRecuperacion]= CONVERT(nvarchar(30),  DATABASEPROPERTYEX(DB_NAME(), 'Recovery')),
-    -- Estado del mirroring: NULL mientras el Integrante 3 no lo configure.
-    [RolMirroring]      = ISNULL(CONVERT(nvarchar(30), m.mirroring_role_desc),  'Sin configurar'),
-    [EstadoMirroring]   = ISNULL(CONVERT(nvarchar(30), m.mirroring_state_desc), 'Sin configurar'),
-    [Socio]             = ISNULL(CONVERT(nvarchar(128), m.mirroring_partner_name), 'N/D'),
-    [Testigo]           = ISNULL(CONVERT(nvarchar(128), m.mirroring_witness_name), 'N/D'),
+    -- Se conservan los nombres de columna para no romper el modelo Power BI.
+    -- Cuando existe un AG, sus valores tienen prioridad sobre mirroring.
+    [RolMirroring]      = COALESCE(CONVERT(nvarchar(30), 'AG ' + ag.Rol) COLLATE DATABASE_DEFAULT,
+                                   CONVERT(nvarchar(30), m.mirroring_role_desc) COLLATE DATABASE_DEFAULT,
+                                   'Sin configurar'),
+    [EstadoMirroring]   = COALESCE(CONVERT(nvarchar(30), ag.Estado) COLLATE DATABASE_DEFAULT,
+                                   CONVERT(nvarchar(30), m.mirroring_state_desc) COLLATE DATABASE_DEFAULT,
+                                   'Sin configurar'),
+    [Socio]             = COALESCE(CONVERT(nvarchar(128), ag.Socio) COLLATE DATABASE_DEFAULT,
+                                   CONVERT(nvarchar(128), m.mirroring_partner_name) COLLATE DATABASE_DEFAULT,
+                                   'N/D'),
+    [Testigo]           = COALESCE(CONVERT(nvarchar(128), 'Cluster: ' + ag.TipoCluster) COLLATE DATABASE_DEFAULT,
+                                   CONVERT(nvarchar(128), m.mirroring_witness_name) COLLATE DATABASE_DEFAULT,
+                                   'N/D'),
     [InicioInstancia]   = si.sqlserver_start_time,
     [HorasEnLinea]      = DATEDIFF(HOUR, si.sqlserver_start_time, SYSDATETIME()),
     -- Ultima corrida del ETL
@@ -352,6 +362,31 @@ SELECT
 FROM sys.database_mirroring m
 CROSS JOIN sys.dm_os_sys_info si
 LEFT JOIN etl.vw_UltimaEjecucion u ON 1 = 1
+OUTER APPLY (
+    SELECT TOP (1)
+        [Rol]         = ars.role_desc,
+        [Estado]      = drs.synchronization_state_desc,
+        [TipoCluster] = g.cluster_type_desc,
+        [Socio]       = (
+            SELECT TOP (1) ar2.replica_server_name
+            FROM sys.availability_replicas ar2
+            WHERE ar2.group_id = ar.group_id
+              AND ar2.replica_server_name <> CONVERT(nvarchar(128), @@SERVERNAME)
+            ORDER BY ar2.replica_server_name
+        )
+    FROM sys.availability_replicas ar
+    JOIN sys.availability_groups g
+      ON g.group_id = ar.group_id
+    JOIN sys.dm_hadr_availability_replica_states ars
+      ON ars.replica_id = ar.replica_id
+     AND ars.group_id = ar.group_id
+     AND ars.is_local = 1
+    JOIN sys.dm_hadr_database_replica_states drs
+      ON drs.replica_id = ar.replica_id
+     AND drs.group_id = ar.group_id
+     AND drs.is_local = 1
+     AND drs.database_id = DB_ID()
+) ag
 WHERE m.database_id = DB_ID();
 GO
 

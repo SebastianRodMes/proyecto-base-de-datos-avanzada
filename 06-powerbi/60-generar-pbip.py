@@ -38,6 +38,7 @@ Uso
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 import uuid
@@ -52,6 +53,7 @@ RAIZ = Path(__file__).resolve().parent
 NOMBRE = "TurismoDW"
 DIR_MODELO = RAIZ / f"{NOMBRE}.SemanticModel"
 DIR_REPORTE = RAIZ / f"{NOMBRE}.Report"
+SERVIDOR_POWERBI = os.getenv("POWERBI_SQL_SERVIDOR", "localhost,14330")
 
 
 # ===========================================================================
@@ -546,15 +548,16 @@ def tmdl_tabla(nombre: str, vista: str, es_hecho: bool) -> str:
             "",
         ]
 
-    # Particion: la consulta M que trae los datos. El origen es el ALIAS
-    # TURISMODW, no un nombre de servidor fisico: tras el failover se
-    # repunta el alias y este archivo no se toca.
+    # Particion: la consulta M usa el endpoint logico del cliente. En el
+    # laboratorio Docker es localhost,14330; el proxy se repunta durante el
+    # failover y el PBIP no cambia. POWERBI_SQL_SERVIDOR permite usar el alias
+    # TURISMODW del laboratorio Windows sin regenerar el codigo.
     lineas += [
         f"\tpartition {nombre} = m",
         "\t\tmode: import",
         "\t\tsource =",
         "\t\t\t\tlet",
-        f'\t\t\t\t    Origen = Sql.Database("{config.SQL_SERVIDOR}", "{config.SQL_BASE}"),',
+        f'\t\t\t\t    Origen = Sql.Database("{SERVIDOR_POWERBI}", "{config.SQL_BASE}"),',
         f'\t\t\t\t    Datos = Origen{{[Schema="dw",Item="{vista}"]}}[Data]',
         "\t\t\t\tin",
         "\t\t\t\t    Datos",

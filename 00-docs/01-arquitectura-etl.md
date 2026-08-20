@@ -3,6 +3,11 @@
 **ITI-821 Bases de Datos Avanzadas · Escenario 8: Turismo Inteligente · Semana 3**
 **Integrante 1: Alex Herrera** — ingreso de datos al modelo analítico y despliegue en Power BI
 
+> Actualización del Integrante 4 (19-08-2026): la arquitectura se validó sobre
+> SQL Server 2022 Developer en Docker y se agregó una réplica Always On. Las
+> referencias posteriores a SQLEXPRESS/Developer pendiente describen el plan
+> original; el estado final está en `00-docs/06-informe-integrante4.md`.
+
 ---
 
 ## 1. Problema que resuelve esta arquitectura
@@ -13,7 +18,7 @@ El enunciado de la Semana 3 parte de seis problemas concretos. Los que correspon
 |---|---|
 | «Las consultas históricas afectan las operaciones» | Se separa físicamente la carga analítica: PostgreSQL queda sólo con la operación, SQL Server recibe todo lo histórico. El dashboard nunca toca la base transaccional. |
 | «No existe una estructura analítica ni separación física» | `TurismoDW` con modelo estrella, en filegroups propios y archivos en un volumen distinto al de la base operacional. |
-| «No existe un dashboard que interactúe con el modelo de alta disponibilidad» | Power BI se conecta al alias `TURISMODW`, no al nombre físico del nodo; tras el failover el reporte sigue funcionando sin editarse. |
+| «No existe un dashboard que interactúe con el modelo de alta disponibilidad» | Power BI se conecta a `localhost,14330`, endpoint lógico que se repunta a la réplica primaria; tras el failover el reporte sigue funcionando sin editarse. |
 
 ---
 
@@ -57,10 +62,10 @@ El enunciado de la Semana 3 parte de seis problemas concretos. Los que correspon
 │   │  Ejecucion / Etapa / Error         │          ▼                   │
 │   └────────────────────────────────────┘   ┌──────────────┐          │
 │                                              │  Power BI    │          │
-│   Recovery FULL ──► Mirroring (Integrante 3) │  Import mode │          │
+│   Recovery FULL ──► Always On sincronico     │  Import mode │          │
 └──────────────────────────────────────────────┴──────┬───────┴─────────┘
                                                        │
-                                     alias SQL «TURISMODW» (repunteable)
+                                  endpoint «localhost,14330» (repunteable)
 ```
 
 ---
@@ -140,9 +145,12 @@ La tabla guarda **numerador y denominador por separado** (`HabitacionesOcupadas`
 
 Los generadores de JSON y XML emiten un 2 % de registros defectuosos (identificación vacía, correo sin dominio, presupuesto negativo, precio no numérico). Sin ellos, `etl.Error` quedaría vacío y no habría forma de demostrar que la validación de RF-15 funciona. Son la evidencia, no un descuido.
 
-### 5.6 Alias de cliente SQL en lugar del nombre del servidor
+### 5.6 Endpoint lógico en lugar del nombre del servidor
 
-Todo —el ETL y el `.pbix`— apunta a `TURISMODW`, que es un alias registrado en `HKLM\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo`. Tras el failover del Integrante 3, se repunta el alias al nodo espejo y nada más se toca. Sin esto, cada failover obligaría a editar la fuente de datos del reporte a mano.
+Power BI apunta a `localhost,14330`, un proxy TCP administrado por Docker. El
+script de failover lo repunta a la réplica que adquiere el rol `PRIMARY`, por
+lo que las 16 consultas M no cambian. La variante Windows conserva el alias
+`TURISMODW`, pero no es necesaria para reproducir el laboratorio local.
 
 ---
 

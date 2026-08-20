@@ -54,7 +54,7 @@ table DimEstadoReserva
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database("localhost,1433", "TurismoDW"),
+				    Origen = Sql.Database("localhost,14330", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_DimEstadoReserva"]}[Data]
 				in
 				    Datos

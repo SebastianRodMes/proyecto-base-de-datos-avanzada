@@ -831,6 +831,40 @@ BEGIN
     ALTER TABLE dw.FactResena             WITH CHECK CHECK CONSTRAINT ALL;
     ALTER TABLE dw.FactInteraccionWeb     WITH CHECK CHECK CONSTRAINT ALL;
 
+    /*
+       Una recarga completa sobre un columnstore particionado puede dejar un
+       delta store OPEN por particion cuando cada lote tiene menos de
+       1,048,576 filas. El indice sigue existiendo, pero las consultas vuelven
+       a leer esas filas como rowstore y pierden la mejora analitica.
+
+       Los indices se crean en la fase de tuning (47c), despues de este
+       procedimiento. Por eso la operacion es condicional y dinamica: el ETL
+       funciona tanto antes como despues de aplicar el tuning.
+    */
+    IF EXISTS (
+        SELECT 1 FROM sys.indexes
+        WHERE object_id = OBJECT_ID(N'dw.FactReserva')
+          AND name = N'NCCI_FactReserva'
+    )
+        EXEC(N'ALTER INDEX NCCI_FactReserva ON dw.FactReserva
+               REORGANIZE WITH (COMPRESS_ALL_ROW_GROUPS = ON);');
+
+    IF EXISTS (
+        SELECT 1 FROM sys.indexes
+        WHERE object_id = OBJECT_ID(N'dw.FactReservaTour')
+          AND name = N'NCCI_FactReservaTour'
+    )
+        EXEC(N'ALTER INDEX NCCI_FactReservaTour ON dw.FactReservaTour
+               REORGANIZE WITH (COMPRESS_ALL_ROW_GROUPS = ON);');
+
+    IF EXISTS (
+        SELECT 1 FROM sys.indexes
+        WHERE object_id = OBJECT_ID(N'dw.FactOcupacionDiaria')
+          AND name = N'NCCI_FactOcupacionDiaria'
+    )
+        EXEC(N'ALTER INDEX NCCI_FactOcupacionDiaria ON dw.FactOcupacionDiaria
+               REORGANIZE WITH (COMPRESS_ALL_ROW_GROUPS = ON);');
+
     -- Estadisticas al dia: el Integrante 2 y el 4 miden planes sobre esto.
     UPDATE STATISTICS dw.FactReserva            WITH FULLSCAN;
     UPDATE STATISTICS dw.FactReservaHabitacion  WITH FULLSCAN;

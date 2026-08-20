@@ -1,0 +1,57 @@
+
+=== 1. Conteo de documentos por coleccion ===
+  resenas            : 500,000
+  interacciones_web  : 1,500,000
+
+=== 2. Distribucion de calificaciones (base del KPI de satisfaccion) ===
+  5 estrellas :    209,619  (41.92 %)
+  4 estrellas :    149,834  (29.97 %)
+  3 estrellas :     75,506  (15.10 %)
+  2 estrellas :     39,881  (7.98 %)
+  1 estrellas :     25,160  (5.03 %)
+
+  Calificacion promedio    : 3.9577
+  Resenas positivas (>=4)  : 359,453  (71.89 %)
+  Resenas verificadas      : 349,251  (69.85 %)
+
+=== 3. Resenas por tipo de entidad ===
+  HOTEL        299,430
+  TOUR         150,520
+  PAQUETE       50,050
+
+=== 4. Cobertura temporal ===
+  resenas            : 2021-01-01  ..  2026-12-31
+  interacciones_web  : 2021-01-01  ..  2026-12-31
+
+=== 5. Interacciones web por tipo de evento ===
+  busqueda                 300,458  (20.03 %)
+  vista_hotel              300,056  (20.00 %)
+  inicio_reserva           150,875  (10.06 %)
+  abandono_carrito         149,849  (9.99 %)
+  reserva_completada       149,773  (9.98 %)
+  vista_paquete            149,758  (9.98 %)
+  vista_tour               149,688  (9.98 %)
+  agregar_carrito          149,543  (9.97 %)
+
+  Conversiones : 149,773  (9.98 %)
+  Sesiones anonimas : 524,498  (34.97 %)
+
+=== 6. Calidad: documentos que la validacion del ETL deberia rechazar ===
+  Calificaciones fuera de 1..5 : 0
+  Resenas sin entidad asociada : 0
+
+=== 7. Indices ===
+  resenas:
+    - _id_
+    - fecha_1
+    - entidad_id_1_tipo_entidad_1
+    - cliente_id_1
+  interacciones_web:
+    - _id_
+    - fecha_evento_1
+    - cliente_id_1
+    - tipo_evento_1
+
+=== 8. Valores esperados para 46-validacion-consistencia.sql ===
+  ResenasOrigen=500000 InteraccionesOrigen=1500000
+
