@@ -1,0 +1,59 @@
+# =====================================================================
+# ITI-821 | Escenario 8: Turismo Inteligente | Semana 3 y 4
+# Integrante 1: Alex Herrera
+#
+# Publica los puertos de los ORIGENES hacia el host.
+#
+# Por que existe este archivo y no se edita docker-compose.yml
+# ------------------------------------------------------------
+# El compose original solo publica SQL Server (1433). PostgreSQL y MongoDB
+# quedan accesibles unicamente dentro de la red de Docker, lo cual basta
+# para el orquestador pero NO para el trabajo de migracion: pg_dump,
+# mongodump y el ETL corriendo en el host necesitan alcanzarlos.
+#
+# El compose original es entregable de la Semana 1-2 y esta referenciado en
+# README.md e INSTRUCCIONES-EQUIPO.md, asi que se deja intacto y se agrega
+# esta capa encima.
+#
+# Eleccion de los puertos: NO se usan los de siempre
+# --------------------------------------------------
+# Esta maquina ya tiene servicios NATIVOS de Windows escuchando en los
+# puertos obvios, y comprobados con Get-NetTCPConnection:
+#
+#   5432   postgresql-x64-15/17 nativo   (0.0.0.0)
+#   5433   otro PostgreSQL nativo        (0.0.0.0)
+#   27017  servicio MongoDB nativo       (127.0.0.1)
+#
+# Docker igual logra publicar en esos puertos porque se enlaza a la pila
+# IPv6 (::), mientras el servicio nativo ocupa la IPv4 (0.0.0.0). El
+# resultado es una trampa silenciosa: una cadena de conexion con
+# 127.0.0.1 resuelve a IPv4 y termina hablando con el servicio NATIVO,
+# no con el contenedor. No falla, no avisa: devuelve datos de otra base.
+#
+# Eso ya paso en este proyecto. Una corrida del ETL desde el host reporto
+# 2 000 005 reservas cuando el contenedor tenia 2 000 010, porque estaba
+# leyendo la copia nativa. Si se hubiera migrado asi, la nube habria
+# recibido datos de un origen equivocado y la validacion habria cuadrado
+# igual, porque ambas copias coinciden.
+#
+# Por eso se publican en puertos que nadie mas usa. Hay que fijarlos en
+# 05-etl/.env:
+#
+#   PG_PORT=15432
+#   MONGO_URI=mongodb://127.0.0.1:27018/
+#
+# Uso (hay que pasar AMBOS -f; un override solo se autodetecta cuando el
+# compose vive en el directorio de trabajo, y aqui se invoca con ruta):
+#
+#   docker compose -f docker\docker-compose.yml `
+#                  -f docker\docker-compose.override.yml up -d --build
+# =====================================================================
+
+services:
+  postgres:
+    ports:
+      - "15432:5432"
+
+  mongo:
+    ports:
+      - "27018:27017"

@@ -1,0 +1,88 @@
+=====================================================================
+ PRUEBA DE CARGA INCREMENTAL
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
+=====================================================================
+
+Objetivo
+--------
+Demostrar que el ETL, en modo INCREMENTAL, procesa unicamente lo que
+cambio desde la ultima corrida, y que el modelo queda consistente.
+
+Escenario de la prueba
+----------------------
+Sobre el DW ya cargado se inyectaron novedades en los dos origenes:
+
+  PostgreSQL   3 clientes nuevos
+               5 reservas nuevas con fecha_inicio en 2027
+               5 lineas de reserva_habitacion
+  MongoDB      2 resenas    con fecha 2027-01-20 y 2027-01-21
+               2 interacciones_web con fecha_evento 2027-01-20 y 21
+
+Las reservas se fecharon en 2027 a proposito: el generador de datos
+produce fecha_actualizacion hasta 2026-12-31, asi que una fila con la
+fecha del reloj del sistema quedaria POR DEBAJO de la marca de agua y no
+seria detectada. Es un rasgo del conjunto sintetico, no del mecanismo.
+
+=== 1. Bitacora de ejecuciones: completa contra incremental ===
+
+Ejecucion Modo Estado FilasLeidas Segundos
+--------- ---- ------ ----------- --------
+1 FULL CON_ERRORES 8317880 424
+2 FULL CON_ERRORES 8317880 507
+3 INCREMENTAL CON_ERRORES 2125 24
+4 INCREMENTAL CON_ERRORES 2152 22
+5 INCREMENTAL COMPLETADO 2050 22
+
+=== 2. Contraste ===
+
+  Carga completa      : 8 317 880 filas de staging   424-507 s
+  Carga incremental   :     2 050 filas de staging        22 s
+  Reduccion de volumen: 99,975 %
+  Reduccion de tiempo : 23 veces mas rapida
+
+=== 3. Marcas de agua tras la corrida incremental ===
+
+Fuente Objeto TipoMarca Marca
+------ ------ --------- -----
+JSON preferencias ARCHIVO 1787362659.4497533
+MONGODB interacciones_web FECHA 2027-01-21T12:10:00
+MONGODB resenas FECHA 2027-01-21T11:30:00
+POSTGRESQL cliente TIMESTAMP 2026-08-22 02:47:58.623965
+POSTGRESQL preferencia_cliente TIMESTAMP 2026-08-22 02:13:14.281377
+POSTGRESQL reserva TIMESTAMP 2027-01-10 09:00:00
+XML paquetes ARCHIVO 1787362659.3683026
+
+=== 4. Totales de hechos: el historico se conserva, no se recarga ===
+
+Hecho Filas
+----- -----
+dw.FactReserva 2000010
+dw.FactReservaHabitacion 1632458
+dw.FactReservaTour 2577212
+dw.FactOcupacionDiaria 431321
+dw.FactResena 500002
+dw.FactInteraccionWeb 1500002
+
+=== 5. Distribucion por particion: P8 dejo de estar vacia ===
+
+Particion Filegroup Filas
+--------- --------- -----
+1 FG_PRE2021 0
+2 FG_2021 333424
+3 FG_2022 334078
+4 FG_2023 333542
+5 FG_2024 334499
+6 FG_2025 331702
+7 FG_2026 332760
+8 FG_2027PLUS 5
+
+  Las 5 reservas de 2027 aterrizaron en FG_2027PLUS, que estaba en cero.
+  Es la comprobacion de que la particion sigue enrutando bien tras la
+  carga incremental, sin haber reconstruido ningun indice.
+
+=== 6. Consistencia del modelo tras la incremental ===
+
+2025 Verde 110,611 744,814,207.94
+2026 Alta 221,911 1,487,224,885.00
+2026 Verde 110,849 746,086,699.00
+2027 Alta 5 7,501.00

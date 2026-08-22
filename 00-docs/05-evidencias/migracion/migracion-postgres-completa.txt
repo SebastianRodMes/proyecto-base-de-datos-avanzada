@@ -1,0 +1,72 @@
+=====================================================================
+ MIGRACION DE POSTGRESQL A AMAZON RDS - COMPLETA
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Fecha   : 2026-08-21 21:40:47
+ Destino : turismodw-pg.cyjcymmugyxk.us-east-1.rds.amazonaws.com
+=====================================================================
+
+--- 1. Conteos en el origen ---
+    cliente|50008
+    hotel|200
+    paquete_hotel|282
+    paquete_tour|227
+    paquete_turistico|150
+    preferencia_cliente|50005
+    reserva|2000010
+    reserva_habitacion|1632458
+    reserva_tour|2577212
+    tipo_habitacion|791
+    tour|400
+    suma monto_total = 16709503160.28
+
+--- 2. pg_dump en formato custom ---
+    volcado listo: 85.2 MB en 13.6 s
+
+--- 3. pg_restore contra RDS ---
+    restauracion terminada en 167.0 s
+
+--- 4. Validacion en el destino ---
+
+    Tabla                          Origen      Destino  Veredicto
+    --------------------------------------------------------------
+    cliente                        50,008       50,008  OK
+    hotel                             200          200  OK
+    paquete_hotel                     282          282  OK
+    paquete_tour                      227          227  OK
+    paquete_turistico                 150          150  OK
+    preferencia_cliente            50,005       50,005  OK
+    reserva                     2,000,010    2,000,010  OK
+    reserva_habitacion          1,632,458    1,632,458  OK
+    reserva_tour                2,577,212    2,577,212  OK
+    tipo_habitacion                   791          791  OK
+    tour                              400          400  OK
+
+    suma monto_total origen  = 16709503160.28
+    suma monto_total destino = 16709503160.28
+
+--- 5. Indices en el destino (el GIN sobre JSONB es el critico) ---
+    cliente_correo_key|CREATE UNIQUE INDEX cliente_correo_key ON public.cliente USING btree (correo)
+    cliente_identificacion_key|CREATE UNIQUE INDEX cliente_identificacion_key ON public.cliente USING btree (identificacion)
+    cliente_pkey|CREATE UNIQUE INDEX cliente_pkey ON public.cliente USING btree (cliente_id)
+    error_importacion_pkey|CREATE UNIQUE INDEX error_importacion_pkey ON public.error_importacion USING btree (error_id)
+    hotel_pkey|CREATE UNIQUE INDEX hotel_pkey ON public.hotel USING btree (hotel_id)
+    idx_pref_gin|CREATE INDEX idx_pref_gin ON public.preferencia_cliente USING gin (datos_adicionales)
+    idx_reserva_cliente|CREATE INDEX idx_reserva_cliente ON public.reserva USING btree (cliente_id)
+    idx_reserva_fechas|CREATE INDEX idx_reserva_fechas ON public.reserva USING btree (fecha_inicio, fecha_fin)
+    idx_rh_reserva|CREATE INDEX idx_rh_reserva ON public.reserva_habitacion USING btree (reserva_id)
+    idx_rt_reserva|CREATE INDEX idx_rt_reserva ON public.reserva_tour USING btree (reserva_id)
+    importacion_datos_pkey|CREATE UNIQUE INDEX importacion_datos_pkey ON public.importacion_datos USING btree (importacion_id)
+    paquete_hotel_pkey|CREATE UNIQUE INDEX paquete_hotel_pkey ON public.paquete_hotel USING btree (paquete_hotel_id)
+    paquete_tour_pkey|CREATE UNIQUE INDEX paquete_tour_pkey ON public.paquete_tour USING btree (paquete_tour_id)
+    paquete_turistico_pkey|CREATE UNIQUE INDEX paquete_turistico_pkey ON public.paquete_turistico USING btree (paquete_id)
+    preferencia_cliente_pkey|CREATE UNIQUE INDEX preferencia_cliente_pkey ON public.preferencia_cliente USING btree (preferencia_id)
+    reserva_habitacion_pkey|CREATE UNIQUE INDEX reserva_habitacion_pkey ON public.reserva_habitacion USING btree (reserva_habitacion_id)
+    reserva_pkey|CREATE UNIQUE INDEX reserva_pkey ON public.reserva USING btree (reserva_id)
+    reserva_tour_pkey|CREATE UNIQUE INDEX reserva_tour_pkey ON public.reserva_tour USING btree (reserva_tour_id)
+    tipo_habitacion_pkey|CREATE UNIQUE INDEX tipo_habitacion_pkey ON public.tipo_habitacion USING btree (tipo_habitacion_id)
+    tour_pkey|CREATE UNIQUE INDEX tour_pkey ON public.tour USING btree (tour_id)
+
+    El indice GIN sobre preferencia_cliente.datos_adicionales SOBREVIVIO.
+
+--- Resultado ---
+    MIGRACION DE POSTGRESQL CORRECTA.

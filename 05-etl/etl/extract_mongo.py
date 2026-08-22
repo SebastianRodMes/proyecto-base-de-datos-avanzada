@@ -21,6 +21,7 @@ de forma notable el trafico con 2 millones de documentos.
 from __future__ import annotations
 
 import time
+from datetime import datetime
 from pathlib import Path
 
 from pymongo import MongoClient
@@ -45,7 +46,8 @@ def contar_origen() -> dict[str, int]:
         cli.close()
 
 
-def _extraer_resenas(db, ejecucion_id: int, destino: Path) -> int:
+def _extraer_resenas(db, ejecucion_id: int, destino: Path,
+                     filtro: dict | None = None) -> int:
     """Aplana resenas al ancho de stg.Resena.
 
     Orden de columnas (posicional, igual que la tabla de staging):
@@ -58,7 +60,7 @@ def _extraer_resenas(db, ejecucion_id: int, destino: Path) -> int:
         "titulo": 1, "comentario": 1, "idioma": 1, "fecha": 1, "verificada": 1,
         "etiquetas": 1, "origen_canal": 1,
     }
-    cursor = db[config.COLECCION_RESENAS].find({}, proyeccion).batch_size(
+    cursor = db[config.COLECCION_RESENAS].find(filtro or {}, proyeccion).batch_size(
         config.MONGO_TAMANO_LOTE
     )
 
@@ -85,7 +87,8 @@ def _extraer_resenas(db, ejecucion_id: int, destino: Path) -> int:
         return escribir_lote(fh, filas())
 
 
-def _extraer_interacciones(db, ejecucion_id: int, destino: Path) -> int:
+def _extraer_interacciones(db, ejecucion_id: int, destino: Path,
+                           filtro: dict | None = None) -> int:
     """Aplana interacciones web al ancho de stg.InteraccionWeb.
 
     Orden de columnas:
@@ -98,7 +101,7 @@ def _extraer_interacciones(db, ejecucion_id: int, destino: Path) -> int:
         "entidad_tipo": 1, "entidad_id": 1, "dispositivo": 1, "canal": 1,
         "pais_visitante": 1, "fecha_evento": 1, "duracion_seg": 1, "convirtio": 1,
     }
-    cursor = db[config.COLECCION_INTERACCIONES].find({}, proyeccion).batch_size(
+    cursor = db[config.COLECCION_INTERACCIONES].find(filtro or {}, proyeccion).batch_size(
         config.MONGO_TAMANO_LOTE
     )
 
@@ -125,20 +128,72 @@ def _extraer_interacciones(db, ejecucion_id: int, destino: Path) -> int:
         return escribir_lote(fh, filas())
 
 
-def extraer_todo(ejecucion_id: int) -> list[tuple[str, Path, int, float]]:
-    """Devuelve (tabla_staging, ruta, filas, segundos) por coleccion."""
+# Campo de fecha por coleccion. Es la marca de agua del modo incremental.
+CAMPO_MARCA = {
+    config.COLECCION_RESENAS: "fecha",
+    config.COLECCION_INTERACCIONES: "fecha_evento",
+}
+
+
+def calcular_marcas() -> dict[str, str]:
+    """Marca nueva por coleccion: la fecha mas alta presente.
+
+    Se resuelve con find().sort(campo, -1).limit(1), que usa los indices
+    fecha_1 y fecha_evento_1 que ya existen en el origen, en vez de un
+    agregado $max que recorreria las dos millones de documentos.
+    """
+    marcas: dict[str, str] = {}
+    cli = _cliente()
+    try:
+        db = cli[config.MONGO_DB]
+        for coleccion, campo in CAMPO_MARCA.items():
+            doc = db[coleccion].find({}, {campo: 1}).sort(campo, -1).limit(1)
+            for d in doc:
+                if d.get(campo) is not None:
+                    marcas[coleccion] = d[campo].isoformat()
+    finally:
+        cli.close()
+    return marcas
+
+
+def _filtro_marca(coleccion: str, marca: str | None) -> dict | None:
+    """Traduce la marca de texto al filtro de MongoDB."""
+    if not marca:
+        return None
+    campo = CAMPO_MARCA.get(coleccion)
+    if not campo:
+        return None
+    try:
+        return {campo: {"$gt": datetime.fromisoformat(marca)}}
+    except ValueError:
+        log(f"Marca ilegible para {coleccion}: {marca!r}. Se extrae completo.", "AVISO")
+        return None
+
+
+def extraer_todo(ejecucion_id: int,
+                 marcas: dict[str, str] | None = None
+                 ) -> list[tuple[str, Path, int, float]]:
+    """Devuelve (tabla_staging, ruta, filas, segundos) por coleccion.
+
+    Con `marcas` se extrae solo lo posterior a la fecha registrada. Sin
+    ellas, o con marca None, se extrae la coleccion completa.
+    """
+    marcas = marcas or {}
     resultados = []
     cli = _cliente()
     try:
         db = cli[config.MONGO_DB]
 
-        for tabla, archivo, funcion in (
-            ("stg.Resena", "resena.dat", _extraer_resenas),
-            ("stg.InteraccionWeb", "interaccion_web.dat", _extraer_interacciones),
+        for tabla, archivo, funcion, coleccion in (
+            ("stg.Resena", "resena.dat", _extraer_resenas,
+             config.COLECCION_RESENAS),
+            ("stg.InteraccionWeb", "interaccion_web.dat", _extraer_interacciones,
+             config.COLECCION_INTERACCIONES),
         ):
             inicio = time.time()
             destino = ruta_trabajo(archivo)
-            filas = funcion(db, ejecucion_id, destino)
+            filtro = _filtro_marca(coleccion, marcas.get(coleccion))
+            filas = funcion(db, ejecucion_id, destino, filtro)
             transcurrido = time.time() - inicio
             mb = destino.stat().st_size / 1024 / 1024
             log(

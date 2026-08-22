@@ -181,6 +181,60 @@ def actualizar_leidos(ejecucion_id: int, leidos: int) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Marcas de agua de la carga incremental (etl.Marca, ver 43b-carga-incremental)
+# ---------------------------------------------------------------------------
+def obtener_marca(fuente: str, objeto: str) -> str | None:
+    """Hasta donde se leyo este objeto la ultima vez.
+
+    Devuelve None cuando nunca se cargo, y entonces el extractor hace
+    barrido completo: la primera corrida INCREMENTAL sobre una base recien
+    migrada equivale a una FULL, que es el comportamiento correcto.
+
+    Si la tabla no existe todavia (base creada antes de 43b) tambien se
+    devuelve None, para que el ETL siga corriendo en modo completo en vez
+    de abortar por un objeto de control ausente.
+    """
+    try:
+        with conectar() as cn:
+            cur = cn.cursor()
+            cur.execute(
+                "DECLARE @v varchar(50); "
+                "EXEC etl.usp_ObtenerMarca ?, ?, @v OUTPUT; SELECT @v;",
+                fuente, objeto,
+            )
+            while cur.description:
+                fila = cur.fetchone()
+                if fila and fila[0] is not None:
+                    return str(fila[0])
+                if not cur.nextset():
+                    break
+            return None
+    except Exception as exc:                       # noqa: BLE001
+        log(f"No se pudo leer la marca de {fuente}/{objeto}: {exc}", "AVISO")
+        return None
+
+
+def actualizar_marca(fuente: str, objeto: str, valor: str | None,
+                     filas: int = 0, ejecucion_id: int | None = None) -> None:
+    """Avanza la marca. Un valor None deja la marca donde estaba.
+
+    Se llama solo cuando la corrida termino bien. Si el ETL falla a media
+    carga la marca no se mueve y el siguiente intento reprocesa el mismo
+    lote: es preferible reprocesar a perder datos, y la carga de hechos
+    incremental es idempotente porque borra por clave de negocio antes de
+    insertar.
+    """
+    try:
+        with conectar() as cn:
+            cn.cursor().execute(
+                "EXEC etl.usp_ActualizarMarca ?, ?, ?, ?, ?",
+                fuente, objeto, valor, filas, ejecucion_id,
+            )
+    except Exception as exc:                       # noqa: BLE001
+        log(f"No se pudo actualizar la marca de {fuente}/{objeto}: {exc}", "AVISO")
+
+
+# ---------------------------------------------------------------------------
 # Transformacion
 # ---------------------------------------------------------------------------
 def ejecutar_procedimiento(nombre: str, ejecucion_id: int) -> list[list[tuple]]:

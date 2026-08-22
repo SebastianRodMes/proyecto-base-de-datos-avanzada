@@ -1,0 +1,34 @@
+=====================================================================
+ VALIDACION ESTATICA DEL MODELO DE POWER BI CONTRA LA NUBE
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Fecha    : 2026-08-21 22:21:11
+ Servidor : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433
+=====================================================================
+
+=== 1. Origen declarado por las 16 particiones del modelo ===
+     16 Origen = Sql.Database("turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433", "TurismoDW"),
+
+=== 2. Las 16 vistas que consume el modelo, contra RDS ===
+Vista Filas
+----- -----
+vw_DimTiempo 2922
+vw_DimCliente 50009
+vw_DimHotel 201
+vw_DimTipoHabitacion 792
+vw_DimTour 401
+vw_DimPaquete 151
+vw_DimEstadoReserva 4
+vw_DimCanal 18
+vw_FactReserva 2000010
+vw_FactReservaHabitacion 1632458
+vw_FactReservaTour 2577212
+vw_FactOcupacionDiaria 431321
+vw_FactResena 500002
+vw_FactInteraccionWeb 1500002
+vw_EstadoSistema 1
+vw_CalidadDatos 0
+
+=== 3. Pagina 6: estado del sistema tal como lo vera el reporte ===
+NodoActual                     Edicion                        RolMirroring                   EstadoMirroring                Testigo                        HorasEnLinea
+------------------------------ ------------------------------ ------------------------------ ------------------------------ ------------------------------ ------------
+EC2AMAZ-4AR53DH                Express Edition (64-bit)       RDS Single-AZ                  GESTIONADO POR AWS             Cluster: RDS gestionado por AW            0

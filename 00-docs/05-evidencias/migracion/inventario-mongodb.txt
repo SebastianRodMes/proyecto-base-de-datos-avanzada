@@ -1,0 +1,73 @@
+=====================================================================
+ INVENTARIO DE OBJETOS A MIGRAR - MONGODB
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Generado  : 2026-08-21 20:28:30
+ Contenedor: turismodw-mongo-1
+ Base      : turismo_nosql
+=====================================================================
+
+=== 0. Version del servidor ===
+7.0.40
+
+=== 1. Colecciones, documentos y tamano ===
+interacciones_web        docs=   1500000 datos=   396 MB indices=   49 MB total=   445 MB
+resenas                  docs=    500000 datos=   162 MB indices=   17 MB total=   178 MB
+
+=== 2. Indices por coleccion ===
+-- interacciones_web
+   _id_                             {"_id":1}
+   fecha_evento_1                   {"fecha_evento":1}
+   cliente_id_1                     {"cliente_id":1}
+   tipo_evento_1                    {"tipo_evento":1}
+-- resenas
+   _id_                             {"_id":1}
+   fecha_1                          {"fecha":1}
+   entidad_id_1_tipo_entidad_1      {"entidad_id":1,"tipo_entidad":1}
+   cliente_id_1                     {"cliente_id":1}
+
+=== 3. Forma del documento (campos de una muestra) ===
+-- interacciones_web
+   _id                    object
+   cliente_id             number
+   sesion_id              string
+   tipo_evento            string
+   destino_buscado        null
+   entidad_tipo           string
+   entidad_id             number
+   dispositivo            string
+   canal                  string
+   pais_visitante         string
+   fecha_evento           date
+   duracion_seg           number
+   convirtio              boolean
+-- resenas
+   _id                    object
+   cliente_id             number
+   tipo_entidad           string
+   entidad_id             number
+   calificacion           number
+   titulo                 string
+   comentario             string
+   idioma                 string
+   fecha                  date
+   verificada             boolean
+   etiquetas              array
+   origen_canal           string
+   util_votos             number
+
+=== 4. Tamano total de la base (define si cabe en Atlas M0, tope 512 MB) ===
+dataSize   : 557 MB
+indexSize  : 66 MB
+storageSize: 139 MB
+objetos    : 2000000
+
+=== 5. Resumen contable ===
+colecciones: 2
+indices    : 8
+
+=== 5. Archivos planos de origen ===
+paquetes_2025.xml                  41 KB
+paquetes_2026.xml                  41 KB
+preferencias_lote1.json         1,007 KB
+preferencias_lote2.json         1,007 KB
+preferencias_lote3.json         1,006 KB
