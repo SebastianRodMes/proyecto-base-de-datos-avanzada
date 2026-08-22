@@ -35,7 +35,12 @@ param(
     [string] $Perfil        = 'turismodw',
     [string] $Region        = 'us-east-1',
     [string] $Prefijo       = 'turismodw',
-    [string] $ClaseSql      = 'db.t3.micro',
+    # db.t3.small y no db.t3.micro: micro tiene 995 MB de RAM y SQL Server se
+    # auto-reduce a 125 MB de Target Server Memory, con lo que ni un insert
+    # bulk de 2923 filas consigue concesion de memoria y la carga se cuelga en
+    # RESOURCE_SEMAPHORE. Esta documentado en 10-validacion-post-migracion.md
+    # seccion 6.1: se provisiono micro, no sirvio, y hubo que escalar.
+    [string] $ClaseSql      = 'db.t3.small',
     [string] $ClasePg       = 'db.t4g.micro',
     [int]    $AlmacenamientoGB = 20,
     [switch] $Esperar,
@@ -373,6 +378,22 @@ if (-not $existe.Ok) {
 # ---------------------------------------------------------------------------
 # 5. Guardar credenciales fuera del repositorio
 # ---------------------------------------------------------------------------
+# ATLAS_URI no la genera este script: el cluster M0 se crea aparte. Pero el
+# archivo se reescribe ENTERO aqui, asi que una segunda corrida borraria la
+# cadena de Atlas sin avisar y 74-migrar-mongo.ps1 fallaria despues sin que se
+# entienda por que. Se rescata antes de sobrescribir.
+$AtlasPrevia = $null
+if (Test-Path $archivoSecreto) {
+    $AtlasPrevia = Get-Content $archivoSecreto |
+                   Where-Object { $_ -match '^\s*ATLAS_URI=' } |
+                   Select-Object -First 1
+    if ($AtlasPrevia) { Escribir 'ATLAS_URI existente: se conserva' 'OK' }
+}
+
+$LineaAtlas = if ($AtlasPrevia) { $AtlasPrevia } else {
+    '# ATLAS_URI=mongodb+srv://turismodw:<clave>@<cluster>.mongodb.net/'
+}
+
 @"
 # Credenciales de la infraestructura cloud de TurismoDW.
 # Generado por 07-migracion/70-provisionar-aws.ps1
@@ -392,9 +413,9 @@ IAM_ROL_S3=$ArnRol
 OPTION_GROUP=$NomOpt
 
 # MongoDB Atlas no se provisiona desde aqui: el nivel gratuito M0 solo se
-# crea desde la consola de cloud.mongodb.com. Pegue abajo la cadena que
-# entrega Connect -> Drivers, sin comentar.
-# ATLAS_URI=mongodb+srv://turismodw:<clave>@<cluster>.mongodb.net/
+# crea desde la consola de cloud.mongodb.com. Si la linea de abajo esta
+# comentada, pegue ahi la cadena que entrega Connect -> Drivers.
+$LineaAtlas
 "@ | Set-Content -Path $archivoSecreto -Encoding utf8
 Escribir ''
 Escribir "Credenciales guardadas en .secrets\turismodw-cloud.env (ignorado por git)" 'OK'

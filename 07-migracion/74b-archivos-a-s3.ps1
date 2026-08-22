@@ -22,7 +22,8 @@
     Estructura en el bucket:
         raw/preferencias/   los tres lotes JSON  (RF-10)
         raw/paquetes/       los dos catalogos XML (RF-11)
-        bak/                respaldos .bak, los deja 75-migrar-dw.ps1
+        bak/                respaldos .bak; los sube 72-piloto-migracion.ps1
+                            al probar la ruta alterna de restauracion
 
     Uso:
         .\07-migracion\74b-archivos-a-s3.ps1

@@ -17,7 +17,7 @@ Lo que existe hoy, medido y reconciliado, no estimado:
 | PostgreSQL 16 | Origen operacional `turismo`, 13 tablas | 2 000 005 reservas / 768 MB |
 | MongoDB 7 | Origen NoSQL `turismo_nosql`, 2 colecciones | 2 000 000 documentos |
 | Archivos | 3 JSON + 2 XML en `03-archivos/entrada/` | 6 150 registros |
-| SQL Server 2022 | `TurismoDW`: 8 dimensiones, 6 hechos, 17 vistas, 5 procedimientos | 8 695 473 filas de hechos |
+| SQL Server 2022 | `TurismoDW`: 8 dimensiones, 6 hechos, 17 vistas, 10 procedimientos | 8 640 983 filas de hechos |
 | ETL Python | `05-etl/`, bitácora en `etl.Ejecucion` | 8 317 880 filas de staging |
 | Power BI | `06-powerbi/TurismoDW.pbip` | 17 tablas, 26 relaciones, 52 medidas |
 
@@ -35,7 +35,7 @@ De las cinco estrategias clásicas de migración se evaluaron tres:
 | Replatform | Cambiar el DW a Redshift o BigQuery, el origen a Aurora | Descartada |
 | Refactor | Rediseñar el modelo para un almacén columnar nativo de la nube | Descartada |
 
-> **Por qué rehost y no replatform.** El valor del proyecto está en el modelo estrella, en los cinco procedimientos `etl.usp_*`, en las 17 vistas `dw.vw_*` y en las 52 medidas DAX. Un replatform a Redshift obligaría a reescribir el `MERGE` de dimensiones (Redshift no lo soporta igual), la explosión de estadías de `usp_CargarOcupacionDiaria`, las tres funciones de partición y las medidas que dependen de `DATABASEPROPERTYEX`. Sería un proyecto nuevo, no una migración, y no cabe en dos semanas. Rehost conserva el T-SQL íntegro y permite comparar local contra nube sobre una base honesta: mismo motor, mismo esquema, misma consulta.
+> **Por qué rehost y no replatform.** El valor del proyecto está en el modelo estrella, en los diez procedimientos `etl.usp_*`, en las 17 vistas `dw.vw_*` y en las 52 medidas DAX. Un replatform a Redshift obligaría a reescribir el `MERGE` de dimensiones (Redshift no lo soporta igual), la explosión de estadías de `usp_CargarOcupacionDiaria`, las tres funciones de partición y las medidas que dependen de `DATABASEPROPERTYEX`. Sería un proyecto nuevo, no una migración, y no cabe en dos semanas. Rehost conserva el T-SQL íntegro y permite comparar local contra nube sobre una base honesta: mismo motor, mismo esquema, misma consulta.
 
 **Híbrida por diseño, no por concesión.** Los archivos JSON y XML no se migran a una base de datos: van a S3 como *landing zone* cruda. Son la fuente de la que el ETL extrae; convertirlos en tablas destruiría la evidencia de que la solución integra cuatro tipos de fuente distintos. El enunciado admite migración "completa o híbrida", y aquí la parte híbrida es una decisión de diseño, no una limitación.
 
@@ -54,9 +54,9 @@ De las cinco estrategias clásicas de migración se evaluaron tres:
                                                      SG abierto a una sola IP
 
  mongo:7                                          MongoDB Atlas M0
-   turismo_nosql           mongodump                 AWS us-east-1
-   500 000 resenas      ------------------->         512 MB, capa gratuita
-   1 500 000 interac.      mongorestore               (ver limitacion, seccion 5)
+   turismo_nosql           mongodump                 AWS CENTRAL_US
+   500 000 resenas      ------------------->         512 MB por CLUSTER, no
+   1 500 000 interac.      mongorestore               por base (ver R2)
 
  03-archivos/entrada/                             S3  turismodw-migracion-<cuenta>
    preferencias_*.json     aws s3 cp                 /raw/     landing zone
@@ -65,8 +65,8 @@ De las cinco estrategias clásicas de migración se evaluaron tres:
 
  SQL Server 2022 Developer                        RDS for SQL Server 2022 Express
    TurismoDW               DDL portable + bcp        turismodw-sql
-   8 695 473 filas      ------------------->         db.t3.micro / 20 GB gp3
-   14 filegroups           (.bak+S3 como              option group con
+   8 640 983 filas      ------------------->         db.t3.small / 20 GB gp3
+   14 archivos de datos    (.bak+S3 como              option group con
    particion anual          ruta alterna)             SQLSERVER_BACKUP_RESTORE
                                                               ^
  ETL Python (host Windows)  ---------------------------------|
@@ -81,7 +81,7 @@ De las cinco estrategias clásicas de migración se evaluaron tres:
 | Recurso | Elección | Costo/hora | Razón |
 |---|---|---:|---|
 | RDS PostgreSQL | `db.t4g.micro`, 20 GB gp3 | $0.016 | Solo sirve lecturas al ETL; 768 MB entran de sobra |
-| RDS SQL Server | `sqlserver-ex`, `db.t3.micro`, 20 GB gp3 | $0.018 | Ver nota sobre Express |
+| RDS SQL Server | `sqlserver-ex`, `db.t3.small`, 20 GB gp3 | $0.036 | Se provisiono `db.t3.micro` y hubo que escalar: ver R3c |
 | MongoDB Atlas | M0 | $0.000 | Capa gratuita permanente |
 | S3 | Estándar, < 1 GB | ~$0.00003 | Landing zone y respaldos |
 
@@ -102,10 +102,14 @@ Costo total estimado: **menos de 5 USD** por tres días de operación continua. 
 | 3 | **Piloto 10 %** | `72-piloto-migracion.ps1` | Sí, base desechable |
 | 4 | Migración de PostgreSQL | `73-migrar-postgres.ps1` | Sí, origen intacto |
 | 5 | Migración de MongoDB | `74-migrar-mongo.ps1` | Sí, origen intacto |
-| 6 | Migración del DW | `75-migrar-dw.ps1` | Sí, origen intacto |
-| 7 | Repunte de ETL y Power BI | `.env.aws` + TMDL | Sí, revertir configuración |
-| 8 | Validación post-migración | `76-validacion-post-migracion.sql` | No aplica, solo lectura |
-| 9 | Comparación local vs nube | `77-comparar-local-cloud.ps1` | No aplica, solo lectura |
+| 6 | Archivos JSON y XML a S3 | `74b-archivos-a-s3.ps1` | Sí, origen intacto |
+| 7 | Migración del DW | `75-migrar-dw.ps1` | Sí, origen intacto |
+| 8 | Repunte de Power BI | `repuntar-powerbi.ps1` | Sí, `-Local` revierte |
+| 9 | Repunte del ETL | `05-etl/.env.aws` | Sí, restaurar `.env` |
+| 10 | Validación post-migración | `76-validacion-post-migracion.sql` | No aplica, solo lectura |
+| 11 | Comparación local vs nube | `77-comparar-local-cloud.ps1` | No aplica, solo lectura |
+| 12 | Prueba de recuperación ante error | `79-prueba-recuperacion-etl.ps1` | Sí, converge sola |
+| 13 | Apagado de los recursos | `78-detener-recursos.ps1` | Sí, `-Iniciar` los vuelve |
 
 ### 4.2 La migración piloto, y para qué sirve realmente
 
@@ -190,7 +194,7 @@ La reversión de esta migración es barata porque **el origen nunca se modifica*
 
 La migración se considera terminada cuando:
 
-1. `76-validacion-post-migracion.sql` contra RDS devuelve 2 000 005 reservas y `SUM(MontoTotal) = 16 709 495 659.28`, con tolerancia de 0.01.
+1. `76-validacion-post-migracion.sql` contra RDS reconcilia contra los conteos que el origen tenga **en ese momento** (`01-postgres/11-verificacion-origen.sql` los produce), con tolerancia de 0.01 en la suma. En la ejecucion registrada fueron 2 000 010 reservas y `SUM(MontoTotal) = 16 709 503 160.28`.
 2. Ninguna clave foránea del esquema `dw` queda en `is_not_trusted` ni `is_disabled`.
 3. El ETL completa una corrida `FULL` y una `INCREMENTAL` contra la nube, ambas en estado `COMPLETADO` en `etl.Ejecucion`.
 4. Una corrida abortada a propósito queda en `FALLIDO` y el relanzamiento converge al mismo estado.
@@ -198,7 +202,7 @@ La migración se considera terminada cuando:
 6. La comparación local contra nube existe, con cinco corridas y mediana por consulta, **incluyendo las regresiones**.
 7. Ambas instancias RDS quedan detenidas al cerrar.
 
-> **Sobre el punto 6.** Se espera que la nube pierda en varias de las cinco consultas testigo: `db.t3.micro` con Express contra un contenedor Developer con 4 GB de memoria no es una comparación pareja. Ese resultado se reporta tal cual. El repositorio ya sentó el precedente cuando el Integrante 4 documentó la regresión de T4 en vez de presentar cinco mejoras de cinco.
+> **Sobre el punto 6.** Se espera que la nube pierda en varias de las cinco consultas testigo: `db.t3.small` con Express contra un contenedor Developer con 4 GB de memoria y 16 nucleos no es una comparación pareja. Ese resultado se reporta tal cual. El repositorio ya sentó el precedente cuando el Integrante 4 documentó la regresión de T4 en vez de presentar cinco mejoras de cinco.
 
 ---
 

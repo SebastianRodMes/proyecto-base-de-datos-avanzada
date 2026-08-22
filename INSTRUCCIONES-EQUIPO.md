@@ -132,8 +132,22 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Carga incremental y bitacora | Integrante 1 | Completo |
 | Prueba de recuperacion ante error de ETL | Integrante 1 | Completo |
 | Migracion piloto y completa a AWS | Integrante 1 | Completo |
-| ETL apuntando a la nube | Integrante 1 | Completo |
-| Power BI apuntando a la nube | Integrante 1 | Completo, falta captura de pantallas |
+| ETL apuntando a la nube | Integrante 1 | Completo con `--solo-pg`; falta una corrida que ejercite Mongo y archivos |
+| Power BI apuntando a la nube | Integrante 1 | Modelo repuntado y validado de forma estatica; **faltan las capturas del refresco real** |
+| Validacion de dashboard local contra nube | Integrante 3 | **Pendiente** |
+| Metricas de negocio sobre el modelo migrado | Integrante 3 | **Pendiente**, revisar si el escenario pide indicadores nuevos |
+| Manual de usuario | Integrante 3 | **Pendiente** |
+| Tema de investigacion: decision, documento y prototipo | Integrante 4 | **No iniciado** |
+| Demostracion de la tecnologia investigada | Integrante 4 | **No iniciado** |
+| Pruebas de rendimiento y recuperacion contra la nube | Integrante 4 | **Pendiente**. Ojo: `79-prueba-recuperacion-etl.ps1` tiene `localhost,1433` fijo y no lee `.env.aws` |
+| Registro de calidad de datos antes/despues del ETL | Integrante 2 | **Pendiente**. El mecanismo existe (`etl.usp_ValidarStaging`, `dw.vw_CalidadDatos`); falta capturarlo |
+| Verificar `43b`/`44b` y correr una incremental completa | Integrante 2 | **Pendiente** |
+| Manual tecnico | Equipo | **No iniciado** |
+| Video de demostracion | Equipo | **No iniciado** |
+| Presentacion ejecutiva final | Equipo | **No iniciado** |
+
+El detalle de cada pendiente, con el porque y como retomarlo, esta en
+`00-docs/11-traspaso-cloud.md`.
 
 ### Resultado de la migracion
 
@@ -166,15 +180,23 @@ docker compose -f docker\docker-compose.yml `
 PostgreSQL queda en `15432` y MongoDB en `27018`.
 
 **Las credenciales.** Nada de AWS ni de Atlas se versiona. `70-provisionar-aws.ps1`
-genera las contrasenas y las deja en `.secrets	urismodw-cloud.env`, que esta
+genera las contrasenas y las deja en `.secrets\turismodw-cloud.env`, que esta
 en `.gitignore` junto con `05-etl/.env.aws`, `*_accessKeys.csv` y `*.pem`.
 
-**El costo.** Las dos instancias RDS suman unos 0.034 USD/hora. Al terminar
-cada sesion:
+Consecuencia directa: **quien clone el repositorio no recibe ninguna
+credencial**. Los pasos para volver a tenerlas estan en
+`00-docs/11-traspaso-cloud.md`.
+
+**El costo.** Las dos instancias RDS suman unos 0.052 USD/hora con las clases
+actuales (`db.t4g.micro` mas `db.t3.small`). Al terminar cada sesion:
 
 ```powershell
-.-migracion8-detener-recursos.ps1
+.\07-migracion\78-detener-recursos.ps1
 ```
+
+Quedan detenidas y solo se paga almacenamiento, unos 0.15 USD por dia. **AWS
+reinicia sola una instancia detenida a los 7 dias**: si el proyecto se deja
+parado mas tiempo, conviene eliminarlas con `-Eliminar`.
 
 ### Carga incremental
 
@@ -214,10 +236,33 @@ llegan a 2 000 filas.
 
 ## Criterio de cierre
 
-La entrega esta lista cuando:
+### Semanas 1 y 2, eje de alta disponibilidad (cumplido)
 
 - `46-validacion-consistencia.sql` devuelve `MODELO CONSISTENTE`;
 - ambos nodos HA estan `SYNCHRONIZED / HEALTHY`;
 - el endpoint `localhost,14330` devuelve 2,000,005 reservas;
 - Power BI refresca y la pagina 6 muestra `sql-secondary / AG PRIMARY / SYNCHRONIZED`;
 - las capturas se guardan en `00-docs/05-evidencias/`.
+
+> Este criterio quedo **congelado** como evidencia de las semanas 1 y 2. Los
+> conteos de 2,000,005 reservas corresponden a esa carga; la prueba de carga
+> incremental agrego 5 reservas de 2027 y el total vigente es 2,000,010 en
+> local y 2,000,011 en la nube. No es una discrepancia: es la prueba de que la
+> carga incremental funciona.
+
+### Semanas 3 y 4, eje de migracion y operacion cloud
+
+La entrega esta lista cuando:
+
+- `07-migracion/76-validacion-post-migracion.sql` contra RDS devuelve
+  `MIGRACION VERIFICADA`;
+- `07-migracion/77-comparar-local-cloud.ps1` reporta checksums identicos en las
+  14 tablas;
+- una corrida `INCREMENTAL` del ETL contra la nube termina en `COMPLETADO`;
+- Power BI abre el `.pbip`, **refresca contra RDS** y se guardan las capturas de
+  las paginas 1 y 6;
+- el tema de investigacion tiene su prototipo y su evidencia;
+- existen manual tecnico, manual de usuario, video y presentacion final;
+- las instancias RDS quedan detenidas.
+
+**Lo que falta y de quien es** esta en `00-docs/11-traspaso-cloud.md`.

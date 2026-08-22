@@ -11,7 +11,7 @@ PostgreSQL y MongoDB alimentan un modelo estrella en SQL Server 2022, consumido 
 | Base operacional | PostgreSQL 16 en Docker | RDS for PostgreSQL 16, `db.t4g.micro` |
 | Base NoSQL | MongoDB 7 en Docker | MongoDB Atlas M0 (capa gratuita) |
 | Archivos JSON y XML | `03-archivos/entrada/` | S3, landing zone cruda |
-| Almacen analitico | SQL Server 2022 Developer | RDS for SQL Server 2022 Express, `db.t3.micro` |
+| Almacen analitico | SQL Server 2022 Developer | RDS for SQL Server 2022 Express, `db.t3.small` |
 
 ```powershell
 # 1. Provisionar la infraestructura (crea recursos facturables)
@@ -46,6 +46,8 @@ Documentos de la migracion:
 | [00-docs/07-estrategia-migracion.md](00-docs/07-estrategia-migracion.md) | Estrategia, arquitectura destino, riesgos y plan de reversion |
 | [00-docs/08-matriz-herramientas.md](00-docs/08-matriz-herramientas.md) | Herramientas evaluadas y justificacion de cada eleccion |
 | [00-docs/09-inventario-migracion.md](00-docs/09-inventario-migracion.md) | Inventario de objetos con veredicto de portabilidad |
+| [00-docs/10-validacion-post-migracion.md](00-docs/10-validacion-post-migracion.md) | Resultados, seis incidentes y comparacion local contra nube |
+| [00-docs/11-traspaso-cloud.md](00-docs/11-traspaso-cloud.md) | **Como continuar**: credenciales, reactivacion, pendientes y reparto |
 
 ## Carga incremental
 
@@ -61,7 +63,7 @@ Contraste medido en este laboratorio:
 
 | Modo | Filas de staging | Duracion |
 |---|---:|---:|
-| `FULL` | 8 317 880 | 8 min 29 s |
+| `FULL` | 8 317 880 | 8 min 27 s (507 s; una corrida previa tardo 424 s) |
 | `INCREMENTAL` | 2 050 | 22 s |
 
 Evidencia en `00-docs/05-evidencias/migracion/carga-incremental.txt` y `prueba-recuperacion-etl.txt`.
@@ -87,7 +89,7 @@ docker compose -f docker\docker-compose.yml `
 
 | Componente | Estado |
 |---|---|
-| PostgreSQL 16 | 2,000,005 reservas cargadas |
+| PostgreSQL 16 | 2,000,005 reservas cargadas (semanas 1-2; hoy 2,000,010 tras la prueba incremental) |
 | MongoDB 7 | 500,000 resenas y 1,500,000 interacciones |
 | SQL Server 2022 Developer | `TurismoDW` poblada y particionada |
 | Consistencia | 22/22 controles correctos |
@@ -107,7 +109,7 @@ El informe completo del Integrante 4 esta en [00-docs/06-informe-integrante4.md]
 | Claves foraneas | | 32/32 validadas y confiables |
 | Particionamiento | | Distribucion identica, los 12 filegroups reproducidos |
 | Archivos JSON/XML | S3 | 5/5 byte a byte |
-| MongoDB | Atlas M0 | 2 colecciones migradas |
+| MongoDB | Atlas M0 | `resenas` completa; `interacciones_web` al 50 % determinista (cupo de M0) |
 | ETL apuntando a la nube | | `COMPLETADO`, 19 etapas, 0 rechazos |
 | Power BI | | 16 particiones repuntadas, 16 vistas responden |
 
@@ -117,14 +119,24 @@ Los resultados completos, con los seis incidentes encontrados durante la ejecuci
 
 ## Puesta en marcha
 
-Requisitos: Docker Desktop, Power BI Desktop, SSMS, `sqlcmd` y `bcp`.
+Requisitos para el laboratorio local: Docker Desktop, Power BI Desktop, SSMS,
+`sqlcmd` y `bcp` (ODBC Driver **17**, no 18: el `bcp` de 18 rechaza la opcion
+`-u` que este proyecto necesita), Python 3.11 con `pip install -r 05-etl/requirements.txt`.
+
+Para la fase cloud se agregan: AWS CLI 2.x, PowerShell 7 (`pwsh`) y una cuenta
+de MongoDB Atlas. El detalle de credenciales y permisos esta en
+[00-docs/11-traspaso-cloud.md](00-docs/11-traspaso-cloud.md).
 
 ```powershell
 # Levanta PostgreSQL, MongoDB y SQL Server; la primera vez genera y carga todo.
-docker compose -f docker\docker-compose.yml up -d --build
+# Los DOS archivos: sin el override, PostgreSQL y MongoDB quedan en puertos
+# que pueden estar tomados por servicios nativos (ver la advertencia de arriba).
+docker compose -f docker\docker-compose.yml `
+               -f docker\docker-compose.override.yml up -d --build
 
 # Estado. El orquestador termina con codigo 0 cuando finaliza la carga.
-docker compose -f docker\docker-compose.yml ps -a
+docker compose -f docker\docker-compose.yml `
+               -f docker\docker-compose.override.yml ps -a
 ```
 
 Servicios base:
@@ -186,14 +198,22 @@ Abrir:
 Start-Process .\06-powerbi\TurismoDW.pbip
 ```
 
-Las 16 consultas M usan `localhost,14330`, por lo que un cambio de replica no modifica el PBIP. En el primer refresco seleccionar:
+**Las 16 particiones apuntan hoy al endpoint de RDS**, no a `localhost`. Se
+repuntan con `07-migracionepuntar-powerbi.ps1`, que acepta `-Local` para
+volver al laboratorio. En el primer refresco seleccionar:
 
 - autenticacion: **Base de datos**;
-- usuario: `sa`;
-- contraseña: la configurada para SQL Server;
+- usuario: `turismoadmin` contra la nube, `sa` contra el laboratorio local;
+- contraseña: la de `.secrets	urismodw-cloud.env` en el primer caso;
 - confiar en el certificado del servidor, si Power BI muestra la opcion.
 
-La pagina 6 lee `dw.vw_EstadoSistema` y muestra el nodo actual, rol del AG, sincronizacion, ultima carga y calidad de datos.
+La pagina 6 lee `dw.vw_EstadoSistema`. Contra RDS muestra `RDS Single-AZ` y
+`GESTIONADO POR AWS` en vez del rol del grupo de disponibilidad: la vista se
+adapto para reportar la redundancia del servicio gestionado.
+
+> Para volver a `localhost,14330` no alcanza con `-Local`: ese puerto lo
+> publica un servicio detras de `profiles: ["ha"]`, asi que hay que levantar
+> el compose con `--profile ha`.
 
 ## Validaciones reproducibles
 
@@ -201,11 +221,13 @@ La pagina 6 lee `dw.vw_EstadoSistema` y muestra el nodo actual, rol del AG, sinc
 # Origen PostgreSQL
 docker exec turismodw-postgres-1 psql -U postgres -d turismo -f /ruta/11-verificacion-origen.sql
 
-# Consistencia DW (valores de esta carga determinista)
-sqlcmd -S localhost,14330 -U sa -C -d TurismoDW `
+# Consistencia DW. Los valores de origen CAMBIAN con cada corrida incremental:
+# sacalos del origen en el momento con 01-postgres/11-verificacion-origen.sql.
+# Los de abajo son los de la ultima ejecucion registrada.
+sqlcmd -S localhost,1433 -U sa -C -d TurismoDW `
   -i 04-sqlserver\46-validacion-consistencia.sql `
-  -v ReservasOrigen=2000005 MontoOrigen=16709495659.28 `
-     ResenasOrigen=500000 InteraccionesOrigen=1500000
+  -v ReservasOrigen=2000010 MontoOrigen=16709503160.28 `
+     ResenasOrigen=500002 InteraccionesOrigen=1500002
 ```
 
 ## Estructura del repositorio

@@ -46,7 +46,16 @@
 param(
     [switch] $SinPostgres,
     [switch] $SinMongo,
-    [switch] $SinDw
+    [switch] $SinDw,
+    # La ruta alterna (P2) necesita hablar con el SQL Server LOCAL para generar
+    # el respaldo, y con el contenedor para sacarlo de adentro.
+    [string] $ServidorLocalPiloto = 'localhost,1433',
+    [string] $UsuarioLocalPiloto  = 'sa',
+    [string] $ClaveLocalPiloto    = 'Armagedon45*',
+    [string] $ContenedorSql       = 'turismodw-sqlserver-1',
+    # El respaldo completo pesa mas de 1 GB y subirlo lleva su tiempo. Con este
+    # interruptor se salta P2 y el piloto solo responde P1, P3 y P4.
+    [switch] $SinRutaAlterna
 )
 
 $ErrorActionPreference = 'Stop'
@@ -147,7 +156,45 @@ Anotar '    El inventario predice que va a fallar: la restauracion recrea los'
 Anotar '    archivos por su tamano asignado (11,9 GB) y Express topa en 10 GB.'
 Anotar ''
 
+if ($SinRutaAlterna) {
+    Anotar '    OMITIDA por -SinRutaAlterna. P2 queda sin responder.'
+    $hallazgos.Add('P2  NO SE PROBO: se corrio el piloto con -SinRutaAlterna.')
+    $registro | Set-Content -Path $resumen -Encoding utf8
+    Escribir ''
+    Escribir "Resumen del piloto: $resumen" 'OK'
+    return
+}
+
 try {
+    # El respaldo NO existe hasta que este bloque lo crea. Una version previa
+    # de este script asumia que 75-migrar-dw.ps1 lo dejaba en S3; no es asi,
+    # 75 migra por DDL mas bcp y nunca toca S3. El resultado era que P2
+    # fallaba siempre por archivo inexistente, y el mensaje de RDS parecia un
+    # rechazo de la ruta alterna cuando en realidad era un archivo que nadie
+    # habia subido. Ahora el respaldo se genera aqui.
+    $rutaBakContenedor = '/var/opt/mssql/data/TurismoDW.bak'
+    $rutaBakLocal      = Join-Path $env:TEMP 'TurismoDW.bak'
+
+    Anotar '    4a. BACKUP DATABASE en el contenedor local ...'
+    $sqlBackup = "BACKUP DATABASE TurismoDW TO DISK = N'$rutaBakContenedor' " +
+                 "WITH INIT, COMPRESSION, STATS = 25;"
+    $rb = Invocar-Sqlcmd -Servidor $ServidorLocalPiloto -Usuario $UsuarioLocalPiloto `
+                         -Clave $ClaveLocalPiloto -Base 'master' -Consulta $sqlBackup -Silencioso
+    if (-not $rb.Ok) { throw "BACKUP DATABASE fallo: $($rb.Salida)" }
+
+    Anotar '    4b. Extrayendo el respaldo del contenedor y subiendolo a S3 ...'
+    & docker cp "${ContenedorSql}:$rutaBakContenedor" $rutaBakLocal 2>&1 | Out-Null
+    if (-not (Test-Path $rutaBakLocal)) { throw "No se pudo extraer $rutaBakContenedor del contenedor." }
+    $mb = (Get-Item $rutaBakLocal).Length / 1MB
+    Anotar ("        respaldo de {0:N1} MB" -f $mb)
+
+    & aws s3 cp $rutaBakLocal "s3://$($ctx.Bucket)/bak/TurismoDW.bak" --no-progress 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "aws s3 cp fallo al subir el respaldo." }
+    Remove-Item $rutaBakLocal -ErrorAction SilentlyContinue
+    & docker exec $ContenedorSql rm -f $rutaBakContenedor 2>&1 | Out-Null
+    Anotar '        subido a s3://.../bak/TurismoDW.bak'
+
+    Anotar '    4c. rds_restore_database contra RDS ...'
     $consultaRestore = @"
 EXEC msdb.dbo.rds_restore_database
      @restore_db_name='TurismoDW_bak',

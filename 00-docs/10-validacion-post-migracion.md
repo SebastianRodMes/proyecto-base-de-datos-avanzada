@@ -103,51 +103,6 @@ Ruta primaria: DDL portable más `bcp` en formato nativo (`-n`) con preservació
 
 > **Por qué `-E` no es opcional.** Todas las claves subrogadas del modelo son `IDENTITY`, y las foráneas de los hechos apuntan a ellas. Sin `-E`, SQL Server habría generado números nuevos al insertar las dimensiones y el modelo estrella habría quedado desarmado: los conteos habrían cuadrado y las relaciones no.
 
-### 5.0 Verificación de integridad
-
-`76-validacion-post-migracion.sql` contra RDS: **14 de 14 controles OK — `MIGRACION VERIFICADA`**. Reservas 2 000 010, `SUM(MontoTotal)` 16 709 503 160,28 sin diferencia, cero huérfanos, cero duplicados.
-
-El contraste de métricas entre los dos entornos, tabla por tabla:
-
-| Tabla | Filas | Suma de control | Checksum |
-|---|---|---|---|
-| Las 14 tablas de `dw` | Coinciden | Coinciden | **Idénticos** |
-
-> **El checksum es lo que convierte esto en una verificación de verdad.** Comparar conteos detecta filas perdidas; comparar sumas detecta alteraciones en la columna sumada. `CHECKSUM_AGG(BINARY_CHECKSUM(...))` sobre las columnas de negocio detecta **cualquier** cambio. Que los 14 coincidan significa que no se alteró ni una fila en el camino.
-
-La distribución por partición se reprodujo exacta, con los mismos nombres de filegroup:
-
-| Partición | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Filegroup | `FG_PRE2021` | `FG_2021` | `FG_2022` | `FG_2023` | `FG_2024` | `FG_2025` | `FG_2026` | `FG_2027PLUS` |
-| Filas | 0 | 333 424 | 334 078 | 333 542 | 334 499 | 331 702 | 332 760 | **5** |
-
-Las 5 filas de P8 son las reservas de 2027 que introdujo la prueba de carga incremental: viajaron a la nube y siguen enrutadas a la partición correcta.
-
-### 5.3 El modelo de Power BI, repuntado y verificado
-
-Las **16 particiones** del modelo semántico se repuntaron de `localhost,14330` al endpoint de RDS con `07-migracion/repuntar-powerbi.ps1`. `_Medidas.tmdl` no se toca porque su partición es una tabla literal sin origen SQL.
-
-Las 16 vistas que consume el modelo responden en la nube con los conteos correctos:
-
-| Vista | Filas |
-|---|---:|
-| `dw.vw_FactReservaTour` | 2 577 212 |
-| `dw.vw_FactReserva` | 2 000 010 |
-| `dw.vw_FactReservaHabitacion` | 1 632 458 |
-| `dw.vw_FactInteraccionWeb` | 1 500 002 |
-| `dw.vw_FactResena` | 500 002 |
-| `dw.vw_FactOcupacionDiaria` | 431 321 |
-| `dw.vw_DimCliente` | 50 009 |
-| `dw.vw_DimTiempo` | 2 922 |
-| *(6 dimensiones menores)* | 1 567 |
-| `dw.vw_EstadoSistema` | 1 |
-| `dw.vw_CalidadDatos` | **0** |
-
-> `dw.vw_CalidadDatos` devuelve cero filas **por diseño**: resume `etl.Error`, y la bitácora de la nube arranca limpia para que las corridas cloud sean distinguibles de las locales. Se poblará en la primera corrida del ETL contra la nube.
-
-Evidencia: `00-docs/05-evidencias/migracion/migracion-dw-completa.txt`, `metricas-cloud.txt`, `powerbi-validacion-cloud.txt`
-
 ### 5.1 El esquema migró literal
 
 El hallazgo más importante del piloto. **RDS aceptó los filegroups por propósito**, así que los scripts `41` a `45` y `47b` se ejecutaron **sin una sola modificación**:
@@ -177,7 +132,7 @@ El hallazgo más importante del piloto. **RDS aceptó los filegroups por propós
 `07-migracion/sql/45b-vistas-estado-rds.sql` la reemplaza conservando **las 21 columnas con nombre y tipo idénticos**, que es lo que exige `EstadoSistema.tmdl` del modelo de Power BI. Verificado en el destino:
 
 ```text
-NodoActual       EC2AMAZ-CEG5E1B
+NodoActual       EC2AMAZ-4AR53DH
 Edicion          Express Edition (64-bit)
 RolMirroring     RDS Single-AZ
 EstadoMirroring  GESTIONADO POR AWS
@@ -185,6 +140,55 @@ Testigo          Cluster: RDS gestionado por AWS
 ```
 
 La hora de arranque de la instancia pasa a obtenerse de `create_date` de `tempdb`, que SQL Server recrea en cada arranque: mismo dato, sin permisos elevados.
+
+> **`NodoActual` no es estable en RDS.** Al escalar la clase de `db.t3.micro` a `db.t3.small`, AWS reemplazó la máquina y `@@SERVERNAME` pasó de `EC2AMAZ-CEG5E1B` a `EC2AMAZ-4AR53DH`. Conviene saberlo antes de la demostración: la página 6 del reporte va a mostrar un nombre distinto después de cualquier cambio de clase o de un mantenimiento de AWS. No es un error, es cómo funciona el servicio gestionado, y es justamente lo que la columna debe reflejar.
+
+### 5.3 Verificación de integridad
+
+`76-validacion-post-migracion.sql` contra RDS: **14 de 14 controles OK — `MIGRACION VERIFICADA`**. Reservas 2 000 010, `SUM(MontoTotal)` 16 709 503 160,28 sin diferencia, cero huérfanos, cero duplicados.
+
+El contraste de métricas entre los dos entornos, tabla por tabla:
+
+| Tabla | Filas | Suma de control | Checksum |
+|---|---|---|---|
+| Las 14 tablas de `dw` | Coinciden | Coinciden | **Idénticos** |
+
+> **El checksum es lo que convierte esto en una verificación de verdad.** Comparar conteos detecta filas perdidas; comparar sumas detecta alteraciones en la columna sumada. `CHECKSUM_AGG(BINARY_CHECKSUM(...))` sobre las columnas de negocio detecta **cualquier** cambio. Que los 14 coincidan significa que no se alteró ni una fila en el camino.
+
+La distribución por partición se reprodujo exacta, con los mismos nombres de filegroup:
+
+| Partición | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Filegroup | `FG_PRE2021` | `FG_2021` | `FG_2022` | `FG_2023` | `FG_2024` | `FG_2025` | `FG_2026` | `FG_2027PLUS` |
+| Filas | 0 | 333 424 | 334 078 | 333 542 | 334 499 | 331 702 | 332 760 | **5** |
+
+Las 5 filas de P8 son las reservas de 2027 que introdujo la prueba de carga incremental: viajaron a la nube y siguen enrutadas a la partición correcta.
+
+### 5.4 El modelo de Power BI, repuntado y verificado
+
+Las **16 particiones** del modelo semántico se repuntaron de `localhost,14330` al endpoint de RDS con `07-migracion/repuntar-powerbi.ps1`. `_Medidas.tmdl` no se toca porque su partición es una tabla literal sin origen SQL.
+
+Las 16 vistas que consume el modelo responden en la nube con los conteos correctos:
+
+| Vista | Filas |
+|---|---:|
+| `dw.vw_FactReservaTour` | 2 577 212 |
+| `dw.vw_FactReserva` | 2 000 010 |
+| `dw.vw_FactReservaHabitacion` | 1 632 458 |
+| `dw.vw_FactInteraccionWeb` | 1 500 002 |
+| `dw.vw_FactResena` | 500 002 |
+| `dw.vw_FactOcupacionDiaria` | 431 321 |
+| `dw.vw_DimCliente` | 50 009 |
+| `dw.vw_DimTiempo` | 2 922 |
+| *(6 dimensiones menores)* | 1 567 |
+| `dw.vw_EstadoSistema` | 1 |
+| `dw.vw_CalidadDatos` | **0** |
+
+> `dw.vw_CalidadDatos` devuelve cero filas **por diseño**: resume `etl.Error`, y la bitácora de la nube arranca limpia para que las corridas cloud sean distinguibles de las locales. Se poblará en la primera corrida del ETL contra la nube.
+
+**Lo que falta y no se puede guionizar:** abrir el `.pbip` en Power BI Desktop, autenticar y refrescar es un paso interactivo. La validación de arriba es **estática** —comprueba que el modelo apunta a RDS y que las 16 vistas responden— pero no reemplaza el refresco real ni las capturas de las páginas 1 y 6. Ver `00-docs/11-traspaso-cloud.md`.
+
+Evidencia: `00-docs/05-evidencias/migracion/migracion-dw-completa.txt`, `metricas-cloud.txt`, `powerbi-validacion-cloud.txt`
 
 ---
 
@@ -324,7 +328,7 @@ Requisito de Semana 4: *"Actualizar ETL para conectarse a las bases migradas"* y
 
 El ETL no necesitó cambios de código para hablar con la nube, solo de configuración: `05-etl/.env.aws` apunta `PG_HOST` al endpoint de RDS PostgreSQL y `SQL_SERVIDOR` al de RDS SQL Server, con `SQL_PUERTO=1433` y `SQL_CIFRADO=yes`. Lo único que sí hizo falta tocar fue `config.py`, que armaba `SERVER={SQL_SERVIDOR}` sin puerto: un endpoint de RDS necesita `host,puerto` y ni la cadena ODBC ni `bcp` aceptan `host:puerto`.
 
-Corrida `INCREMENTAL` contra la infraestructura migrada, **COMPLETADO en 118 s**:
+Corrida `INCREMENTAL --solo-pg` contra la infraestructura migrada, **COMPLETADO en 118 s**:
 
 | Aspecto | Resultado |
 |---|---|
@@ -341,7 +345,11 @@ Corrida `INCREMENTAL` contra la infraestructura migrada, **COMPLETADO en 118 s**
 
 > **La bitácora distingue el entorno sola.** `etl.Ejecucion` tiene `Servidor sysname DEFAULT @@SERVERNAME`, así que cada corrida queda marcada con el nodo donde ocurrió. En la nube esa columna dice `EC2AMAZ-4AR53DH` y en local `873e20f577e4`. Fue el motivo de migrar la bitácora vacía: mezcladas, las corridas locales y las cloud serían indistinguibles en el reporte.
 
-La etapa más cara fue `VERIFICAR_INTEGRIDAD` con **76 s**, contra los 18 s del entorno local: revalidar 32 claves foráneas sobre 8,7 millones de filas cuesta bastante más en una `db.t3.small` con 2 vCPU.
+La etapa más cara fue `VERIFICAR_INTEGRIDAD` con **76 s**: revalidar 32 claves foráneas sobre 8,7 millones de filas cuesta bastante en una `db.t3.small` con 2 vCPU.
+
+> **Lo que esta corrida NO probó.** Se usó `--solo-pg`, así que ejercitó PostgreSQL en RDS y el DW en RDS, pero **no** leyó de Atlas ni de los archivos. Se eligió así porque la migración de MongoDB estaba en curso en ese momento y una lectura concurrente habría medido el restore, no el ETL.
+>
+> El camino de Mongo y archivos está probado contra el laboratorio local —la prueba de carga incremental de la sección 7.1 los ejercita completos— pero **falta una corrida cloud sin `--solo-pg`** para cerrar el entregable del todo. El procedimiento está en `00-docs/11-traspaso-cloud.md`, sección 3.4.
 
 Evidencia: `00-docs/05-evidencias/migracion/etl-cloud.txt`
 
