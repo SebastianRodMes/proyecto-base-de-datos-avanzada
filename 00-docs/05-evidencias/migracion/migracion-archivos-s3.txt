@@ -1,0 +1,43 @@
+=====================================================================
+ MIGRACION DE ARCHIVOS JSON Y XML A AMAZON S3
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
+ Fecha  : 2026-08-21 21:28:11
+ Bucket : s3://turismodw-migracion-063876841411
+=====================================================================
+
+=== 1. Archivos en el origen ===
+
+    paquetes_2025.xml                 40.5 KB
+    paquetes_2026.xml                 41.0 KB
+    preferencias_lote1.json        1,007.4 KB
+    preferencias_lote2.json        1,006.6 KB
+    preferencias_lote3.json        1,006.4 KB
+    TOTAL                          3,101.9 KB  (5 archivos)
+
+=== 2. Subida con aws s3 sync ===
+
+    JSON de preferencias (RF-10) -> s3://turismodw-migracion-063876841411/raw/preferencias/
+      sin cambios (sync no resubio nada)
+    XML de paquetes (RF-11) -> s3://turismodw-migracion-063876841411/raw/paquetes/
+      sin cambios (sync no resubio nada)
+
+    subida completa en 2.2 s
+
+=== 3. Verificacion: cada archivo, con su tamano ===
+
+    Archivo                             Local           S3  Veredicto
+    --------------------------------------------------------------------
+    paquetes_2025.xml                  41,520       41,520  OK
+    paquetes_2026.xml                  41,952       41,952  OK
+    preferencias_lote1.json         1,031,610    1,031,610  OK
+    preferencias_lote2.json         1,030,727    1,030,727  OK
+    preferencias_lote3.json         1,030,515    1,030,515  OK
+
+    LANDING ZONE VERIFICADA: los 5 archivos estan en S3 con el tamano exacto.
+
+    Nota: el ETL sigue leyendo los archivos desde el disco local. Migrar
+    la lectura a S3 exigiria agregar boto3 al ETL y reescribir
+    extract_files.py, cambio que no aporta al objetivo de la Semana 4 y
+    que ademas rompería la corrida on-premise. S3 cumple aqui el papel
+    de landing zone y de respaldo fuera de la maquina, que es para lo
+    que se contrato.

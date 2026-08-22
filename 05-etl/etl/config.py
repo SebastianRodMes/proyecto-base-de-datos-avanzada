@@ -30,9 +30,9 @@ DIR_ARCHIVOS_ENTRADA = RAIZ_PROYECTO / "03-archivos" / "entrada"
 DIR_SQL = RAIZ_PROYECTO / "04-sqlserver"
 DIR_EVIDENCIAS = RAIZ_PROYECTO / "00-docs" / "05-evidencias"
 
-# Los CSV intermedios que consume bcp. Van fuera del arbol del proyecto para
-# no ensuciar el entregable con archivos de varios cientos de megabytes.
-DIR_TRABAJO = Path(os.environ.get("TURISMO_DIR_TRABAJO", r"D:\DB\mssql\TurismoDW\etl"))
+# DIR_TRABAJO se define mas abajo, DESPUES de cargar el .env. Definirlo aqui
+# haria que TURISMO_DIR_TRABAJO se leyera antes de que el archivo poblara
+# os.environ, y el valor del .env quedaria ignorado en silencio.
 
 
 # ---------------------------------------------------------------------------
@@ -69,6 +69,16 @@ def _env_int(clave: str, defecto: int) -> int:
         return int(os.environ.get(clave, defecto))
     except ValueError:
         return defecto
+
+
+# Los archivos intermedios que consume bcp. Van fuera del arbol del proyecto
+# para no ensuciar el entregable con archivos de varios cientos de megabytes.
+#
+# Se resuelve aqui, ya cargado el .env, y no junto al resto de las rutas del
+# encabezado: alli se leia antes de que _cargar_env poblara os.environ, con
+# lo que TURISMO_DIR_TRABAJO definido en el .env no tenia ningun efecto y el
+# ETL escribia siempre en la ruta por omision.
+DIR_TRABAJO = Path(_env("TURISMO_DIR_TRABAJO", r"D:\DB\mssql\TurismoDW\etl"))
 
 
 # ---------------------------------------------------------------------------
@@ -108,6 +118,18 @@ SQL_SERVIDOR = _env("SQL_SERVIDOR", "TURISMODW")
 SQL_BASE = _env("SQL_BASE", "TurismoDW")
 SQL_DRIVER = _env("SQL_DRIVER", "ODBC Driver 17 for SQL Server")
 
+# Puerto explicito. Vacio por defecto: el alias TURISMODW ya lleva el puerto
+# incrustado en el registro de Windows y el contenedor usa el 1433 implicito.
+#
+# Hace falta para la migracion a la nube: un endpoint de Amazon RDS es
+# <instancia>.<sufijo>.us-east-1.rds.amazonaws.com y hay que decirle el
+# puerto aparte, porque ni ODBC ni bcp aceptan la sintaxis host:puerto.
+SQL_PUERTO = _env("SQL_PUERTO", "")
+
+# Cifrado del canal. En Docker local se deja apagado (ODBC 17 no lo fuerza).
+# RDS obliga TLS, asi que la configuracion de nube define SQL_CIFRADO=yes.
+SQL_CIFRADO = _env("SQL_CIFRADO", "")
+
 # Autenticacion integrada de Windows por defecto; si se define SQL_USUARIO
 # se cambia a autenticacion de SQL Server.
 SQL_USUARIO = _env("SQL_USUARIO", "")
@@ -133,15 +155,32 @@ BCP_SEP_CAMPO = "|~|"
 BCP_SEP_FILA = "\n"
 
 
+def destino_sql() -> str:
+    """Servidor en la forma que entienden ODBC y bcp: 'host' o 'host,puerto'.
+
+    SQL Server usa coma, no dos puntos, para separar el puerto. Si el valor
+    de SQL_SERVIDOR ya trae una coma (por ejemplo 'localhost,14330') se
+    respeta tal cual y no se le agrega nada.
+    """
+    if SQL_PUERTO and "," not in SQL_SERVIDOR:
+        return f"{SQL_SERVIDOR},{SQL_PUERTO}"
+    return SQL_SERVIDOR
+
+
 def cadena_odbc(base: str | None = None) -> str:
     """Cadena de conexion ODBC hacia SQL Server."""
     destino = base or SQL_BASE
     partes = [
         f"DRIVER={{{SQL_DRIVER}}}",
-        f"SERVER={SQL_SERVIDOR}",
+        f"SERVER={destino_sql()}",
         f"DATABASE={destino}",
         "TrustServerCertificate=yes",
     ]
+    # RDS termina la conexion si el cliente no negocia TLS. Se deja opcional
+    # para no cambiar el comportamiento del laboratorio local, donde el
+    # certificado autofirmado del contenedor haria ruido sin aportar nada.
+    if SQL_CIFRADO:
+        partes.append(f"Encrypt={SQL_CIFRADO}")
     if SQL_USUARIO:
         partes += [f"UID={SQL_USUARIO}", f"PWD={SQL_PASSWORD}"]
     else:
@@ -156,8 +195,13 @@ def argumentos_bcp() -> list[str]:
     existe en el bcp que viene con ODBC Driver 18. El instalado aqui es el de
     ODBC 17, que la rechaza con "unknown option u". ODBC 17 no fuerza cifrado
     por omision, asi que la conexion local funciona sin ella.
+
+    Contra Amazon RDS el destino lleva puerto explicito (ver destino_sql).
+    RDS acepta el bcp de ODBC 17 porque negocia TLS sin exigir que el cliente
+    valide la cadena del certificado; si una version futura lo exigiera, la
+    salida seria migrar a las herramientas de ODBC 18 y agregar -u aqui.
     """
-    args = ["-S", SQL_SERVIDOR]
+    args = ["-S", destino_sql()]
     if SQL_USUARIO:
         args += ["-U", SQL_USUARIO, "-P", SQL_PASSWORD]
     else:

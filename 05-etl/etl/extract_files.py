@@ -33,13 +33,15 @@ from .comun import escribir_lote, formato_duracion, formato_filas, log, ruta_tra
 # ---------------------------------------------------------------------------
 # RF-10 : preferencias en JSON
 # ---------------------------------------------------------------------------
-def _leer_preferencias(ejecucion_id: int, destino: Path) -> tuple[int, list[str]]:
+def _leer_preferencias(ejecucion_id: int, destino: Path,
+                       desde: float | None = None) -> tuple[int, list[str]]:
     """Orden de columnas (igual que stg.PreferenciaArchivo):
         archivo_origen, numero_registro, identificacion, correo,
         destinos_preferidos, tipo_alojamiento, presupuesto_estimado,
         temporada_viaje, idioma, grupo_viaje, payload_original, EjecucionId
     """
-    archivos = sorted(config.DIR_ARCHIVOS_ENTRADA.glob("preferencias_*.json"))
+    archivos = _filtrar_por_marca(
+        sorted(config.DIR_ARCHIVOS_ENTRADA.glob("preferencias_*.json")), desde)
     procesados: list[str] = []
 
     def filas():
@@ -80,13 +82,15 @@ def _texto(elemento, ruta: str) -> str | None:
     return hijo.text if hijo is not None else None
 
 
-def _leer_paquetes(ejecucion_id: int, destino: Path) -> tuple[int, list[str]]:
+def _leer_paquetes(ejecucion_id: int, destino: Path,
+                   desde: float | None = None) -> tuple[int, list[str]]:
     """Orden de columnas (igual que stg.PaqueteArchivo):
         archivo_origen, numero_registro, codigo_paquete, nombre, destino, pais,
         duracion_dias, precio_total, moneda, actividades, servicios_adicionales,
         temporada, payload_original, EjecucionId
     """
-    archivos = sorted(config.DIR_ARCHIVOS_ENTRADA.glob("paquetes_*.xml"))
+    archivos = _filtrar_por_marca(
+        sorted(config.DIR_ARCHIVOS_ENTRADA.glob("paquetes_*.xml")), desde)
     procesados: list[str] = []
 
     def filas():
@@ -137,21 +141,72 @@ def _leer_paquetes(ejecucion_id: int, destino: Path) -> tuple[int, list[str]]:
 
 
 # ---------------------------------------------------------------------------
-def extraer_todo(ejecucion_id: int) -> list[tuple[str, Path, int, float]]:
-    """Devuelve (tabla_staging, ruta, filas, segundos) por tipo de archivo."""
+# Patron de archivos por objeto de etl.Marca.
+PATRON_MARCA = {
+    "preferencias": "preferencias_*.json",
+    "paquetes": "paquetes_*.xml",
+}
+
+
+def calcular_marcas() -> dict[str, str]:
+    """Marca nueva por objeto: la fecha de modificacion mas alta.
+
+    Los archivos no tienen columna de control como una tabla, asi que la
+    marca es el mtime del sistema de archivos. Se guarda como epoch en
+    texto porque etl.Marca almacena varchar para admitir las tres fuentes.
+
+    Se usa repr() y no un formato de N decimales. Con "%.3f" el valor se
+    redondea hacia abajo, y entonces el propio archivo del que se saco la
+    marca queda con mtime MAYOR que ella: la siguiente corrida incremental
+    lo vuelve a procesar como si fuera nuevo. Ya paso una vez, con
+    paquetes_2026.xml reapareciendo en una corrida sin novedades. repr()
+    da la cadena mas corta que reconstruye el float exacto.
+    """
+    marcas: dict[str, str] = {}
+    if not config.DIR_ARCHIVOS_ENTRADA.is_dir():
+        return marcas
+    for objeto, patron in PATRON_MARCA.items():
+        archivos = list(config.DIR_ARCHIVOS_ENTRADA.glob(patron))
+        if archivos:
+            marcas[objeto] = repr(max(a.stat().st_mtime for a in archivos))
+    return marcas
+
+
+def _filtrar_por_marca(archivos: list[Path], desde: float | None) -> list[Path]:
+    """Deja solo los archivos modificados despues de la marca."""
+    if desde is None:
+        return archivos
+    return [a for a in archivos if a.stat().st_mtime > desde]
+
+
+def extraer_todo(ejecucion_id: int,
+                 marcas: dict[str, str] | None = None
+                 ) -> list[tuple[str, Path, int, float]]:
+    """Devuelve (tabla_staging, ruta, filas, segundos) por tipo de archivo.
+
+    Con `marcas` se procesan solo los archivos modificados despues de la
+    ultima corrida. Un lote que no cambio no se vuelve a leer.
+    """
+    marcas = marcas or {}
     resultados = []
 
     if not config.DIR_ARCHIVOS_ENTRADA.is_dir():
         log(f"  No existe {config.DIR_ARCHIVOS_ENTRADA}; se omiten JSON y XML.", "AVISO")
         return resultados
 
-    for tabla, archivo, funcion in (
-        ("stg.PreferenciaArchivo", "preferencia_archivo.dat", _leer_preferencias),
-        ("stg.PaqueteArchivo", "paquete_archivo.dat", _leer_paquetes),
+    for tabla, archivo, funcion, objeto in (
+        ("stg.PreferenciaArchivo", "preferencia_archivo.dat", _leer_preferencias,
+         "preferencias"),
+        ("stg.PaqueteArchivo", "paquete_archivo.dat", _leer_paquetes, "paquetes"),
     ):
         inicio = time.time()
         ruta = ruta_trabajo(archivo)
-        filas, detalle = funcion(ejecucion_id, ruta)
+        try:
+            desde = float(marcas[objeto]) if marcas.get(objeto) else None
+        except ValueError:
+            log(f"  Marca ilegible para {objeto}; se leen todos los archivos.", "AVISO")
+            desde = None
+        filas, detalle = funcion(ejecucion_id, ruta, desde)
         transcurrido = time.time() - inicio
 
         if filas == 0:

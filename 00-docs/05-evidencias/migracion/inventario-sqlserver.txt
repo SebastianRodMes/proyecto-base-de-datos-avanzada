@@ -1,0 +1,267 @@
+=====================================================================
+ INVENTARIO DE OBJETOS A MIGRAR - SQL SERVER
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Generado  : 2026-08-21 20:28:28
+ Servidor  : localhost,1433
+ Base      : TurismoDW
+=====================================================================
+Changed database context to 'TurismoDW'.
+ 
+=====================================================================
+ INVENTARIO DE OBJETOS - SQL SERVER (TurismoDW)
+=====================================================================
+ 
+=== 0. Instancia y base ===
+Servidor Version Edicion Compat Recovery Collation RCSI
+-------- ------- ------- ------ -------- --------- ----
+873e20f577e4 16.0.4265.3 Developer Edition (64-bit) 160 FULL SQL_Latin1_General_CP1_CI_AS ON
+ 
+=== 1. Filegroups y archivos (clave para la portabilidad a RDS) ===
+Filegroup Archivo TamanoMB UsadoMB PorDefecto RutaFisica
+--------- ------- -------- ------- ---------- ----------
+FG_2021 TurismoDW_2021 128 123 no /var/opt/mssql/data/TurismoDW_2021.ndf
+FG_2022 TurismoDW_2022 128 123 no /var/opt/mssql/data/TurismoDW_2022.ndf
+FG_2023 TurismoDW_2023 128 123 no /var/opt/mssql/data/TurismoDW_2023.ndf
+FG_2024 TurismoDW_2024 128 123 no /var/opt/mssql/data/TurismoDW_2024.ndf
+FG_2025 TurismoDW_2025 128 122 no /var/opt/mssql/data/TurismoDW_2025.ndf
+FG_2026 TurismoDW_2026 128 123 no /var/opt/mssql/data/TurismoDW_2026.ndf
+FG_2027PLUS TurismoDW_2027plus 128 0 no /var/opt/mssql/data/TurismoDW_2027plus.ndf
+FG_DIM TurismoDW_dim01 256 25 no /var/opt/mssql/data/TurismoDW_dim01.ndf
+FG_FACT TurismoDW_fact01 2048 139 SI /var/opt/mssql/data/TurismoDW_fact01.ndf
+FG_FACT TurismoDW_fact02 2048 139 SI /var/opt/mssql/data/TurismoDW_fact02.ndf
+FG_IDX TurismoDW_idx01 1280 907 no /var/opt/mssql/data/TurismoDW_idx01.ndf
+FG_PRE2021 TurismoDW_pre2021 128 0 no /var/opt/mssql/data/TurismoDW_pre2021.ndf
+FG_STG TurismoDW_stg01 2048 1447 no /var/opt/mssql/data/TurismoDW_stg01.ndf
+PRIMARY TurismoDW_sys 128 9 no /var/opt/mssql/data/TurismoDW_sys.mdf
+NULL TurismoDW_log 3072 1192 no /var/opt/mssql/data/TurismoDW_log.ldf
+ 
+=== 2. Tablas por esquema, con filas y espacio ===
+Esquema Tabla Columnas Filas Particiones EspacioMB
+------- ----- -------- ----- ----------- ---------
+dw DimCanal 4 16 1 0
+dw DimCliente 26 50006 1 23
+dw DimEstadoReserva 6 4 1 0
+dw DimHotel 14 201 1 0
+dw DimPaquete 13 151 1 0
+dw DimTiempo 18 2923 1 0
+dw DimTipoHabitacion 12 792 1 0
+dw DimTour 13 401 1 0
+dw FactInteraccionWeb 14 1500000 1 321
+dw FactOcupacionDiaria 10 431313 8 42
+dw FactResena 17 500000 1 115
+dw FactReserva 17 2000005 8 375
+dw FactReservaHabitacion 16 1632453 8 199
+dw FactReservaTour 13 2577212 8 293
+etl Ejecucion 12 1 1 0
+etl Error 13 84 1 0
+etl Etapa 12 24 1 0
+etl Numeros 1 4000 1 0
+stg Cliente 11 50005 1 14
+stg Hotel 10 200 1 0
+stg InteraccionWeb 14 1500000 1 408
+stg PaqueteArchivo 14 150 1 0
+stg PaqueteHotel 5 282 1 0
+stg PaqueteTour 4 227 1 0
+stg PaqueteTuristico 10 150 1 0
+stg PreferenciaArchivo 12 6000 1 6
+stg PreferenciaCliente 10 50005 1 21
+stg Resena 13 500000 1 191
+stg Reserva 12 2000005 1 740
+stg ReservaHabitacion 6 1632453 1 256
+stg ReservaTour 6 2577212 1 387
+stg TipoHabitacion 9 791 1 0
+stg Tour 12 400 1 0
+ 
+=== 3. Vistas ===
+Esquema Vista Lineas
+------- ----- ------
+dw vw_CalidadDatos 22
+dw vw_DimCanal 10
+dw vw_DimCliente 27
+dw vw_DimEstadoReserva 12
+dw vw_DimHotel 19
+dw vw_DimPaquete 17
+dw vw_DimTiempo 32
+dw vw_DimTipoHabitacion 15
+dw vw_DimTour 17
+dw vw_EstadoSistema 80
+dw vw_FactInteraccionWeb 17
+dw vw_FactOcupacionDiaria 13
+dw vw_FactResena 24
+dw vw_FactReserva 27
+dw vw_FactReservaHabitacion 18
+dw vw_FactReservaTour 16
+etl vw_UltimaEjecucion 27
+ 
+=== 4. Procedimientos y funciones ===
+Esquema Objeto Tipo Parametros Lineas
+------- ------ ---- ---------- ------
+etl fn_TiempoKey SQL_SCALAR_FUNCTION 2 18
+etl usp_CargarDimensiones SQL_STORED_PROCEDURE 1 331
+etl usp_CargarHechos SQL_STORED_PROCEDURE 1 209
+etl usp_CargarOcupacionDiaria SQL_STORED_PROCEDURE 1 76
+etl usp_FinalizarEjecucion SQL_STORED_PROCEDURE 3 35
+etl usp_FinalizarEtapa SQL_STORED_PROCEDURE 4 17
+etl usp_IniciarEjecucion SQL_STORED_PROCEDURE 2 26
+etl usp_IniciarEtapa SQL_STORED_PROCEDURE 5 20
+etl usp_RegistrarError SQL_STORED_PROCEDURE 11 24
+etl usp_ValidarStaging SQL_STORED_PROCEDURE 1 130
+etl usp_VerificarIntegridad SQL_STORED_PROCEDURE 1 71
+ 
+=== 5. Indices (tipo, alineacion y filegroup) ===
+Tabla Indice Tipo Unico Alineado Ubicacion
+----- ------ ---- ----- -------- ---------
+dw.DimCanal PK_DimCanal CLUSTERED SI no FG_DIM
+dw.DimCanal UQ_DimCanal NONCLUSTERED SI no FG_DIM
+dw.DimCliente PK_DimCliente CLUSTERED SI no FG_DIM
+dw.DimCliente UQ_DimCliente_Negocio NONCLUSTERED SI no FG_DIM
+dw.DimEstadoReserva PK_DimEstadoReserva CLUSTERED SI no FG_DIM
+dw.DimEstadoReserva UQ_DimEstadoReserva NONCLUSTERED SI no FG_DIM
+dw.DimHotel PK_DimHotel CLUSTERED SI no FG_DIM
+dw.DimHotel UQ_DimHotel_Negocio NONCLUSTERED SI no FG_DIM
+dw.DimPaquete PK_DimPaquete CLUSTERED SI no FG_DIM
+dw.DimPaquete UQ_DimPaquete_Negocio NONCLUSTERED SI no FG_DIM
+dw.DimTiempo PK_DimTiempo CLUSTERED SI no FG_DIM
+dw.DimTipoHabitacion PK_DimTipoHabitacion CLUSTERED SI no FG_DIM
+dw.DimTipoHabitacion UQ_DimTipoHab_Negocio NONCLUSTERED SI no FG_DIM
+dw.DimTour PK_DimTour CLUSTERED SI no FG_DIM
+dw.DimTour UQ_DimTour_Negocio NONCLUSTERED SI no FG_DIM
+dw.FactInteraccionWeb PK_FactInteraccionWeb CLUSTERED SI no FG_FACT
+dw.FactInteraccionWeb UQ_FIW_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactOcupacionDiaria PK_FactOcupacionDiaria CLUSTERED SI SI ps_TurismoAnio
+dw.FactOcupacionDiaria UQ_FOD_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactOcupacionDiaria NCCI_FactOcupacionDiaria NONCLUSTERED COLUMNSTO no SI ps_TurismoAnio
+dw.FactResena PK_FactResena CLUSTERED SI no FG_FACT
+dw.FactResena IX_FactResena_Cliente NONCLUSTERED no no FG_FACT
+dw.FactResena UQ_FRes_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactReserva PK_FactReserva CLUSTERED SI SI ps_TurismoAnio
+dw.FactReserva IX_FactReserva_Cliente NONCLUSTERED no SI ps_TurismoAnio
+dw.FactReserva IX_FactReserva_FechaInicio NONCLUSTERED no SI ps_TurismoAnio
+dw.FactReserva UQ_FactReserva_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactReserva NCCI_FactReserva NONCLUSTERED COLUMNSTO no SI ps_TurismoAnio
+dw.FactReservaHabitacion PK_FactReservaHabitacion CLUSTERED SI SI ps_TurismoAnio
+dw.FactReservaHabitacion UQ_FRH_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactReservaTour PK_FactReservaTour CLUSTERED SI SI ps_TurismoAnio
+dw.FactReservaTour UQ_FRT_Negocio NONCLUSTERED SI no FG_IDX
+dw.FactReservaTour NCCI_FactReservaTour NONCLUSTERED COLUMNSTO no SI ps_TurismoAnio
+etl.Ejecucion PK_EtlEjecucion CLUSTERED SI no FG_DIM
+etl.Error PK_EtlError CLUSTERED SI no FG_DIM
+etl.Error IX_EtlError_Ejecucion NONCLUSTERED no no FG_IDX
+etl.Etapa PK_EtlEtapa CLUSTERED SI no FG_DIM
+etl.Etapa IX_EtlEtapa_Ejecucion NONCLUSTERED no no FG_IDX
+etl.Numeros PK__Numeros__3BD01993D0FABC67 CLUSTERED SI no FG_DIM
+stg.Reserva IX_stgReserva_cliente NONCLUSTERED no no FG_IDX
+stg.Reserva IX_stgReserva_id NONCLUSTERED no no FG_IDX
+stg.ReservaHabitacion IX_stgRH_reserva NONCLUSTERED no no FG_IDX
+stg.ReservaTour IX_stgRT_reserva NONCLUSTERED no no FG_IDX
+ 
+=== 6. Claves foraneas (y si son confiables) ===
+Restriccion Origen Destino NoConfiable Deshabilit
+----------- ------ ------- ----------- ----------
+FK_DimTipoHab_Hotel dw.DimTipoHabitacion dw.DimHotel no no
+FK_FIW_Canal dw.FactInteraccionWeb dw.DimCanal no no
+FK_FIW_Cliente dw.FactInteraccionWeb dw.DimCliente no no
+FK_FIW_Hotel dw.FactInteraccionWeb dw.DimHotel no no
+FK_FIW_Tiempo dw.FactInteraccionWeb dw.DimTiempo no no
+FK_FIW_Tour dw.FactInteraccionWeb dw.DimTour no no
+FK_FOD_Hotel dw.FactOcupacionDiaria dw.DimHotel no no
+FK_FOD_Tiempo dw.FactOcupacionDiaria dw.DimTiempo no no
+FK_FRes_Cliente dw.FactResena dw.DimCliente no no
+FK_FRes_Hotel dw.FactResena dw.DimHotel no no
+FK_FRes_Paquete dw.FactResena dw.DimPaquete no no
+FK_FRes_Tiempo dw.FactResena dw.DimTiempo no no
+FK_FRes_Tour dw.FactResena dw.DimTour no no
+FK_FactReserva_Cliente dw.FactReserva dw.DimCliente no no
+FK_FactReserva_Estado dw.FactReserva dw.DimEstadoReserva no no
+FK_FactReserva_FechaFin dw.FactReserva dw.DimTiempo no no
+FK_FactReserva_FechaInicio dw.FactReserva dw.DimTiempo no no
+FK_FactReserva_FechaReserva dw.FactReserva dw.DimTiempo no no
+FK_FactReserva_Paquete dw.FactReserva dw.DimPaquete no no
+FK_FRH_Cliente dw.FactReservaHabitacion dw.DimCliente no no
+FK_FRH_Estado dw.FactReservaHabitacion dw.DimEstadoReserva no no
+FK_FRH_FechaFin dw.FactReservaHabitacion dw.DimTiempo no no
+FK_FRH_FechaInicio dw.FactReservaHabitacion dw.DimTiempo no no
+FK_FRH_Hotel dw.FactReservaHabitacion dw.DimHotel no no
+FK_FRH_TipoHabitacion dw.FactReservaHabitacion dw.DimTipoHabitacion no no
+FK_FRT_Cliente dw.FactReservaTour dw.DimCliente no no
+FK_FRT_Estado dw.FactReservaTour dw.DimEstadoReserva no no
+FK_FRT_FechaInicio dw.FactReservaTour dw.DimTiempo no no
+FK_FRT_Tour dw.FactReservaTour dw.DimTour no no
+FK_EtlError_Ejecucion etl.Error etl.Ejecucion no no
+FK_EtlEtapa_Ejecucion etl.Etapa etl.Ejecucion no no
+ 
+=== 7. Particionamiento ===
+Funcion Tipo Limites Particion
+------- ---- ------- ---------
+pf_TurismoAnio RANGE RIGHT 7 8
+Esquema Particion Filegroup
+------- --------- ---------
+ps_TurismoAnio 1 FG_PRE2021
+ps_TurismoAnio 2 FG_2021
+ps_TurismoAnio 3 FG_2022
+ps_TurismoAnio 4 FG_2023
+ps_TurismoAnio 5 FG_2024
+ps_TurismoAnio 6 FG_2025
+ps_TurismoAnio 7 FG_2026
+ps_TurismoAnio 8 FG_2027PLUS
+ 
+=== 8. Distribucion de filas por particion (tablas particionadas) ===
+Tabla Particion Filegroup Filas
+----- --------- --------- -----
+dw.FactOcupacionDiaria 1 FG_PRE2021 0
+dw.FactOcupacionDiaria 2 FG_2021 71519
+dw.FactOcupacionDiaria 3 FG_2022 71516
+dw.FactOcupacionDiaria 4 FG_2023 71518
+dw.FactOcupacionDiaria 5 FG_2024 71721
+dw.FactOcupacionDiaria 6 FG_2025 71518
+dw.FactOcupacionDiaria 7 FG_2026 71526
+dw.FactOcupacionDiaria 8 FG_2027PLUS 1995
+dw.FactReserva 1 FG_PRE2021 0
+dw.FactReserva 2 FG_2021 333424
+dw.FactReserva 3 FG_2022 334078
+dw.FactReserva 4 FG_2023 333542
+dw.FactReserva 5 FG_2024 334499
+dw.FactReserva 6 FG_2025 331702
+dw.FactReserva 7 FG_2026 332760
+dw.FactReserva 8 FG_2027PLUS 0
+dw.FactReservaHabitacion 1 FG_PRE2021 0
+dw.FactReservaHabitacion 2 FG_2021 271958
+dw.FactReservaHabitacion 3 FG_2022 272510
+dw.FactReservaHabitacion 4 FG_2023 272510
+dw.FactReservaHabitacion 5 FG_2024 273205
+dw.FactReservaHabitacion 6 FG_2025 270564
+dw.FactReservaHabitacion 7 FG_2026 271706
+dw.FactReservaHabitacion 8 FG_2027PLUS 0
+dw.FactReservaTour 1 FG_PRE2021 0
+dw.FactReservaTour 2 FG_2021 429535
+dw.FactReservaTour 3 FG_2022 430384
+dw.FactReservaTour 4 FG_2023 429913
+dw.FactReservaTour 5 FG_2024 431468
+dw.FactReservaTour 6 FG_2025 427076
+dw.FactReservaTour 7 FG_2026 428836
+dw.FactReservaTour 8 FG_2027PLUS 0
+ 
+=== 9. Resumen contable de objetos ===
+Categoria Cantidad
+--------- --------
+Tablas stg 15
+Tablas dw (dimension) 8
+Tablas dw (hechos) 6
+Tablas etl (control) 4
+Vistas 17
+Procedimientos 10
+Funciones 1
+Indices agrupados 18
+Indices no agrupados 22
+Columnstore 3
+Claves foraneas 31
+Filegroups de usuario 12
+Archivos de datos 14
+Funciones de particion 1
+ 
+=== 10. Tamano total de la base (define si cabe en Express, tope 10 GB) ===
+ArchivosDatosMB UsadoDatosMB LogMB
+--------------- ------------ -----
+8832 3409 3072
+ 
+>> Fin del inventario de SQL Server.

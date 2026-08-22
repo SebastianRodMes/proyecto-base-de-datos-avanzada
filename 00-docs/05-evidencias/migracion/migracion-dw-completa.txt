@@ -1,0 +1,45 @@
+=====================================================================
+ MIGRACION DEL DW A AMAZON RDS - COMPLETA
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Fecha   : 2026-08-21 22:08:44
+ Origen  : localhost,1433 / TurismoDW
+ Destino : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433 / TurismoDW
+=====================================================================
+
+--- Modo leido de la base: FILEGROUPS ---
+
+--- B1. Desactivacion temporal de claves foraneas en el destino ---
+
+--- B1b. Vaciado del destino antes de copiar ---
+    15 tablas vaciadas en el destino.
+
+--- B2. Copia de datos con bcp ---
+
+    Tabla                              Origen      Destino         MB  Segundos
+    --------------------------------------------------------------------------
+    dw.DimTiempo                        2,923        2,923        0.2       1.7
+    dw.DimCliente                      50,009       50,009       19.6      16.6
+    dw.DimHotel                           201          201        0.0       1.4
+    dw.DimTipoHabitacion                  792          792        0.1       1.3
+    dw.DimTour                            401          401        0.1       2.1
+    dw.DimPaquete                         151          151        0.0       1.5
+    dw.DimEstadoReserva                     4            4        0.0       2.1
+    dw.DimCanal                            18           18        0.0       1.4
+    etl.Numeros                         4,000        4,000        0.0       1.9
+    dw.FactReserva                  2,000,010    2,000,010      204.1     124.7
+    dw.FactReservaHabitacion        1,632,458    1,632,458      174.4      91.4
+    dw.FactReservaTour              2,577,212    2,577,212      238.4     147.4
+    dw.FactOcupacionDiaria            431,321      431,321       26.3      18.2
+    dw.FactResena                     500,002      500,002       53.8      24.8
+    dw.FactInteraccionWeb           1,500,002    1,500,002      167.2      73.3
+    --------------------------------------------------------------------------
+    TOTAL                                        8,699,504                509.9
+
+--- C1. Indices y columnstore (despues de la carga) ---
+
+--- C2. Revalidacion de claves foraneas ---
+    Todas las claves foraneas quedaron validadas y confiables.
+    Claves foraneas no confiables o deshabilitadas: 0
+
+--- Resultado ---
+    MIGRACION CORRECTA. 8,699,504 filas en 509.9 s.

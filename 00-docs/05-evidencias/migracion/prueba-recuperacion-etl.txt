@@ -1,0 +1,125 @@
+=====================================================================
+ PRUEBA DE RECUPERACION ANTE ERROR DE ETL
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
+ Fecha: 2026-08-21 20:59:48
+=====================================================================
+
+=== 1. Estado antes de provocar el fallo ===
+
+Hecho Filas
+----- -----
+dw.FactInteraccionWeb 1500002
+dw.FactOcupacionDiaria 431321
+dw.FactResena 500002
+dw.FactReserva 2000010
+dw.FactReservaHabitacion 1632458
+dw.FactReservaTour 2577212
+
+Marcas de agua antes del fallo:
+Fuente Objeto Marca
+------ ------ -----
+JSON preferencias 1787362659.4497533
+MONGODB interacciones_web 2027-01-21T12:10:00
+MONGODB resenas 2027-01-21T11:30:00
+POSTGRESQL cliente 2026-08-22 02:47:58.623965
+POSTGRESQL preferencia_cliente 2026-08-22 02:13:14.281377
+POSTGRESQL reserva 2027-01-10 09:00:00
+XML paquetes 1787362659.3683026
+
+=== 2. Corrida previa correcta (deja los .dat en el directorio de trabajo) ===
+    [21:00:11] INFO    Estado     : COMPLETADO
+    Directorio de trabajo: C:\Users\alexh\AppData\Local\Temp\turismodw-etl
+
+=== 3. Corrupcion deliberada de reserva.dat ===
+    Se agregaron 50 filas bien formadas pero invalidas (0 -> 15400 bytes).
+    Cada una viola dos veces el esquema: reserva_id de 200 caracteres en
+    una nvarchar(50), y EjecucionId con texto en una columna int.
+    bcp tolera 10 filas malas (-m 10). Con 50 aborta.
+
+=== 4. Corrida con el archivo corrupto (debe fallar) ===
+    Codigo de salida del ETL: 1  (se espera 1)
+    [21:00:14] ERROR El ETL fallo: bcp fallo al cargar stg.Reserva (codigo 1).
+    SQLState = 22001, NativeError = 0
+    Error = [Microsoft][ODBC Driver 17 for SQL Server]String data, right truncation
+    SQLState = 22001, NativeError = 0
+    Error = [Microsoft][ODBC Driver 17 for SQL Server]String data, right truncation
+    SQLState = 22001, NativeError = 0
+
+=== 5. Lo que la bitacora registro del fallo ===
+
+Ejecucion fallida:
+Ejecucion Modo Estado Segundos Mensaje
+--------- ---- ------ -------- -------
+13 INCREMENTAL FALLIDO 1 bcp fallo al cargar stg.Reserva (codigo 1).
+Starting copy...
+SQLState = 22001, NativeError
+
+Etapa culpable, identificada por nombre y objeto destino:
+Etapa Destino Estado Mensaje
+----- ------- ------ -------
+CARGAR_STG stg.Reserva FALLIDO bcp fallo al cargar stg.Reserva (codigo 1).
+Starting copy...
+SQLState = 22001, N
+
+=== 6. El DW conservo su estado ===
+
+Hecho Filas
+----- -----
+dw.FactInteraccionWeb 1500002
+dw.FactOcupacionDiaria 431321
+dw.FactResena 500002
+dw.FactReserva 2000010
+dw.FactReservaHabitacion 1632458
+dw.FactReservaTour 2577212
+
+    Los conteos son IDENTICOS a los de antes del fallo.
+    El fallo ocurrio en la carga a staging, antes de tocar dw.*,
+    asi que ninguna tabla de hechos quedo a medias.
+
+Marcas de agua despues del fallo:
+Fuente Objeto Marca
+------ ------ -----
+JSON preferencias 1787362659.4497533
+MONGODB interacciones_web 2027-01-21T12:10:00
+MONGODB resenas 2027-01-21T11:30:00
+POSTGRESQL cliente 2026-08-22 02:47:58.623965
+POSTGRESQL preferencia_cliente 2026-08-22 02:13:14.281377
+POSTGRESQL reserva 2027-01-10 09:00:00
+XML paquetes 1787362659.3683026
+
+    Las marcas NO avanzaron. El siguiente intento vuelve a traer el
+    mismo lote en vez de saltarselo: se prefiere reprocesar antes que
+    perder datos, y la carga incremental es idempotente porque borra
+    por clave de negocio antes de insertar.
+
+=== 7. Recuperacion: se relanza el ETL ===
+    Archivo intermedio restaurado (simula corregir el origen del fallo).
+    Codigo de salida: 0  (se espera 0)
+
+Ultimas tres ejecuciones:
+Ejecucion Modo Estado Leidos Segundos
+--------- ---- ------ ------ --------
+14 INCREMENTAL COMPLETADO 2050 22
+13 INCREMENTAL FALLIDO 0 1
+12 INCREMENTAL COMPLETADO 2050 21
+
+=== 8. Estado final ===
+
+Hecho Filas
+----- -----
+dw.FactInteraccionWeb 1500002
+dw.FactOcupacionDiaria 431321
+dw.FactResena 500002
+dw.FactReserva 2000010
+dw.FactReservaHabitacion 1632458
+dw.FactReservaTour 2577212
+
+=== 9. Veredicto ===
+
+    RECUPERACION CORRECTA.
+
+    - El fallo devolvio codigo 1 y quedo registrado como FALLIDO.
+    - La etapa culpable esta identificada en etl.Etapa.
+    - Los hechos del DW no se alteraron durante el fallo.
+    - Las marcas de agua no avanzaron.
+    - El relanzamiento devolvio codigo 0 y convergio al mismo estado.

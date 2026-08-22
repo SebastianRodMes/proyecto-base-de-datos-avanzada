@@ -20,3 +20,10 @@ desktop.ini
 .pbi/
 *.abf
 *.pbix
+.secrets
+
+# Credenciales locales de la migracion cloud (NUNCA versionar)
+.secrets/
+05-etl/.env.aws
+*_accessKeys.csv
+*.pem

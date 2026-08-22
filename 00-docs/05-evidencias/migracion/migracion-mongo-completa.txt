@@ -1,0 +1,84 @@
+=====================================================================
+ MIGRACION DE MONGODB A ATLAS M0 - COMPLETA
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
+ Fecha   : 2026-08-21 22:42:01
+ Destino : moviles-ii.muywssn.mongodb.net / turismo_nosql
+=====================================================================
+
+Herramienta: mongodump / mongorestore en formato BSON, ejecutados dentro
+del contenedor de origen. BSON conserva los tipos nativos; mongoexport
+habria degradado fechas y enteros de 64 bits.
+
+=== 1. Origen ===
+
+    resenas                   500,002 docs     162 MB logicos      40 MB en disco
+    interacciones_web       1,500,002 docs     396 MB logicos      99 MB en disco
+
+=== 2. Destino ===
+
+    -- resenas  docs=500002
+         _id_                            {"_id":1}
+         fecha_1                         {"fecha":1}
+         entidad_id_1_tipo_entidad_1     {"entidad_id":1,"tipo_entidad":1}
+         cliente_id_1                    {"cliente_id":1}
+    -- interacciones_web  docs=749872
+         _id_                            {"_id":1}
+         fecha_evento_1                  {"fecha_evento":1}
+         cliente_id_1                    {"cliente_id":1}
+         tipo_evento_1                   {"tipo_evento":1}
+    
+    dataSize    : 360 MB
+    storageSize : 103 MB
+    indexSize   : 65 MB
+    objetos     : 1249874
+
+=== 3. Veredicto por coleccion ===
+
+    Coleccion                 Origen        Atlas   Cobertura  Veredicto
+    ------------------------------------------------------------------------
+    resenas                  500,002      500,002      100.0%  COMPLETA
+    interacciones_web      1,500,002      749,872       50.0%  MUESTREO DETERMINISTA
+
+=== 4. Por que interacciones_web va muestreada ===
+
+El cupo de Atlas M0 es de 512 MB y se cuenta por CLUSTER, no por base de
+datos. El cluster reutilizado ya aloja los datos de otro proyecto, asi que
+turismo_nosql no dispone de los 512 MB completos.
+
+Un primer intento de migrar las 1,500,002 interacciones se detuvo solo, a
+1,128,000 documentos, con el mensaje del servidor:
+
+    (AtlasError) you are over your space quota, using 518 MB of 512 MB.
+    Writes are blocked on your cluster.
+
+Ese resultado era una truncacion accidental: no reproducible, porque
+depende de en que documento se agoto el espacio. Se descarto y se
+reemplazo por un MUESTREO DETERMINISTA:
+
+    --query '{"duracion_seg": {"$mod": [2, 0]}}'
+
+que selecciona 749,872 documentos, el 50.0 % exacto de la coleccion. Dos
+corridas del script producen el mismo conjunto, que es lo que hace la
+evidencia verificable.
+
+Se eligio duracion_seg y no cliente_id porque el 35 % de las interacciones
+son anonimas y llevan cliente_id nulo: el operador $mod no las alcanza y el
+muestreo habria quedado sesgado hacia los visitantes identificados.
+
+La coleccion resenas se migro COMPLETA a proposito: alimenta FactResena y
+todos los KPI de satisfaccion, que son los que el dashboard usa.
+
+=== 5. Indices ===
+
+Los 8 indices (2 implicitos _id_ y 6 explicitos) se recrearon en el
+destino. mongorestore los reconstruye al terminar de cargar cada coleccion,
+leyendolos de los metadatos del volcado.
+
+=== 6. Como levantar la limitacion ===
+
+    - Atlas M10 dedicado (~57 USD/mes): 10 GB, cabria todo con holgura.
+    - Un cluster M0 propio en un proyecto aparte, sin compartir cupo. Requiere
+      que el service account tenga el rol de creador de proyectos en la
+      organizacion, que hoy no tiene.
+    - Amazon DocumentDB: sin capa gratuita y solo accesible dentro de la VPC,
+      lo que obligaria a levantar un bastion EC2.

@@ -182,7 +182,7 @@ table EstadoSistema
 		mode: import
 		source =
 				let
-				    Origen = Sql.Database("localhost,14330", "TurismoDW"),
+				    Origen = Sql.Database("turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433", "TurismoDW"),
 				    Datos = Origen{[Schema="dw",Item="vw_EstadoSistema"]}[Data]
 				in
 				    Datos

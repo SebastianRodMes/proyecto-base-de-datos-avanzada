@@ -1,0 +1,61 @@
+ 
+=====================================================================
+ VALIDACION POST-MIGRACION
+=====================================================================
+ 
+Entorno Edicion Version Base Fecha
+------- ------- ------- ---- -----
+EC2AMAZ-4AR53DH Express Edition (64-bit) 16.0.4205.1 TurismoDW 2026-08-22 04:19:25
+ 
+=== 1. Reconciliacion contra los conteos del origen ===
+Num Control Esperado Obtenido Diferencia Veredicto
+--- ------- -------- -------- ---------- ---------
+1 Reservas migradas 2,000,010 2,000,010 0 OK
+2 Suma de MontoTotal 16,709,503,160.28 16,709,503,160.28 0.00 OK
+3 Resenas migradas 500,002 500,002 0 OK
+4 Interacciones migradas 1,500,002 1,500,002 0 OK
+5 Claves foraneas no confiables o deshabilitadas 0 0  OK
+6 Hechos sin dimension resuelta (ClienteKey = -1) 0 0  OK
+7 Huerfanos FactReserva -> DimCliente 0 0  OK
+8 ReservaId duplicados 0 0  OK
+9 Dimensiones presentes 8 8  OK
+10 Hechos presentes 6 6  OK
+11 Vistas presentes 17 18  OK
+12 Indices columnstore 3 3  OK
+13 Tablas particionadas 4 4  OK
+14 dw.vw_EstadoSistema responde 1 fila 1 fila  OK
+ 
+=== 2. Metricas comparables (Tabla | Filas | SumaControl | Checksum) ===
+Tabla Filas SumaControl Checksum
+----- ----- ----------- --------
+dw.DimCanal 18 18.00 -1914908563
+dw.DimCliente 50009 50009.00 -503861286
+dw.DimEstadoReserva 4 4.00 -1726926235
+dw.DimHotel 201 201.00 -2080898072
+dw.DimPaquete 151 151.00 1625140968
+dw.DimTiempo 2923 2923.00 -1206700
+dw.DimTipoHabitacion 792 792.00 1624531949
+dw.DimTour 401 401.00 390021312
+dw.FactInteraccionWeb 1500002 676570022.00 -402968381
+dw.FactOcupacionDiaria 431321 4662098648.91 1086298692
+dw.FactResena 500002 1978880.00 77252577
+dw.FactReserva 2000010 16709503160.28 1639399849
+dw.FactReservaHabitacion 1632458 5632663058.37 -2134913524
+dw.FactReservaTour 2577212 1673999112.61 -1914188793
+ 
+=== 3. Distribucion de dw.FactReserva por particion ===
+Particion Filegroup Filas
+--------- --------- -----
+1 FG_PRE2021 0
+2 FG_2021 333424
+3 FG_2022 334078
+4 FG_2023 333542
+5 FG_2024 334499
+6 FG_2025 331702
+7 FG_2026 332760
+8 FG_2027PLUS 5
+ 
+=== 4. Veredicto ===
+Pruebas Correctas PorRevisar Global
+------- --------- ---------- ------
+14 14 0 MIGRACION VERIFICADA

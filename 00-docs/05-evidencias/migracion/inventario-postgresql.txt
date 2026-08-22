@@ -1,0 +1,158 @@
+=====================================================================
+ INVENTARIO DE OBJETOS A MIGRAR - POSTGRESQL
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1
+ Generado  : 2026-08-21 20:28:29
+ Contenedor: turismodw-postgres-1
+ Base      : turismo
+=====================================================================
+
+=== 0. Version y tamano de la base ===
+                                                       version                                                        
+----------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+ tamano_total 
+--------------
+ 768 MB
+(1 row)
+
+
+=== 1. Tablas, filas reales y tamano ===
+        tabla        | columnas | filas_estimadas | tamano 
+---------------------+----------+-----------------+--------
+ reserva             |       11 |         2000005 | 283 MB
+ reserva_tour        |        5 |         2577212 | 274 MB
+ reserva_habitacion  |        5 |         1632453 | 176 MB
+ cliente             |       10 |           50005 | 13 MB
+ preferencia_cliente |        9 |           50005 | 12 MB
+ tipo_habitacion     |        8 |             791 | 296 kB
+ hotel               |        9 |             200 | 120 kB
+ tour                |       11 |             400 | 120 kB
+ paquete_turistico   |        9 |             150 | 80 kB
+ paquete_hotel       |        4 |             282 | 72 kB
+ paquete_tour        |        3 |             227 | 64 kB
+ error_importacion   |        7 |               3 | 64 kB
+ importacion_datos   |        9 |              72 | 56 kB
+(13 rows)
+
+
+=== 2. Conteo exacto de filas por tabla ===
+        tabla        |  count  
+---------------------+---------
+ reserva_tour        | 2577212
+ reserva             | 2000005
+ reserva_habitacion  | 1632453
+ preferencia_cliente |   50005
+ cliente             |   50005
+ tipo_habitacion     |     791
+ tour                |     400
+ paquete_hotel       |     282
+ paquete_tour        |     227
+ hotel               |     200
+ paquete_turistico   |     150
+ importacion_datos   |      72
+ error_importacion   |       3
+(13 rows)
+
+
+=== 3. Columnas de tipo JSONB (delicadas al migrar) ===
+     table_name      |    column_name    | data_type 
+---------------------+-------------------+-----------
+ error_importacion   | datos_originales  | jsonb
+ preferencia_cliente | datos_adicionales | jsonb
+(2 rows)
+
+
+=== 4. Indices (el GIN sobre JSONB es el critico) ===
+      tablename      |         indexname          |                                                   indexdef                                                   
+---------------------+----------------------------+--------------------------------------------------------------------------------------------------------------
+ cliente             | cliente_correo_key         | CREATE UNIQUE INDEX cliente_correo_key ON public.cliente USING btree (correo)
+ cliente             | cliente_identificacion_key | CREATE UNIQUE INDEX cliente_identificacion_key ON public.cliente USING btree (identificacion)
+ cliente             | cliente_pkey               | CREATE UNIQUE INDEX cliente_pkey ON public.cliente USING btree (cliente_id)
+ error_importacion   | error_importacion_pkey     | CREATE UNIQUE INDEX error_importacion_pkey ON public.error_importacion USING btree (error_id)
+ hotel               | hotel_pkey                 | CREATE UNIQUE INDEX hotel_pkey ON public.hotel USING btree (hotel_id)
+ importacion_datos   | importacion_datos_pkey     | CREATE UNIQUE INDEX importacion_datos_pkey ON public.importacion_datos USING btree (importacion_id)
+ paquete_hotel       | paquete_hotel_pkey         | CREATE UNIQUE INDEX paquete_hotel_pkey ON public.paquete_hotel USING btree (paquete_hotel_id)
+ paquete_tour        | paquete_tour_pkey          | CREATE UNIQUE INDEX paquete_tour_pkey ON public.paquete_tour USING btree (paquete_tour_id)
+ paquete_turistico   | paquete_turistico_pkey     | CREATE UNIQUE INDEX paquete_turistico_pkey ON public.paquete_turistico USING btree (paquete_id)
+ preferencia_cliente | idx_pref_gin               | CREATE INDEX idx_pref_gin ON public.preferencia_cliente USING gin (datos_adicionales)
+ preferencia_cliente | preferencia_cliente_pkey   | CREATE UNIQUE INDEX preferencia_cliente_pkey ON public.preferencia_cliente USING btree (preferencia_id)
+ reserva             | idx_reserva_cliente        | CREATE INDEX idx_reserva_cliente ON public.reserva USING btree (cliente_id)
+ reserva             | idx_reserva_fechas         | CREATE INDEX idx_reserva_fechas ON public.reserva USING btree (fecha_inicio, fecha_fin)
+ reserva             | reserva_pkey               | CREATE UNIQUE INDEX reserva_pkey ON public.reserva USING btree (reserva_id)
+ reserva_habitacion  | idx_rh_reserva             | CREATE INDEX idx_rh_reserva ON public.reserva_habitacion USING btree (reserva_id)
+ reserva_habitacion  | reserva_habitacion_pkey    | CREATE UNIQUE INDEX reserva_habitacion_pkey ON public.reserva_habitacion USING btree (reserva_habitacion_id)
+ reserva_tour        | idx_rt_reserva             | CREATE INDEX idx_rt_reserva ON public.reserva_tour USING btree (reserva_id)
+ reserva_tour        | reserva_tour_pkey          | CREATE UNIQUE INDEX reserva_tour_pkey ON public.reserva_tour USING btree (reserva_tour_id)
+ tipo_habitacion     | tipo_habitacion_pkey       | CREATE UNIQUE INDEX tipo_habitacion_pkey ON public.tipo_habitacion USING btree (tipo_habitacion_id)
+ tour                | tour_pkey                  | CREATE UNIQUE INDEX tour_pkey ON public.tour USING btree (tour_id)
+(20 rows)
+
+
+=== 5. Claves foraneas ===
+              constraint_name               |       origen        |      destino      |      columna       
+--------------------------------------------+---------------------+-------------------+--------------------
+ error_importacion_importacion_id_fkey      | error_importacion   | importacion_datos | importacion_id
+ paquete_hotel_paquete_id_fkey              | paquete_hotel       | paquete_turistico | paquete_id
+ paquete_hotel_hotel_id_fkey                | paquete_hotel       | hotel             | hotel_id
+ paquete_tour_tour_id_fkey                  | paquete_tour        | tour              | tour_id
+ paquete_tour_paquete_id_fkey               | paquete_tour        | paquete_turistico | paquete_id
+ preferencia_cliente_cliente_id_fkey        | preferencia_cliente | cliente           | cliente_id
+ reserva_cliente_id_fkey                    | reserva             | cliente           | cliente_id
+ reserva_paquete_id_fkey                    | reserva             | paquete_turistico | paquete_id
+ reserva_habitacion_reserva_id_fkey         | reserva_habitacion  | reserva           | reserva_id
+ reserva_habitacion_tipo_habitacion_id_fkey | reserva_habitacion  | tipo_habitacion   | tipo_habitacion_id
+ reserva_tour_reserva_id_fkey               | reserva_tour        | reserva           | reserva_id
+ reserva_tour_tour_id_fkey                  | reserva_tour        | tour              | tour_id
+ tipo_habitacion_hotel_id_fkey              | tipo_habitacion     | hotel             | hotel_id
+(13 rows)
+
+
+=== 6. Secuencias ===
+                sequence_name                 | data_type 
+----------------------------------------------+-----------
+ cliente_cliente_id_seq                       | bigint
+ error_importacion_error_id_seq               | bigint
+ hotel_hotel_id_seq                           | bigint
+ importacion_datos_importacion_id_seq         | bigint
+ paquete_hotel_paquete_hotel_id_seq           | bigint
+ paquete_tour_paquete_tour_id_seq             | bigint
+ paquete_turistico_paquete_id_seq             | bigint
+ preferencia_cliente_preferencia_id_seq       | bigint
+ reserva_habitacion_reserva_habitacion_id_seq | bigint
+ reserva_reserva_id_seq                       | bigint
+ reserva_tour_reserva_tour_id_seq             | bigint
+ tipo_habitacion_tipo_habitacion_id_seq       | bigint
+ tour_tour_id_seq                             | bigint
+(13 rows)
+
+
+=== 7. Vistas, funciones y procedimientos ===
+ vista 
+-------
+(0 rows)
+
+ routine_name | routine_type 
+--------------+--------------
+(0 rows)
+
+
+=== 8. Extensiones instaladas ===
+ extname | extversion 
+---------+------------
+ plpgsql | 1.0
+(1 row)
+
+
+=== 9. Resumen contable ===
+    categoria    | count 
+-----------------+-------
+ tablas          |    13
+ indices         |    20
+ secuencias      |    13
+ claves foraneas |    13
+ vistas          |     0
+ rutinas         |     0
+(6 rows)
+

@@ -23,10 +23,30 @@ Flujo:
     6. INTEGRIDAD   revalida las FK y actualiza estadisticas
 
 Uso:
-    python run_etl.py                 # carga completa
-    python run_etl.py --solo-mongo    # solo la parte NoSQL
-    python run_etl.py --solo-archivos # solo JSON y XML
-    python run_etl.py --sin-extraer   # reutiliza los archivos ya extraidos
+    python run_etl.py                     # carga completa
+    python run_etl.py --modo INCREMENTAL  # solo lo cambiado desde la ultima corrida
+    python run_etl.py --solo-mongo        # solo la parte NoSQL
+    python run_etl.py --solo-archivos     # solo JSON y XML
+    python run_etl.py --sin-extraer       # reutiliza los archivos ya extraidos
+
+Carga incremental (RF de la Semana 4)
+-------------------------------------
+En modo INCREMENTAL cada extractor consulta etl.Marca para saber hasta
+donde leyo la ultima vez y filtra por ahi:
+
+    PostgreSQL  cliente.fecha_registro, preferencia_cliente y reserva por
+                fecha_actualizacion; las lineas de reserva se cuelgan de la
+                marca de reserva porque el origen no les da fecha propia
+    MongoDB     resenas.fecha e interacciones_web.fecha_evento
+    Archivos    fecha de modificacion del archivo
+
+Los catalogos pequenos (hotel, tipo_habitacion, tour y los de paquetes) se
+leen completos siempre: no tienen columna de fecha y entre todos no llegan
+a 2 000 filas.
+
+Los hechos se cargan con borrar-e-insertar por clave de negocio en vez de
+TRUNCATE, asi que la operacion es idempotente. Las marcas solo avanzan si
+la corrida termina bien.
 """
 
 from __future__ import annotations
@@ -55,6 +75,11 @@ class Orquestador:
         self.usar_pg = not (args.solo_mongo or args.solo_archivos)
         self.usar_mongo = not (args.solo_pg or args.solo_archivos)
         self.usar_archivos = not (args.solo_pg or args.solo_mongo)
+
+        # INCREMENTAL deja de ser una etiqueta y pasa a cambiar el camino:
+        # los extractores filtran por etl.Marca y los hechos se cargan con
+        # borrar-e-insertar por clave de negocio en vez de TRUNCATE.
+        self.incremental = args.modo.strip().upper() == "INCREMENTAL"
 
     # -- utilidades de bitacora ------------------------------------------
     def _etapa(self, nombre: str, fuente: str, destino: str | None = None) -> int:
@@ -95,6 +120,55 @@ class Orquestador:
             log(f"  MongoDB    : " + ", ".join(
                 f"{formato_filas(v)} {k}" for k, v in conteos.items()))
 
+    # -- marcas de agua ---------------------------------------------------
+    def _leer_marcas(self, fuente: str, objetos: list[str]) -> dict[str, str]:
+        """Marcas vigentes de una fuente. Solo se consultan en modo
+        INCREMENTAL: en FULL se extrae todo y las marcas se avanzan al
+        final igual, para que la siguiente incremental parta de ahi."""
+        if not self.incremental:
+            return {}
+        marcas = {}
+        for objeto in objetos:
+            valor = sql.obtener_marca(fuente, objeto)
+            if valor:
+                marcas[objeto] = valor
+        return marcas
+
+    def _avanzar_marcas(self) -> None:
+        """Avanza todas las marcas al maximo actual del origen.
+
+        Se llama SOLO tras una corrida correcta. Si el ETL falla, las
+        marcas se quedan donde estaban y el siguiente intento reprocesa el
+        mismo lote: es preferible reprocesar a perder datos, y la carga
+        incremental es idempotente porque borra por clave de negocio.
+        """
+        log_etapa("7. Avance de marcas de agua")
+        etapa = self._etapa("AVANZAR_MARCAS", "INTERNO", "etl.Marca")
+        total = 0
+        try:
+            grupos = []
+            if self.usar_pg:
+                grupos.append(("POSTGRESQL", extract_postgres.calcular_marcas()))
+            if self.usar_mongo:
+                grupos.append(("MONGODB", extract_mongo.calcular_marcas()))
+            if self.usar_archivos:
+                archivos = extract_files.calcular_marcas()
+                grupos.append(("JSON", {"preferencias": archivos.get("preferencias")}))
+                grupos.append(("XML", {"paquetes": archivos.get("paquetes")}))
+
+            for fuente, marcas in grupos:
+                for objeto, valor in marcas.items():
+                    if valor is None:
+                        continue
+                    sql.actualizar_marca(fuente, objeto, valor,
+                                         ejecucion_id=self.ejecucion_id)
+                    log(f"  {fuente:<12} {objeto:<22} -> {valor}")
+                    total += 1
+            sql.finalizar_etapa(etapa, total)
+        except Exception as exc:                      # noqa: BLE001
+            sql.finalizar_etapa(etapa, total, "FALLIDO", str(exc)[:4000])
+            raise
+
     # -- 1. extraccion ----------------------------------------------------
     def extraer(self) -> None:
         if self.args.sin_extraer:
@@ -104,8 +178,14 @@ class Orquestador:
         if self.usar_pg:
             log_etapa("1a. Extraccion desde PostgreSQL")
             etapa = self._etapa("EXTRAER_PG", "POSTGRESQL")
+            marcas = self._leer_marcas("POSTGRESQL", sorted({
+                e.objeto_marca for e in extract_postgres.EXTRACCIONES if e.objeto_marca
+            }))
+            if marcas:
+                log(f"  Marcas vigentes: {marcas}")
             total = 0
-            for ext, ruta, filas, _ in extract_postgres.extraer_todo(self.ejecucion_id):
+            for ext, ruta, filas, _ in extract_postgres.extraer_todo(
+                    self.ejecucion_id, marcas):
                 self.archivos.append((ext.tabla_staging, ruta, filas))
                 total += filas
             sql.finalizar_etapa(etapa, total)
@@ -115,8 +195,12 @@ class Orquestador:
         if self.usar_mongo:
             log_etapa("1b. Extraccion desde MongoDB")
             etapa = self._etapa("EXTRAER_MONGO", "MONGODB")
+            marcas = self._leer_marcas("MONGODB", list(extract_mongo.CAMPO_MARCA))
+            if marcas:
+                log(f"  Marcas vigentes: {marcas}")
             total = 0
-            for tabla, ruta, filas, _ in extract_mongo.extraer_todo(self.ejecucion_id):
+            for tabla, ruta, filas, _ in extract_mongo.extraer_todo(
+                    self.ejecucion_id, marcas):
                 self.archivos.append((tabla, ruta, filas))
                 total += filas
             sql.finalizar_etapa(etapa, total)
@@ -126,8 +210,14 @@ class Orquestador:
         if self.usar_archivos:
             log_etapa("1c. Extraccion de archivos JSON y XML")
             etapa = self._etapa("EXTRAER_ARCHIVOS", "JSON")
+            marcas = {}
+            marcas.update(self._leer_marcas("JSON", ["preferencias"]))
+            marcas.update(self._leer_marcas("XML", ["paquetes"]))
+            if marcas:
+                log(f"  Marcas vigentes: {marcas}")
             total = 0
-            for tabla, ruta, filas, _ in extract_files.extraer_todo(self.ejecucion_id):
+            for tabla, ruta, filas, _ in extract_files.extraer_todo(
+                    self.ejecucion_id, marcas):
                 self.archivos.append((tabla, ruta, filas))
                 total += filas
             sql.finalizar_etapa(etapa, total)
@@ -205,23 +295,40 @@ class Orquestador:
                 total_dim += filas
         sql.finalizar_etapa(etapa, total_dim)
 
-        log_etapa("4b. Hechos (recarga completa)")
+        if self.incremental:
+            log_etapa("4b. Hechos (incremental: borrar-e-insertar por clave)")
+            procedimiento = "etl.usp_CargarHechosIncremental"
+        else:
+            log_etapa("4b. Hechos (recarga completa)")
+            procedimiento = "etl.usp_CargarHechos"
+
         etapa = self._etapa("CARGAR_DW_HECHOS", "INTERNO", "dw.Fact*")
-        conjuntos = sql.ejecutar_procedimiento("etl.usp_CargarHechos", self.ejecucion_id)
+        conjuntos = sql.ejecutar_procedimiento(procedimiento, self.ejecucion_id)
         total_fact = 0
         for conjunto in conjuntos:
-            for nombre, filas in conjunto:
-                log(f"  {nombre:<26} {formato_filas(filas):>12} filas")
-                total_fact += filas
+            for fila in conjunto:
+                if self.incremental and len(fila) == 3:
+                    nombre, reemplazadas, total_actual = fila
+                    log(f"  {nombre:<26} {formato_filas(reemplazadas):>12} reemplazadas"
+                        f"   (total {formato_filas(total_actual)})")
+                    total_fact += reemplazadas
+                else:
+                    nombre, filas = fila[0], fila[1]
+                    log(f"  {nombre:<26} {formato_filas(filas):>12} filas")
+                    total_fact += filas
         sql.finalizar_etapa(etapa, total_fact)
 
     # -- 5. ocupacion diaria ----------------------------------------------
     def cargar_ocupacion(self) -> None:
-        log_etapa("5. FactOcupacionDiaria (KPI de ocupacion hotelera)")
+        if self.incremental:
+            log_etapa("5. FactOcupacionDiaria (recalculo por ambito afectado)")
+            procedimiento = "etl.usp_CargarOcupacionIncremental"
+        else:
+            log_etapa("5. FactOcupacionDiaria (KPI de ocupacion hotelera)")
+            procedimiento = "etl.usp_CargarOcupacionDiaria"
+
         etapa = self._etapa("CARGAR_DW_OCUPACION", "INTERNO", "dw.FactOcupacionDiaria")
-        conjuntos = sql.ejecutar_procedimiento(
-            "etl.usp_CargarOcupacionDiaria", self.ejecucion_id
-        )
+        conjuntos = sql.ejecutar_procedimiento(procedimiento, self.ejecucion_id)
         filas = 0
         for conjunto in conjuntos:
             for nombre, n, promedio in conjunto:
@@ -292,6 +399,7 @@ class Orquestador:
             self.cargar_dw()
             self.cargar_ocupacion()
             self.verificar_integridad()
+            self._avanzar_marcas()
             sql.finalizar_ejecucion(self.ejecucion_id)
         except Exception as exc:
             log(f"El ETL fallo: {exc}", "ERROR")
@@ -311,7 +419,8 @@ def main() -> int:
         description="ETL del Escenario 8: PostgreSQL + MongoDB + JSON + XML -> SQL Server"
     )
     p.add_argument("--modo", default="FULL",
-                   help="Etiqueta de la corrida en la bitacora (FULL, INCREMENTAL...)")
+                   help="FULL recarga todo; INCREMENTAL filtra por etl.Marca y "
+                        "carga los hechos por clave de negocio.")
     p.add_argument("--solo-pg", action="store_true", help="Solo la fuente PostgreSQL.")
     p.add_argument("--solo-mongo", action="store_true", help="Solo la fuente MongoDB.")
     p.add_argument("--solo-archivos", action="store_true", help="Solo JSON y XML.")

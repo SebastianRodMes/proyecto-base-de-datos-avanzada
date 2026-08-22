@@ -1,0 +1,54 @@
+=====================================================================
+ COMPARACION LOCAL CONTRA NUBE
+ ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
+ Fecha : 2026-08-21 22:24:05
+ Local : localhost,1433
+ Nube  : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433
+=====================================================================
+
+=== 0. Los dos entornos ===
+
+  LOCAL 873e20f577e4 | Developer Edition (64-bit) | 16.0.4265.3 | CPUs=16 | MemMB=4096
+  NUBE  EC2AMAZ-4AR53DH | Express Edition (64-bit) | 16.0.4205.1 | CPUs=2 | MemMB=2009
+
+=====================================================================
+ B. RENDIMIENTO: cinco consultas testigo, mediana de N corridas
+=====================================================================
+
+  Costo fijo por invocacion (SELECT 1):
+    local     52.7 ms     nube    783.9 ms     sobrecosto de la nube    731.2 ms
+
+  Corridas por consulta: 5 (mas una de calentamiento que se descarta)
+
+  Consulta                                       Local      Nube   Factor Local net  Nube net  F. neto
+  ----------------------------------------------------------------------------------------------------
+  T1 Eliminacion de particion (2024)              55.9     781.3    14.0x       3.2       0.1     0.0x
+  T2 Ocupacion por pais y mes                     70.7     888.7    12.6x      18.0     104.9     5.8x
+  T3 Ranking de tours                             65.9     817.7    12.4x      13.2      33.8     2.6x
+  T4 Perfil del visitante contra satisfaccion     542.5   9,386.4    17.3x     489.8   8,602.5    17.6x
+  T5 Tendencia mensual                            69.6     855.2    12.3x      16.9      71.3     4.2x
+
+  Descontado el costo de conexion, la nube pierde en 4 de 5 consultas.
+
+  Las columnas "net" son la medida honesta del MOTOR. Las primeras dos
+  son la medida honesta de la EXPERIENCIA: es lo que va a sentir Power
+  BI al refrescar contra la nube. Ninguna sobra, y presentar solo una
+  de las dos daria una conclusion equivocada:
+
+    - solo el total     -> parece que el motor degrado por igual en
+                           todas las consultas, que es falso;
+    - solo el neto      -> esconde que cada ida y vuelta a us-east-1
+                           cuesta cientos de milisegundos reales.
+
+=====================================================================
+ Conclusion
+=====================================================================
+
+  La migracion se juzga por INTEGRIDAD, no por velocidad. Una db.t3.micro
+  con Express no puede competir contra Developer con 4 GB y disco local,
+  y no es el objetivo: el objetivo era que los datos llegaran completos y
+  que la solucion siguiera operando desde la nube.
+
+  Si hiciera falta rendimiento comparable, la palanca es la clase de
+  instancia, no el diseno: subir a db.t3.small o db.t3.medium es un
+  cambio de configuracion, no una migracion nueva.
