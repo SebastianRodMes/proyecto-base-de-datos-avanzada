@@ -132,7 +132,7 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Carga incremental y bitacora | Integrante 1 | Completo |
 | Prueba de recuperacion ante error de ETL | Integrante 1 | Completo |
 | Migracion piloto y completa a AWS | Integrante 1 | Completo |
-| ETL apuntando a la nube | Integrante 1 | Completo con `--solo-pg`; falta una corrida que ejercite Mongo y archivos |
+| ETL apuntando a la nube | Integrante 1 + Integrante 2 | **Completo** con PostgreSQL, MongoDB, JSON y XML; ejecucion #5 aprobada |
 | Power BI apuntando a la nube | Integrante 1 | Modelo repuntado y validado de forma estatica; **faltan las capturas del refresco real** |
 | Validacion de dashboard local contra nube | Integrante 3 | **Pendiente** |
 | Metricas de negocio sobre el modelo migrado | Integrante 3 | **Pendiente**, revisar si el escenario pide indicadores nuevos |
@@ -140,8 +140,8 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Tema de investigacion: decision, documento y prototipo | Integrante 4 | **No iniciado** |
 | Demostracion de la tecnologia investigada | Integrante 4 | **No iniciado** |
 | Pruebas de rendimiento y recuperacion contra la nube | Integrante 4 | **Pendiente**. Ojo: `79-prueba-recuperacion-etl.ps1` tiene `localhost,1433` fijo y no lee `.env.aws` |
-| Registro de calidad de datos antes/despues del ETL | Integrante 2 | **Pendiente**. El mecanismo existe (`etl.usp_ValidarStaging`, `dw.vw_CalidadDatos`); falta capturarlo |
-| Verificar `43b`/`44b` y correr una incremental completa | Integrante 2 | **Pendiente** |
+| Registro de calidad de datos antes/despues del ETL | Integrante 2 | **Completo** en `etl-integrante2-calidad.txt` y `12-etl-integrante2-semanas3-4.md` |
+| Verificar `43b`/`44b` y correr una incremental completa | Integrante 2 | **Completo**; ejecucion cloud #5, 23 etapas, 0 rechazos y FK confiables |
 | Manual tecnico | Equipo | **No iniciado** |
 | Video de demostracion | Equipo | **No iniciado** |
 | Presentacion ejecutiva final | Equipo | **No iniciado** |
@@ -158,7 +158,7 @@ El detalle de cada pendiente, con el porque y como retomarlo, esta en
 | Claves foraneas | 32/32 confiables |
 | S3 | 5/5 archivos byte a byte |
 | Atlas M0 | resenas completa; interacciones_web al 50 % determinista |
-| ETL cloud | COMPLETADO, 19 etapas, 0 rechazos |
+| ETL cloud | COMPLETADO con las cuatro fuentes, 23 etapas, 0 rechazos |
 
 Detalle completo, con los seis incidentes de la ejecucion, en
 `00-docs/10-validacion-post-migracion.md`.
@@ -230,6 +230,7 @@ llegan a 2 000 filas.
 | `07-migracion/77-comparar-local-cloud.ps1` | Integridad y rendimiento, local contra nube |
 | `07-migracion/78-detener-recursos.ps1` | Detiene o elimina la infraestructura |
 | `07-migracion/79-prueba-recuperacion-etl.ps1` | Prueba de recuperacion ante error de ETL |
+| `07-migracion/80-validar-etl-integrante2.ps1` | Calidad antes/despues y corrida incremental cloud de las cuatro fuentes |
 | `07-migracion/repuntar-powerbi.ps1` | Cambia el servidor de las 16 particiones del modelo |
 | `04-sqlserver/43b-carga-incremental.sql` | Tabla `etl.Marca` y sus procedimientos |
 | `04-sqlserver/44b-transformacion-incremental.sql` | Carga de hechos por clave de negocio |

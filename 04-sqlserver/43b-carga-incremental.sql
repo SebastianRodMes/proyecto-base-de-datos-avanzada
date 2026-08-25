@@ -50,22 +50,24 @@ GO
 /* ---------------------------------------------------------------------
    1. Tabla de marcas
    --------------------------------------------------------------------- */
-IF OBJECT_ID('etl.Marca') IS NOT NULL DROP TABLE etl.Marca;
-GO
-
-CREATE TABLE etl.Marca (
-    Fuente            varchar(30)  NOT NULL,   -- POSTGRESQL | MONGODB | JSON | XML
-    Objeto            varchar(60)  NOT NULL,   -- tabla o coleccion de origen
-    TipoMarca         varchar(20)  NOT NULL,   -- TIMESTAMP | FECHA | ARCHIVO
-    ValorMarca        varchar(50)  NULL,       -- NULL = nunca se ha cargado
-    FilasUltimoLote   bigint       NOT NULL CONSTRAINT DF_EtlMarca_Filas   DEFAULT (0),
-    EjecucionId       int          NULL,
-    FechaActualizacion datetime2(0) NOT NULL CONSTRAINT DF_EtlMarca_Fecha  DEFAULT (SYSDATETIME()),
-    CONSTRAINT PK_EtlMarca PRIMARY KEY CLUSTERED (Fuente, Objeto),
-    CONSTRAINT CK_EtlMarca_Tipo CHECK (TipoMarca IN ('TIMESTAMP', 'FECHA', 'ARCHIVO')),
-    CONSTRAINT FK_EtlMarca_Ejecucion FOREIGN KEY (EjecucionId)
-        REFERENCES etl.Ejecucion (EjecucionId)
-) ON FG_DIM;
+/* Es reejecutable: desplegar una correccion del procedimiento no puede
+   borrar las marcas vigentes ni abrir de nuevo toda la ventana de carga. */
+IF OBJECT_ID('etl.Marca', 'U') IS NULL
+BEGIN
+    CREATE TABLE etl.Marca (
+        Fuente            varchar(30)  NOT NULL,   -- POSTGRESQL | MONGODB | JSON | XML
+        Objeto            varchar(60)  NOT NULL,   -- tabla o coleccion de origen
+        TipoMarca         varchar(20)  NOT NULL,   -- TIMESTAMP | FECHA | ARCHIVO
+        ValorMarca        varchar(50)  NULL,       -- NULL = nunca se ha cargado
+        FilasUltimoLote   bigint       NOT NULL CONSTRAINT DF_EtlMarca_Filas   DEFAULT (0),
+        EjecucionId       int          NULL,
+        FechaActualizacion datetime2(0) NOT NULL CONSTRAINT DF_EtlMarca_Fecha  DEFAULT (SYSDATETIME()),
+        CONSTRAINT PK_EtlMarca PRIMARY KEY CLUSTERED (Fuente, Objeto),
+        CONSTRAINT CK_EtlMarca_Tipo CHECK (TipoMarca IN ('TIMESTAMP', 'FECHA', 'ARCHIVO')),
+        CONSTRAINT FK_EtlMarca_Ejecucion FOREIGN KEY (EjecucionId)
+            REFERENCES etl.Ejecucion (EjecucionId)
+    ) ON FG_DIM;
+END
 GO
 
 /* ---------------------------------------------------------------------
@@ -78,14 +80,20 @@ GO
    un control de cambios que el modelo de origen no ofrece. Queda dicho
    aqui para que no parezca un olvido.
    --------------------------------------------------------------------- */
-INSERT INTO etl.Marca (Fuente, Objeto, TipoMarca, ValorMarca) VALUES
-    ('POSTGRESQL', 'cliente',             'TIMESTAMP', NULL),
-    ('POSTGRESQL', 'preferencia_cliente', 'TIMESTAMP', NULL),
-    ('POSTGRESQL', 'reserva',             'TIMESTAMP', NULL),
-    ('MONGODB',    'resenas',             'FECHA',     NULL),
-    ('MONGODB',    'interacciones_web',   'FECHA',     NULL),
-    ('JSON',       'preferencias',        'ARCHIVO',   NULL),
-    ('XML',        'paquetes',            'ARCHIVO',   NULL);
+MERGE etl.Marca AS destino
+USING (VALUES
+    ('POSTGRESQL', 'cliente',             'TIMESTAMP'),
+    ('POSTGRESQL', 'preferencia_cliente', 'TIMESTAMP'),
+    ('POSTGRESQL', 'reserva',             'TIMESTAMP'),
+    ('MONGODB',    'resenas',             'FECHA'),
+    ('MONGODB',    'interacciones_web',   'FECHA'),
+    ('JSON',       'preferencias',        'ARCHIVO'),
+    ('XML',        'paquetes',            'ARCHIVO')
+) AS origen (Fuente, Objeto, TipoMarca)
+ON destino.Fuente = origen.Fuente AND destino.Objeto = origen.Objeto
+WHEN NOT MATCHED THEN
+    INSERT (Fuente, Objeto, TipoMarca, ValorMarca)
+    VALUES (origen.Fuente, origen.Objeto, origen.TipoMarca, NULL);
 GO
 
 /* ---------------------------------------------------------------------
@@ -146,7 +154,11 @@ BEGIN
     END
 
     UPDATE etl.Marca
-       SET ValorMarca         = @NuevoValor,
+       SET ValorMarca         = CASE
+                                    WHEN ValorMarca IS NULL OR @NuevoValor > ValorMarca
+                                    THEN @NuevoValor
+                                    ELSE ValorMarca
+                                END,
            FilasUltimoLote    = @Filas,
            EjecucionId        = @EjecucionId,
            FechaActualizacion = SYSDATETIME()
@@ -197,7 +209,7 @@ FROM etl.Marca m
 LEFT JOIN etl.Ejecucion e ON e.EjecucionId = m.EjecucionId;
 GO
 
-PRINT '>> etl.Marca creada con 7 objetos registrados.';
+PRINT '>> etl.Marca configurada con 7 objetos registrados (sin borrar historial).';
 PRINT '   Procedimientos: usp_ObtenerMarca, usp_ActualizarMarca, usp_ReiniciarMarcas.';
 PRINT '   Vista: etl.vw_EstadoIncremental.';
 GO

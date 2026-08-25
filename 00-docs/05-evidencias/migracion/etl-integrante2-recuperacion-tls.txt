@@ -1,0 +1,121 @@
+﻿ETL INCREMENTAL COMPLETO Y REGISTRO DE CALIDAD
+Fecha UTC|2026-08-25T02:25:42Z
+Fuentes|PostgreSQL RDS + MongoDB Atlas + JSON + XML
+Destino|SQL Server RDS / TurismoDW
+Credenciales|omitidas
+
+==============================================================================
+1. CALIDAD ANTES DEL ETL
+==============================================================================
+
+=== CALIDAD ANTES - POSTGRESQL ===
+clientes_total|50009
+clientes_identificacion_vacia|0
+clientes_email_invalido|0
+clientes_identificacion_duplicada|0
+reservas_total|2000011
+reservas_monto_negativo|0
+reservas_rango_fechas_invalido|0
+reservas_estado_fuera_dominio|0
+
+=== CALIDAD ANTES - MONGODB ===
+resenas_total|500002
+resenas_calificacion_fuera_1_5|0
+resenas_entidad_incompleta|0
+interacciones_total|749872
+interacciones_fecha_ausente|0
+
+=== CALIDAD ANTES - JSON Y XML ===
+json_registros_total|6000
+json_identificacion_vacia|44
+json_presupuesto_invalido|38
+xml_registros_total|150
+xml_precio_invalido|2
+CODIGO_SALIDA|0
+
+==============================================================================
+2. EJECUCION ETL INCREMENTAL (CUATRO FUENTES)
+==============================================================================
+==============================================================================
+ ITI-821 | Escenario 8: Turismo Inteligente | ETL Semana 3
+ Integrante 1: Alex Herrera
+==============================================================================
+
+[20:25:52] INFO  --- Verificacion del entorno ---
+[20:25:53] INFO    SQL Server : EC2AMAZ-T8BSC8R  [Express Edition (64-bit)]
+[20:25:53] INFO    Base       : TurismoDW  (version 16.0.4205.1)
+[20:25:53] INFO    Alias      : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com
+[20:25:58] INFO    PostgreSQL : 2 000 011 reservas, 50 009 clientes
+[20:26:02] INFO    MongoDB    : 500 002 resenas, 749 872 interacciones_web
+[20:26:03] INFO    Ejecucion ETL #3 iniciada en modo INCREMENTAL
+
+[20:26:03] INFO  --- 1a. Extraccion desde PostgreSQL ---
+[20:26:04] INFO    Marcas vigentes: {'cliente': '2027-02-01 08:00:00', 'preferencia_cliente': '2026-08-22 02:13:14.281377', 'reserva': '2027-02-05 10:00:00'}
+[20:26:07] INFO    stg.Cliente                           0 filas      0.0 MB  0.5s
+[20:26:07] INFO    stg.PreferenciaCliente                0 filas      0.0 MB  0.3s
+[20:26:08] INFO    stg.Hotel                           200 filas      0.0 MB  0.4s
+[20:26:08] INFO    stg.TipoHabitacion                  791 filas      0.1 MB  0.4s
+[20:26:08] INFO    stg.Tour                            400 filas      0.1 MB  0.3s
+[20:26:09] INFO    stg.PaqueteTuristico                150 filas      0.0 MB  0.3s
+[20:26:09] INFO    stg.PaqueteHotel                    282 filas      0.0 MB  0.3s
+[20:26:10] INFO    stg.PaqueteTour                     227 filas      0.0 MB  0.6s
+[20:26:11] INFO    stg.Reserva                           0 filas      0.0 MB  1.5s
+[20:26:12] INFO    stg.ReservaHabitacion                 0 filas      0.0 MB  0.9s
+[20:26:13] INFO    stg.ReservaTour                       0 filas      0.0 MB  0.9s
+[20:26:13] INFO    Total PostgreSQL: 2 050 filas
+
+[20:26:13] INFO  --- 1b. Extraccion desde MongoDB ---
+[20:26:14] INFO    Marcas vigentes: {'resenas': '2027-01-21T11:30:00', 'interacciones_web': '2027-01-21T12:10:00'}
+[20:26:17] INFO    stg.Resena                            0 filas      0.0 MB  1.1s
+[20:26:17] INFO    stg.InteraccionWeb                    0 filas      0.0 MB  0.1s
+[20:26:18] INFO    Total MongoDB: 0 filas
+
+[20:26:18] INFO  --- 1c. Extraccion de archivos JSON y XML ---
+[20:26:18] INFO    Marcas vigentes: {'preferencias': '1787362659.4497533', 'paquetes': '1787362659.3683026'}
+[20:26:18] AVISO   stg.PreferenciaArchivo     sin archivos de entrada
+[20:26:18] AVISO   stg.PaqueteArchivo         sin archivos de entrada
+[20:26:19] INFO    Total archivos: 0 filas
+
+[20:26:19] INFO  --- 2. Carga masiva a staging (bcp) ---
+[20:26:22] INFO    15 tablas de staging vaciadas
+[20:26:23] ERROR El ETL fallo: bcp fallo al cargar stg.Cliente (codigo 1).
+SQLState = 08001, NativeError = -2146893019
+Error = [Microsoft][ODBC Driver 18 for SQL Server]SSL Provider: The certificate chain was issued by an authority that is not trusted.
+
+
+SQLState = 08001, NativeError = -2146893019
+Error = [Microsoft][ODBC Driver 18 for SQL Server]Client unable to establish connection. For solutions related to encryption errors, see https://go.microsoft.com/fwlink/?linkid=2226722
+Traceback (most recent call last):
+  File "C:\Users\sergi\Documents\Universidad\Bases de Datos Avanzada\bd-avanzadad-project\proyecto-base-de-datos-avanzada\05-etl\run_etl.py", line 431, in ejecutar
+    self.cargar_staging()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sergi\Documents\Universidad\Bases de Datos Avanzada\bd-avanzadad-project\proyecto-base-de-datos-avanzada\05-etl\run_etl.py", line 291, in cargar_staging
+    filas, _seg = sql.cargar_bcp(tabla, ruta)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\sergi\Documents\Universidad\Bases de Datos Avanzada\bd-avanzadad-project\proyecto-base-de-datos-avanzada\05-etl\etl\load_sqlserver.py", line 113, in cargar_bcp
+    raise RuntimeError(
+        f"bcp fallo al cargar {tabla} (codigo {proc.returncode}).\n{salida.strip()}"
+    )
+RuntimeError: bcp fallo al cargar stg.Cliente (codigo 1).
+SQLState = 08001, NativeError = -2146893019
+Error = [Microsoft][ODBC Driver 18 for SQL Server]SSL Provider: The certificate chain was issued by an authority that is not trusted.
+System.Management.Automation.RemoteException
+System.Management.Automation.RemoteException
+SQLState = 08001, NativeError = -2146893019
+Error = [Microsoft][ODBC Driver 18 for SQL Server]Client unable to establish connection. For solutions related to encryption errors, see https://go.microsoft.com/fwlink/?linkid=2226722
+
+[20:26:23] INFO  --- Resumen de la ejecucion ---
+[20:26:23] INFO    Ejecucion  : 3  (INCREMENTAL)
+[20:26:23] INFO    Estado     : FALLIDO
+[20:26:23] INFO    Leidos     : 2 050
+[20:26:23] INFO    Cargados   : 0
+[20:26:23] INFO    Rechazados : 0
+[20:26:23] INFO    Duracion   : 20.0s
+[20:26:23] INFO  
+[20:26:23] INFO    Etapas:
+[20:26:23] INFO      EXTRAER_PG                                        COMPLETADO      10.04s        2 050
+[20:26:23] INFO      EXTRAER_MONGO                                     COMPLETADO       4.13s            0
+[20:26:23] INFO      EXTRAER_ARCHIVOS                                  COMPLETADO       0.61s            0
+[20:26:23] INFO      TRUNCAR_STG            stg.*                      COMPLETADO       2.72s           15
+[20:26:23] INFO      CARGAR_STG             stg.Cliente                FALLIDO          0.65s            0
+CODIGO_SALIDA|1

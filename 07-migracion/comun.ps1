@@ -4,7 +4,7 @@
 
     comun.ps1
     ----------------------------------------------------------------------
-    Funciones compartidas por los scripts 72 a 79. Se carga con dot-source:
+    Funciones compartidas por los scripts 72 a 80. Se carga con dot-source:
 
         . (Join-Path $PSScriptRoot 'comun.ps1')
 
