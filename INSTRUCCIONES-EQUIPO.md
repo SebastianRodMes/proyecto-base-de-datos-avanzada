@@ -134,9 +134,9 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Migracion piloto y completa a AWS | Integrante 1 | Completo |
 | ETL apuntando a la nube | Integrante 1 + Integrante 2 | **Completo** con PostgreSQL, MongoDB, JSON y XML; ejecucion #5 aprobada |
 | Power BI apuntando a la nube | Integrante 1 | Modelo repuntado y validado de forma estatica; **faltan las capturas del refresco real** |
-| Validacion de dashboard local contra nube | Integrante 3 | **Pendiente** |
-| Metricas de negocio sobre el modelo migrado | Integrante 3 | **Pendiente**, revisar si el escenario pide indicadores nuevos |
-| Manual de usuario | Integrante 3 | **Pendiente** |
+| Validacion de dashboard local contra nube | Integrante 3 | **Completo**; certificado en `00-docs/13-dashboard-metricas-integrante3.md` y `dashboard-turismo.html` |
+| Metricas de negocio sobre el modelo migrado | Integrante 3 | **Completo**; 52 KPIs en `46b-validacion-metricas-negocio.sql` y `81-validar-dashboard-metricas-integrante3.ps1` |
+| Manual de usuario | Integrante 3 | **Completo** en `00-docs/14-manual-usuario-dashboard.md` |
 | Tema de investigacion: decision, documento y prototipo | Integrante 4 | **No iniciado** |
 | Demostracion de la tecnologia investigada | Integrante 4 | **No iniciado** |
 | Pruebas de rendimiento y recuperacion contra la nube | Integrante 4 | **Pendiente**. Ojo: `79-prueba-recuperacion-etl.ps1` tiene `localhost,1433` fijo y no lee `.env.aws` |

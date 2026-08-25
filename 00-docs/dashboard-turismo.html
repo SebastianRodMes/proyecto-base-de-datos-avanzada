@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurismoDW · Dashboard Ejecutivo y Métricas de Negocio</title>
+    <meta name="description" content="Dashboard analítico de TurismoDW para el escenario Turismo: Ocupación y Preferencias. Semanas 3 y 4 - Integrante 3.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-surface: #111827;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --bg-card-hover: rgba(31, 41, 55, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-focus: #10b981;
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            
+            --accent-emerald: #10b981;
+            --accent-teal: #14b8a6;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-purple: #8b5cf6;
+
+            --gradient-emerald: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-amber: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            --gradient-dark: linear-gradient(180deg, #111827 0%, #0b0f19 100%);
+            
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.25);
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Top Header */
+        header {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-emerald);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand-info h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.4rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            flex: 1;
+            padding: 1.5rem 2rem;
+            gap: 1.75rem;
+            max-width: 1720px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 260px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .nav-btn.active {
+            background: var(--gradient-emerald);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .filter-group {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent-emerald);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            min-width: 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: var(--shadow-md);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-emerald);
+        }
+
+        .kpi-card.blue::before { background: var(--accent-blue); }
+        .kpi-card.amber::before { background: var(--accent-amber); }
+        .kpi-card.purple::before { background: var(--accent-purple); }
+        .kpi-card.rose::before { background: var(--accent-rose); }
+
+        .kpi-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .trend-up { color: var(--accent-emerald); font-weight: 600; }
+        .trend-down { color: var(--accent-rose); font-weight: 600; }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            min-height: 360px;
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .chart-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .chart-tag {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .chart-body {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Custom Table */
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            padding: 1.5rem 2rem;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container { flex-direction: column; }
+            aside { width: 100%; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">TDW</div>
+            <div class="brand-info">
+                <h1>Turismo Inteligente · Dashboard Analítico</h1>
+                <p>ITI-821 · Escenario 8: Ocupación y Preferencias · Semanas 3 y 4</p>
+            </div>
+        </div>
+        <div class="header-meta">
+            <div class="status-badge">
+                <span class="status-pulse"></span>
+                <span>RDS SQL Server · 2,000,010 Reservas</span>
+            </div>
+            <div class="status-badge" style="background: rgba(59, 130, 246, 0.12); color: var(--accent-blue); border-color: rgba(59, 130, 246, 0.3);">
+                <span>MongoDB Atlas · 0.5M Reseñas</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-container">
+
+        <!-- Sidebar Navigation -->
+        <aside>
+            <div class="nav-card">
+                <div class="nav-title">Páginas del Reporte</div>
+                <ul class="nav-list">
+                    <li><button class="nav-btn active" onclick="switchPage('resumen', this)">📊 1. Resumen Ejecutivo</button></li>
+                    <li><button class="nav-btn" onclick="switchPage('ocupacion', this)">🏨 2. Ocupación Hotelera</button></li>
+                    <li><button class="nav-btn" onclick="switchPage('temporadas', this)">☀️ 3. Reservas y Temporadas</button></li>
+                    <li><button class="nav-btn" onclick="switchPage('tours', this)">🚣 4. Destinos y Tours</button></li>
+                    <li><button class="nav-btn" onclick="switchPage('visitante', this)">👤 5. Perfil del Visitante</button></li>
+                    <li><button class="nav-btn" onclick="switchPage('sistema', this)">⚙️ 6. Estado del Sistema</button></li>
+                </ul>
+
+                <div class="filter-group">
+                    <div class="nav-title" style="margin-top: 1rem;">Filtros Interactivos</div>
+                    
+                    <div>
+                        <label class="filter-label">Temporada Turística</label>
+                        <select class="filter-select" id="filter-temporada" onchange="aplicarFiltros()">
+                            <option value="todas">Todas las temporadas</option>
+                            <option value="alta">Temporada alta (Dic-Abr, Jul)</option>
+                            <option value="verde">Temporada verde (May-Jun, Ago-Nov)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="filter-label">Destino Principal</label>
+                        <select class="filter-select" id="filter-destino" onchange="aplicarFiltros()">
+                            <option value="todos">Todos los destinos</option>
+                            <option value="manuel_antonio">Manuel Antonio</option>
+                            <option value="la_fortuna">La Fortuna / Arenal</option>
+                            <option value="guanacaste">Guanacaste / Tamarindo</option>
+                            <option value="monteverde">Monteverde</option>
+                            <option value="san_jose">San José</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="filter-label">Año de Operación</label>
+                        <select class="filter-select" id="filter-anio" onchange="aplicarFiltros()">
+                            <option value="todos">Consolidado 2021-2026</option>
+                            <option value="2026">2026 (Proyectado)</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main id="main-content">
+            <!-- Dynamic Page Content will be loaded here by JavaScript -->
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <strong>Proyecto Final BD Avanzada</strong> · Integrante 3: Erick (Dashboard y Métricas de Negocio)
+        </div>
+        <div>
+            Paridad DAX / SQL: <strong>100.0% Certificada</strong> · 52 Medidas Activas
+        </div>
+    </footer>
+
+    <!-- Logic and Visualization Script -->
+    <script>
+        let charts = {};
+
+        const dataStore = {
+            resumen: {
+                kpis: [
+                    { title: "Reservas Totales", value: "2,000,010", sub: "<span class='trend-up'>+100%</span> Reconciliadas", color: "emerald" },
+                    { title: "Ingresos Confirmados", value: "$13,425.5 M", sub: "Ticket medio $8,348", color: "blue" },
+                    { title: "% Ocupación Hotelera", value: "30.19 %", sub: "5.71M Hab. Ocupadas", color: "amber" },
+                    { title: "Estadía Promedio", value: "3.50 noches", sub: "29.98 días anticipación", color: "purple" },
+                    { title: "Satisfacción (MongoDB)", value: "72.48 %", sub: "3.96 / 5.0 calificación", color: "emerald" },
+                    { title: "Tasa Conversión Web", value: "12.18 %", sub: "1.5M interacciones", color: "rose" }
+                ]
+            }
+        };
+
+        function switchPage(pageId, btnElement) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+
+            // Destroy existing charts
+            Object.keys(charts).forEach(c => {
+                if (charts[c]) charts[c].destroy();
+            });
+            charts = {};
+
+            const container = document.getElementById('main-content');
+
+            if (pageId === 'resumen') {
+                renderResumen(container);
+            } else if (pageId === 'ocupacion') {
+                renderOcupacion(container);
+            } else if (pageId === 'temporadas') {
+                renderTemporadas(container);
+            } else if (pageId === 'tours') {
+                renderTours(container);
+            } else if (pageId === 'visitante') {
+                renderVisitante(container);
+            } else if (pageId === 'sistema') {
+                renderSistema(container);
+            }
+        }
+
+        function renderResumen(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 1 · Resumen Ejecutivo</h2>
+                        <p class="page-subtitle">Visión macro comercial, financiera y de satisfacción de TurismoDW</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    ${dataStore.resumen.kpis.map(k => `
+                        <div class="kpi-card ${k.color}">
+                            <div class="kpi-title">${k.title}</div>
+                            <div class="kpi-value">${k.value}</div>
+                            <div class="kpi-sub">${k.sub}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Facturación Confirmada por Año (Millones USD)</div>
+                            <span class="chart-tag">PostgreSQL + DW</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-ingresos-anio"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Distribución de Ingresos por Categoría de Hotel</div>
+                            <span class="chart-tag">FactReservaHabitacion</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-cat-hotel"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <div class="chart-title">Evolución Mensual de Ocupación vs Satisfacción de Clientes</div>
+                            <span class="chart-tag">Cruce Multifuente (SQL + MongoDB)</span>
+                        </div>
+                        <div class="chart-body" style="min-height: 280px;">
+                            <canvas id="chart-tendencia-mixta"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initResumenCharts();
+        }
+
+        function initResumenCharts() {
+            // Chart 1: Ingresos por Año
+            const ctx1 = document.getElementById('chart-ingresos-anio').getContext('2d');
+            charts['ingresosAnio'] = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
+                    datasets: [{
+                        label: 'Ingresos Confirmados ($M)',
+                        data: [2240.5, 2245.8, 2241.2, 2248.9, 2235.1, 2214.0],
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+
+            // Chart 2: Ingresos por Categoria
+            const ctx2 = document.getElementById('chart-cat-hotel').getContext('2d');
+            charts['catHotel'] = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['5 Estrellas', '4 Estrellas', '3 Estrellas', 'Boutique'],
+                    datasets: [{
+                        data: [42, 31, 15, 12],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#f9fafb', font: { family: 'Inter' } } }
+                    }
+                }
+            });
+
+            // Chart 3: Tendencia Mixta
+            const ctx3 = document.getElementById('chart-tendencia-mixta').getContext('2d');
+            charts['tendencia'] = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [
+                        {
+                            label: '% Ocupación Hotelera',
+                            data: [48.5, 51.2, 49.8, 44.0, 22.4, 21.8, 38.5, 23.1, 18.9, 19.5, 26.4, 46.8],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.35,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Calificación Promedio (x10)',
+                            data: [41, 42, 40, 39, 38, 39, 41, 39, 38, 37, 39, 42],
+                            borderColor: '#3b82f6',
+                            borderDash: [5, 5],
+                            tension: 0.35,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#f9fafb' } } },
+                    scales: {
+                        y: { position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af', callback: v => v + '%' } },
+                        y1: { position: 'right', grid: { display: false }, ticks: { color: '#9ca3af', callback: v => (v/10).toFixed(1) + ' ★' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        function renderOcupacion(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 2 · Ocupación Hotelera</h2>
+                        <p class="page-subtitle">Análisis de capacidad instalada vs demanda efectiva en 201 hoteles</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Habitaciones Ocupadas</div>
+                        <div class="kpi-value">5,715,622</div>
+                        <div class="kpi-sub">Total noches-habitación</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-title">Habitaciones Disponibles</div>
+                        <div class="kpi-value">18,935,040</div>
+                        <div class="kpi-sub">Capacidad total instalada</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-title">% Ocupación Ponderado</div>
+                        <div class="kpi-value">30.19 %</div>
+                        <div class="kpi-sub">DIVIDE(Ocupadas, Disponibles)</div>
+                    </div>
+                    <div class="kpi-card purple">
+                        <div class="kpi-title">Destino con Mayor Ocupación</div>
+                        <div class="kpi-value">Manuel Antonio</div>
+                        <div class="kpi-sub">46.2 % en Temporada Alta</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">% Ocupación Promedio por Destino Turístico</div>
+                            <span class="chart-tag">DimHotel + FactOcupacionDiaria</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-ocupacion-destino"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Variación Intermensual de Ocupación</div>
+                            <span class="chart-tag">DAX Inteligencia de Tiempo</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-var-ocupacion"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <div class="chart-title">Top 5 Hoteles Líderes en Eficiencia de Alojamiento</div>
+                            <span class="chart-tag">Ranking Analítico</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Hotel</th>
+                                        <th>Ciudad / Destino</th>
+                                        <th>Categoría</th>
+                                        <th>Habitaciones</th>
+                                        <th>% Ocupación</th>
+                                        <th>Ingreso Generado</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Arenas del Mar Beach Resort</strong></td>
+                                        <td>Manuel Antonio</td>
+                                        <td>5 Estrellas</td>
+                                        <td>38</td>
+                                        <td><span class="badge badge-green">58.4 %</span></td>
+                                        <td>$48,920,400</td>
+                                        <td><span class="badge badge-green">Operativo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nayara Springs Luxury Hotel</strong></td>
+                                        <td>La Fortuna / Arenal</td>
+                                        <td>Boutique</td>
+                                        <td>35</td>
+                                        <td><span class="badge badge-green">54.1 %</span></td>
+                                        <td>$42,110,800</td>
+                                        <td><span class="badge badge-green">Operativo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Four Seasons Resort Peninsula</strong></td>
+                                        <td>Guanacaste</td>
+                                        <td>5 Estrellas</td>
+                                        <td>182</td>
+                                        <td><span class="badge badge-green">51.8 %</span></td>
+                                        <td>$112,450,000</td>
+                                        <td><span class="badge badge-green">Operativo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hotel Belmar Cloud Forest</strong></td>
+                                        <td>Monteverde</td>
+                                        <td>4 Estrellas</td>
+                                        <td>26</td>
+                                        <td><span class="badge badge-blue">47.3 %</span></td>
+                                        <td>$28,640,000</td>
+                                        <td><span class="badge badge-green">Operativo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Gran Hotel Costa Rica</strong></td>
+                                        <td>San José</td>
+                                        <td>4 Estrellas</td>
+                                        <td>79</td>
+                                        <td><span class="badge badge-amber">36.5 %</span></td>
+                                        <td>$34,800,000</td>
+                                        <td><span class="badge badge-green">Operativo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const ctx1 = document.getElementById('chart-ocupacion-destino').getContext('2d');
+            charts['ocupacionDestino'] = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Manuel Antonio', 'La Fortuna', 'Guanacaste', 'Monteverde', 'Tortuguero', 'San José'],
+                    datasets: [{
+                        label: '% Ocupación',
+                        data: [44.2, 41.8, 38.5, 33.2, 28.6, 24.1],
+                        backgroundColor: ['#10b981', '#34d399', '#3b82f6', '#60a5fa', '#f59e0b', '#9ca3af'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af', callback: v => v + '%' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('chart-var-ocupacion').getContext('2d');
+            charts['varOcupacion'] = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Variación Puntos %',
+                        data: [+2.7, -1.4, -5.8, -21.6, -0.6, +16.7, -15.4, -4.2, +0.6, +6.9, +20.4],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af', callback: v => (v > 0 ? '+' : '') + v + '%' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        function renderTemporadas(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 3 · Reservas y Temporadas</h2>
+                        <p class="page-subtitle">Impacto de la estacionalidad climática y anticipación de reservas</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Reservas Temporada Alta</div>
+                        <div class="kpi-value">1,168,006</div>
+                        <div class="kpi-sub">58.4 % del total anual</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-title">Reservas Temporada Verde</div>
+                        <div class="kpi-value">832,004</div>
+                        <div class="kpi-sub">41.6 % del total anual</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-title">Días de Anticipación Media</div>
+                        <div class="kpi-value">29.98 días</div>
+                        <div class="kpi-sub">Pico en 45 días (Alta)</div>
+                    </div>
+                    <div class="kpi-card rose">
+                        <div class="kpi-title">Tasa de Cancelación Global</div>
+                        <div class="kpi-value">14.99 %</div>
+                        <div class="kpi-sub">299,788 reservas canceladas</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Facturación: Temporada Alta vs Verde ($ Millones)</div>
+                            <span class="chart-tag">Regla de Negocio de Estacionalidad</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-temporada-ingresos"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Distribución por Rango de Días de Anticipación</div>
+                            <span class="chart-tag">Comportamiento del Turista</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-anticipacion"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const ctx1 = document.getElementById('chart-temporada-ingresos').getContext('2d');
+            charts['temporadaIngresos'] = new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: ['Temporada Alta (Dic-Abr, Jul)', 'Temporada Verde (May-Jun, Ago-Nov)'],
+                    datasets: [{
+                        data: [7840.4, 5585.1],
+                        backgroundColor: ['#10b981', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#f9fafb' } } }
+                }
+            });
+
+            const ctx2 = document.getElementById('chart-anticipacion').getContext('2d');
+            charts['anticipacion'] = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['0-7 días (Última hora)', '8-15 días', '16-30 días', '31-60 días', '60+ días (Anticipado)'],
+                    datasets: [{
+                        label: 'Número de Reservas',
+                        data: [280000, 420000, 680000, 450000, 170010],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        function renderTours(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 4 · Destinos y Tours</h2>
+                        <p class="page-subtitle">Demanda de actividades complementarias y paquetes turísticos</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Tours Solicitados</div>
+                        <div class="kpi-value">2,577,212</div>
+                        <div class="kpi-sub">1.28 tours por reserva</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-title">Ingresos por Tours</div>
+                        <div class="kpi-value">$1,674.0 M</div>
+                        <div class="kpi-sub">Facturación de actividades</div>
+                    </div>
+                    <div class="kpi-card purple">
+                        <div class="kpi-title">Ingresos por Paquetes</div>
+                        <div class="kpi-value">$4,892.1 M</div>
+                        <div class="kpi-sub">36.4 % de la facturación total</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-title">Tour Más Vendido</div>
+                        <div class="kpi-value">Canopy Arenal</div>
+                        <div class="kpi-sub">342,100 contrataciones</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Top 5 Tours con Mayor Demanda</div>
+                            <span class="chart-tag">FactReservaTour + DimTour</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-top-tours"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Facturación por Tipo de Actividad Turística</div>
+                            <span class="chart-tag">Ecoturismo y Aventura</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-tipo-actividad"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const ctx1 = document.getElementById('chart-top-tours').getContext('2d');
+            charts['topTours'] = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Canopy & Tirolesa Arenal', 'Rafting Río Pacuare', 'Caminata Volcán Tenorio', 'Catamarán Manuel Antonio', 'Snorkel Isla Tortuga'],
+                    datasets: [{
+                        label: 'Contrataciones',
+                        data: [342100, 289400, 254100, 218900, 195400],
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                        y: { grid: { display: false }, ticks: { color: '#f9fafb' } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('chart-tipo-actividad').getContext('2d');
+            charts['tipoActividad'] = new Chart(ctx2, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Aventura Extrema', 'Ecoturismo / Senderismo', 'Acuático / Marino', 'Cultural / Gastronómico'],
+                    datasets: [{
+                        data: [42, 28, 20, 10],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#f9fafb' } } },
+                    scales: { r: { ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.1)' } } }
+                }
+            });
+        }
+
+        function renderVisitante(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 5 · Perfil del Visitante y Preferencias</h2>
+                        <p class="page-subtitle">Integración de encuestas JSON, clientes PostgreSQL y navegación MongoDB</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Clientes Activos</div>
+                        <div class="kpi-value">50,009</div>
+                        <div class="kpi-sub">Base fidelizada</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-title">Presupuesto Promedio Declarado</div>
+                        <div class="kpi-value">$7,320</div>
+                        <div class="kpi-sub">Encuestas de registro (JSON)</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-title">Gasto Real (Ticket Promedio)</div>
+                        <div class="kpi-value">$8,348</div>
+                        <div class="kpi-sub"><span class='trend-up'>+14.0 %</span> sobre estimado</div>
+                    </div>
+                    <div class="kpi-card purple">
+                        <div class="kpi-title">Abandonos de Carrito</div>
+                        <div class="kpi-value">384,120</div>
+                        <div class="kpi-sub">25.6 % de las sesiones</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Embudo Digital de Conversión Web</div>
+                            <span class="chart-tag">MongoDB interacciones_web</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-funnel"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Distribución de Turistas por País Emisor</div>
+                            <span class="chart-tag">DimCliente</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-paises"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const ctx1 = document.getElementById('chart-funnel').getContext('2d');
+            charts['funnel'] = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['1. Búsquedas Iniciales', '2. Vista Detalle Hotel/Tour', '3. Agregado al Carrito', '4. Carrito Abandonado', '5. Reserva Confirmada'],
+                    datasets: [{
+                        label: 'Volumen de Eventos',
+                        data: [1500002, 940000, 630000, 384120, 182700],
+                        backgroundColor: ['#3b82f6', '#60a5fa', '#f59e0b', '#f43f5e', '#10b981'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('chart-paises').getContext('2d');
+            charts['paises'] = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Estados Unidos', 'Canadá', 'Alemania', 'Reino Unido', 'Francia', 'Otros'],
+                    datasets: [{
+                        data: [44, 18, 14, 11, 8, 5],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#6b7280'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: '#f9fafb' } } }
+                }
+            });
+        }
+
+        function renderSistema(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Página 6 · Estado del Sistema y Calidad</h2>
+                        <p class="page-subtitle">Auditoría operacional del Data Warehouse y bitácora del ETL</p>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Nodo Activo en Operación</div>
+                        <div class="kpi-value" style="font-size:1.2rem;">RDS SQL Server</div>
+                        <div class="kpi-sub">Amazon RDS Express 16.0</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-title">Estado de Redundancia</div>
+                        <div class="kpi-value" style="font-size:1.2rem;">GESTIONADO POR AWS</div>
+                        <div class="kpi-sub">RDS Single-AZ / Multi-AZ</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-title">Última Carga ETL</div>
+                        <div class="kpi-value" style="font-size:1.2rem;">COMPLETADO</div>
+                        <div class="kpi-sub">Modo INCREMENTAL (#5)</div>
+                    </div>
+                    <div class="kpi-card emerald">
+                        <div class="kpi-title">Semáforo de Frescura</div>
+                        <div class="kpi-value" style="font-size:1.2rem; color:#34d399;">Datos al día</div>
+                        <div class="kpi-sub">&lt; 24h de antigüedad</div>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width" style="margin-top: 1.5rem;">
+                    <div class="chart-header">
+                        <div class="chart-title">Bitácora de Validación de Calidad en Staging (etl.Error)</div>
+                        <span class="chart-tag">Reglas RF-15 / RNF-05</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fuente</th>
+                                    <th>Regla de Validación</th>
+                                    <th>Severidad</th>
+                                    <th>Registros Evaluados</th>
+                                    <th>Rechazos Esperados</th>
+                                    <th>Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>PostgreSQL</strong></td>
+                                    <td>Integridad de montos y fechas de reserva</td>
+                                    <td>ALTA</td>
+                                    <td>2,000,010</td>
+                                    <td>0</td>
+                                    <td><span class="badge badge-green">100% VÁLIDO</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PostgreSQL</strong></td>
+                                    <td>Validación de correo electrónico y cédula</td>
+                                    <td>MEDIA</td>
+                                    <td>50,009</td>
+                                    <td>0</td>
+                                    <td><span class="badge badge-green">100% VÁLIDO</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MongoDB</strong></td>
+                                    <td>Calificación en rango 1 a 5 estrellas</td>
+                                    <td>ALTA</td>
+                                    <td>500,002</td>
+                                    <td>0</td>
+                                    <td><span class="badge badge-green">100% VÁLIDO</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>JSON Preferencias</strong></td>
+                                    <td>Inyección controlada: identificación nula</td>
+                                    <td>CONTROL</td>
+                                    <td>50,000</td>
+                                    <td>44</td>
+                                    <td><span class="badge badge-amber">44 Rechazos Esperados</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>JSON Preferencias</strong></td>
+                                    <td>Inyección controlada: presupuesto negativo</td>
+                                    <td>CONTROL</td>
+                                    <td>50,000</td>
+                                    <td>38</td>
+                                    <td><span class="badge badge-amber">38 Rechazos Esperados</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XML Paquetes</strong></td>
+                                    <td>Inyección controlada: precio no numérico</td>
+                                    <td>CONTROL</td>
+                                    <td>150</td>
+                                    <td>2</td>
+                                    <td><span class="badge badge-amber">2 Rechazos Esperados</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function aplicarFiltros() {
+            const temporada = document.getElementById('filter-temporada').value;
+            const destino = document.getElementById('filter-destino').value;
+            console.log(`Aplicando filtro: Temporada=${temporada}, Destino=${destino}`);
+            // Recalculate visual feedback if needed
+        }
+
+        // Init page on load
+        window.addEventListener('DOMContentLoaded', () => {
+            switchPage('resumen', document.querySelector('.nav-btn.active'));
+        });
+    </script>
+</body>
+</html>

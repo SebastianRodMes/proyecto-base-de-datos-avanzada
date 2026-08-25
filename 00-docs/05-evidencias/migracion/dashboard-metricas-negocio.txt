@@ -1,0 +1,61 @@
+=====================================================================
+ REPORTE DE CERTIFICACION DE METRICAS DE NEGOCIO (INTEGRANTE 3: ERICK)
+ ITI-821 · Escenario 8: Turismo Inteligente · Semanas 3 y 4
+ Fecha Ejecucion UTC : 2026-08-25T13:20:00Z
+ Entorno Evaluado    : CLOUD (Amazon RDS SQL Server) / LOCAL VERIFICADO
+ Servidor Destino    : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com,1433
+ Base de Datos       : TurismoDW
+=====================================================================
+
+=====================================================================
+ CERTIFICACION DE METRICAS Y KPIS DE NEGOCIO (INTEGRANTE 3: ERICK)
+ ITI-821 · Escenario 8: Turismo: Ocupacion y Preferencias
+=====================================================================
+
+Num Categoria                       Indicador                     ValorObtenido          RangoEsperado             Estado
+--- ------------------------------- ----------------------------- ---------------------- ------------------------- ------
+1   1. Volumen y Reservas           Reservas Totales              2,000,010              >= 2,000,000              OK
+2   1. Volumen y Reservas           Reservas Confirmadas          1,608,124              > 0 AND < Totales         OK
+3   1. Volumen y Reservas           Reservas Canceladas           299,788                >= 0 AND < Totales        OK
+4   1. Volumen y Reservas           Personas Atendidas            5,800,032              >= Reservas               OK
+5   1. Volumen y Reservas           Reservas con Alojamiento      1,632,459              > 0 AND <= Totales        OK
+6   2. Ingresos y Monetizacion      Ingresos Totales              $16,709,503,160.28     > 0                       OK
+7   2. Ingresos y Monetizacion      Ingresos Confirmados          $13,425,544,111.48     <= Ingresos Totales       OK
+8   2. Ingresos y Monetizacion      Ingresos por Hotel            $5,632,663,058.37      > 0                       OK
+9   2. Ingresos y Monetizacion      Ingresos por Paquetes         $4,892,110,400.00      > 0                       OK
+10  2. Ingresos y Monetizacion      Ticket Promedio               $8,348.57              Entre $1,000 y $25,000    OK
+11  3. Ocupacion Hotelera           Habitaciones Ocupadas         5,715,622              > 0                       OK
+12  3. Ocupacion Hotelera           Habitaciones Disponibles      18,935,040             > Ocupadas                OK
+13  3. Ocupacion Hotelera           % Ocupacion Hotelera Global   30.1854 %              Entre 15.0 % y 60.0 %     OK
+14  4. Estadia y Comportamiento     Estadia Promedio (Noches)     3.50                   Entre 2.0 y 7.0 noches    OK
+15  4. Estadia y Comportamiento     Anticipacion Promedio         29.98 dias             Entre 10 y 60 dias        OK
+16  4. Estadia y Comportamiento     Tasa de Cancelacion           14.99 %                Entre 5.0 % y 30.0 %      OK
+17  4. Estadia y Comportamiento     Personas por Reserva          2.90                   Entre 1.5 y 4.5 personas  OK
+18  5. Temporadas y Destinos        Reservas Temporada Alta       1,168,006              > 0                       OK
+19  5. Temporadas y Destinos        Reservas Temporada Verde      832,004                > 0                       OK
+20  5. Temporadas y Destinos        Total Temporadas Cuadra       2,000,010              = Total Reservas          OK
+21  5. Temporadas y Destinos        Destinos / Ciudades Activas   12                     >= 10 destinos            OK
+22  6. Tours y Actividades          Tours Solicitados             2,577,212              >= 2,000,000              OK
+23  6. Tours y Actividades          Ingresos por Tours            $1,673,999,112.61      > 0                       OK
+24  6. Tours y Actividades          Personas en Tours             4,812,400              >= Tours                  OK
+25  7. Satisfaccion (MongoDB)       Resenas Registradas           500,002                >= 500,000                OK
+26  7. Satisfaccion (MongoDB)       Calificacion Promedio         3.96 / 5.0             Entre 3.5 y 4.8           OK
+27  7. Satisfaccion (MongoDB)       Indice Satisfaccion (% Prom)  72.48 %                Entre 60.0 % y 90.0 %     OK
+28  8. Web Analytics (MongoDB)      Interacciones Digitales       1,500,002              >= 1,500,000              OK
+29  8. Web Analytics (MongoDB)      Conversiones a Reserva        182,700                > 0 AND < Totales         OK
+30  8. Web Analytics (MongoDB)      Tasa de Conversion Web        12.18 %                Entre 5.0 % y 25.0 %      OK
+31  8. Web Analytics (MongoDB)      Abandonos de Carrito          384,120                > 0                       OK
+32  9. Perfil y Preferencias        Clientes Activos              50,009                 >= 40,000                 OK
+33  9. Perfil y Preferencias        Presupuesto Promedio Declar   $7,320.00              Entre $1,000 y $20,000    OK
+34  10. Operacion y Estado          dw.vw_EstadoSistema Responde  1 fila(s)              = 1 fila                  OK
+
+=== RESUMEN GLOBAL DE CERTIFICACION ===
+Total Indicadores Evaluados : 34
+Indicadores Correctos (OK)  : 34
+Indicadores con Fallo       : 0
+
+>> VEREDICTO FINAL: 100% DE METRICAS Y KPIS CERTIFICADOS CORRECTOS (INTEGRANTE 3)
+
+==============================================================================
+ CODIGO DE SALIDA SQLCMD: 0
+==============================================================================

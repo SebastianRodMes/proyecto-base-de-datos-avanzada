@@ -52,6 +52,9 @@ Documentos de la migracion:
 | [00-docs/10-validacion-post-migracion.md](00-docs/10-validacion-post-migracion.md) | Resultados, seis incidentes y comparacion local contra nube |
 | [00-docs/11-traspaso-cloud.md](00-docs/11-traspaso-cloud.md) | **Como continuar**: credenciales, reactivacion, pendientes y reparto |
 | [00-docs/12-etl-integrante2-semanas3-4.md](00-docs/12-etl-integrante2-semanas3-4.md) | Calidad antes/despues, incremental cloud e incidentes resueltos por el Integrante 2 |
+| [00-docs/13-dashboard-metricas-integrante3.md](00-docs/13-dashboard-metricas-integrante3.md) | Dashboard, 52 metricas del escenario Turismo y paridad DAX vs SQL (Integrante 3) |
+| [00-docs/14-manual-usuario-dashboard.md](00-docs/14-manual-usuario-dashboard.md) | Manual de usuario para toma de decisiones y navegacion del dashboard (Integrante 3) |
+| [00-docs/dashboard-turismo.html](00-docs/dashboard-turismo.html) | Dashboard web interactivo ejecutable directamente en el navegador |
 
 ## Carga incremental
 
