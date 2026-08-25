@@ -1,0 +1,235 @@
+﻿ETL INCREMENTAL COMPLETO Y REGISTRO DE CALIDAD
+Fecha UTC|2026-08-25T02:31:31Z
+Fuentes|PostgreSQL RDS + MongoDB Atlas + JSON + XML
+Destino|SQL Server RDS / TurismoDW
+Credenciales|omitidas
+
+==============================================================================
+1. CALIDAD ANTES DEL ETL
+==============================================================================
+
+=== CALIDAD ANTES - POSTGRESQL ===
+clientes_total|50009
+clientes_identificacion_vacia|0
+clientes_email_invalido|0
+clientes_identificacion_duplicada|0
+reservas_total|2000011
+reservas_monto_negativo|0
+reservas_rango_fechas_invalido|0
+reservas_estado_fuera_dominio|0
+
+=== CALIDAD ANTES - MONGODB ===
+resenas_total|500002
+resenas_calificacion_fuera_1_5|0
+resenas_entidad_incompleta|0
+interacciones_total|749872
+interacciones_fecha_ausente|0
+
+=== CALIDAD ANTES - JSON Y XML ===
+json_registros_total|6000
+json_identificacion_vacia|44
+json_presupuesto_invalido|38
+xml_registros_total|150
+xml_precio_invalido|2
+CODIGO_SALIDA|0
+
+==============================================================================
+2. EJECUCION ETL INCREMENTAL (CUATRO FUENTES)
+==============================================================================
+==============================================================================
+ ITI-821 | Escenario 8: Turismo Inteligente | ETL Semana 3
+ Integrante 1: Alex Herrera
+==============================================================================
+
+[20:31:46] INFO  --- Verificacion del entorno ---
+[20:31:47] INFO    SQL Server : EC2AMAZ-T8BSC8R  [Express Edition (64-bit)]
+[20:31:47] INFO    Base       : TurismoDW  (version 16.0.4205.1)
+[20:31:47] INFO    Alias      : turismodw-sql.cyjcymmugyxk.us-east-1.rds.amazonaws.com
+[20:31:51] INFO    PostgreSQL : 2 000 011 reservas, 50 009 clientes
+[20:31:54] INFO    MongoDB    : 500 002 resenas, 749 872 interacciones_web
+[20:31:54] INFO    Ejecucion ETL #5 iniciada en modo INCREMENTAL
+
+[20:31:54] INFO  --- 1a. Extraccion desde PostgreSQL ---
+[20:31:56] INFO    Marcas vigentes: {'cliente': '2027-02-01 08:00:00', 'preferencia_cliente': '2026-08-22 02:13:14.281377', 'reserva': '2027-02-05 10:00:00'}
+[20:31:57] INFO    stg.Cliente                           0 filas      0.0 MB  0.7s
+[20:31:57] INFO    stg.PreferenciaCliente                0 filas      0.0 MB  0.3s
+[20:31:58] INFO    stg.Hotel                           200 filas      0.0 MB  0.5s
+[20:31:58] INFO    stg.TipoHabitacion                  791 filas      0.1 MB  0.5s
+[20:31:59] INFO    stg.Tour                            400 filas      0.1 MB  0.4s
+[20:31:59] INFO    stg.PaqueteTuristico                150 filas      0.0 MB  0.4s
+[20:32:00] INFO    stg.PaqueteHotel                    282 filas      0.0 MB  0.4s
+[20:32:00] INFO    stg.PaqueteTour                     227 filas      0.0 MB  0.4s
+[20:32:01] INFO    stg.Reserva                           0 filas      0.0 MB  1.6s
+[20:32:02] INFO    stg.ReservaHabitacion                 0 filas      0.0 MB  0.9s
+[20:32:03] INFO    stg.ReservaTour                       0 filas      0.0 MB  0.9s
+[20:32:04] INFO    Total PostgreSQL: 2 050 filas
+
+[20:32:04] INFO  --- 1b. Extraccion desde MongoDB ---
+[20:32:04] INFO    Marcas vigentes: {'resenas': '2027-01-21T11:30:00', 'interacciones_web': '2027-01-21T12:10:00'}
+[20:32:06] INFO    stg.Resena                            0 filas      0.0 MB  1.3s
+[20:32:06] INFO    stg.InteraccionWeb                    0 filas      0.0 MB  0.1s
+[20:32:06] INFO    Total MongoDB: 0 filas
+
+[20:32:06] INFO  --- 1c. Extraccion de archivos JSON y XML ---
+[20:32:07] INFO    Marcas vigentes: {'preferencias': '1787362659.4497533', 'paquetes': '1787362659.3683026'}
+[20:32:07] AVISO   stg.PreferenciaArchivo     sin archivos de entrada
+[20:32:07] AVISO   stg.PaqueteArchivo         sin archivos de entrada
+[20:32:07] INFO    Total archivos: 0 filas
+
+[20:32:07] INFO  --- 2. Carga masiva a staging (bcp) ---
+[20:32:09] INFO    15 tablas de staging vaciadas
+[20:32:10] INFO    stg.Cliente                           0 filas      1.0s
+[20:32:12] INFO    stg.PreferenciaCliente                0 filas      0.8s
+[20:32:15] INFO    stg.Hotel                           200 filas      1.5s
+[20:32:21] INFO    stg.TipoHabitacion                  791 filas      4.5s
+[20:32:23] INFO    stg.Tour                            400 filas      1.4s
+[20:32:24] INFO    stg.PaqueteTuristico                150 filas      1.1s
+[20:32:26] INFO    stg.PaqueteHotel                    282 filas      1.0s
+[20:32:27] INFO    stg.PaqueteTour                     227 filas      1.1s
+[20:32:29] INFO    stg.Reserva                           0 filas      0.8s
+[20:32:30] INFO    stg.ReservaHabitacion                 0 filas      0.8s
+[20:32:31] INFO    stg.ReservaTour                       0 filas      0.9s
+[20:32:33] INFO    stg.Resena                            0 filas      0.9s
+[20:32:34] INFO    stg.InteraccionWeb                    0 filas      0.8s
+[20:32:34] INFO    Total cargado a staging: 2 050 filas
+
+[20:32:34] INFO  --- 3. Validacion y limpieza (RF-15) ---
+[20:32:35] INFO    Rechazos     : 0
+[20:32:35] INFO    Advertencias : 0
+
+[20:32:35] INFO  --- 4a. Dimensiones (MERGE, SCD tipo 1) ---
+[20:32:36] INFO    dw.DimCliente                    50 010 filas
+[20:32:36] INFO    dw.DimHotel                         201 filas
+[20:32:36] INFO    dw.DimTipoHabitacion                792 filas
+[20:32:36] INFO    dw.DimTour                          401 filas
+[20:32:36] INFO    dw.DimPaquete                       151 filas
+[20:32:36] INFO    dw.DimCanal                          18 filas
+[20:32:36] INFO    dw.DimTiempo                      2 923 filas
+
+[20:32:36] INFO  --- 4b. Hechos (incremental: borrar-e-insertar por clave) ---
+[20:32:37] INFO    dw.FactReserva                        0 reemplazadas   (total 2 000 011)
+[20:32:37] INFO    dw.FactReservaHabitacion              0 reemplazadas   (total 1 632 459)
+[20:32:37] INFO    dw.FactReservaTour                    0 reemplazadas   (total 2 577 212)
+[20:32:37] INFO    dw.FactResena                         0 reemplazadas   (total 500 002)
+[20:32:37] INFO    dw.FactInteraccionWeb                 0 reemplazadas   (total 1 500 002)
+
+[20:32:38] INFO  --- 5. FactOcupacionDiaria (recalculo por ambito afectado) ---
+[20:32:38] INFO    dw.FactOcupacionDiaria          431 325 filas
+[20:32:38] INFO    Ocupacion promedio del periodo: 30.19 %
+
+[20:32:39] INFO  --- 6. Verificacion de integridad referencial ---
+[20:33:49] INFO    Todas las claves foraneas quedaron validadas y confiables.
+
+[20:33:49] INFO  --- 7. Avance de marcas de agua ---
+[20:33:53] INFO    POSTGRESQL   cliente                -> 2027-02-01 08:00:00  (0 filas)
+[20:33:54] INFO    POSTGRESQL   preferencia_cliente    -> 2026-08-22 02:13:14.281377  (0 filas)
+[20:33:54] INFO    POSTGRESQL   reserva                -> 2027-02-05 10:00:00  (0 filas)
+[20:33:54] INFO    MONGODB      resenas                -> 2027-01-21T11:30:00  (0 filas)
+[20:33:54] INFO    MONGODB      interacciones_web      -> 2027-01-21T12:10:00  (0 filas)
+[20:33:54] INFO    JSON         preferencias           -> 1787184547.8616178  (0 filas)
+[20:33:54] INFO    XML          paquetes               -> 1787184547.8455892  (0 filas)
+
+[20:33:55] INFO  --- Resumen de la ejecucion ---
+[20:33:55] INFO    Ejecucion  : 5  (INCREMENTAL)
+[20:33:55] INFO    Estado     : COMPLETADO
+[20:33:55] INFO    Leidos     : 2 050
+[20:33:55] INFO    Cargados   : 485 821
+[20:33:55] INFO    Rechazados : 0
+[20:33:55] INFO    Duracion   : 2m 00s
+[20:33:55] INFO  
+[20:33:55] INFO    Etapas:
+[20:33:55] INFO      EXTRAER_PG                                        COMPLETADO       8.68s        2 050
+[20:33:55] INFO      EXTRAER_MONGO                                     COMPLETADO       2.33s            0
+[20:33:55] INFO      EXTRAER_ARCHIVOS                                  COMPLETADO       0.61s            0
+[20:33:55] INFO      TRUNCAR_STG            stg.*                      COMPLETADO       1.68s           15
+[20:33:55] INFO      CARGAR_STG             stg.Cliente                COMPLETADO       1.32s            0
+[20:33:55] INFO      CARGAR_STG             stg.PreferenciaCliente     COMPLETADO       1.09s            0
+[20:33:55] INFO      CARGAR_STG             stg.Hotel                  COMPLETADO       3.86s          200
+[20:33:55] INFO      CARGAR_STG             stg.TipoHabitacion         COMPLETADO       4.78s          791
+[20:33:55] INFO      CARGAR_STG             stg.Tour                   COMPLETADO       1.62s          400
+[20:33:55] INFO      CARGAR_STG             stg.PaqueteTuristico       COMPLETADO       1.39s          150
+[20:33:55] INFO      CARGAR_STG             stg.PaqueteHotel           COMPLETADO       1.29s          282
+[20:33:55] INFO      CARGAR_STG             stg.PaqueteTour            COMPLETADO       1.38s          227
+[20:33:55] INFO      CARGAR_STG             stg.Reserva                COMPLETADO       1.10s            0
+[20:33:55] INFO      CARGAR_STG             stg.ReservaHabitacion      COMPLETADO       1.11s            0
+[20:33:55] INFO      CARGAR_STG             stg.ReservaTour            COMPLETADO       1.16s            0
+[20:33:55] INFO      CARGAR_STG             stg.Resena                 COMPLETADO       1.19s            0
+[20:33:55] INFO      CARGAR_STG             stg.InteraccionWeb         COMPLETADO       1.10s            0
+[20:33:55] INFO      VALIDAR                etl.Error                  COMPLETADO       0.47s            0
+[20:33:55] INFO      CARGAR_DW_DIM          dw.Dim*                    COMPLETADO       0.68s       54 496
+[20:33:55] INFO      CARGAR_DW_HECHOS       dw.Fact*                   COMPLETADO       1.41s            0
+[20:33:55] INFO      CARGAR_DW_OCUPACION    dw.FactOcupacionDiaria     COMPLETADO       0.91s      431 325
+[20:33:55] INFO      VERIFICAR_INTEGRIDAD   dw.*                       COMPLETADO      70.61s            0
+[20:33:55] INFO      AVANZAR_MARCAS         etl.Marca                  COMPLETADO       5.05s            7
+[20:33:55] INFO  
+[20:33:55] INFO  ETL completado en 2m 08s.
+CODIGO_SALIDA|0
+
+==============================================================================
+3. CALIDAD Y BITACORA DESPUES DEL ETL
+==============================================================================
+
+=== CALIDAD DESPUES - SQL SERVER ===
+Marca|ObtenerMarca|ActualizarMarca|CargarHechosIncremental|CargarOcupacionIncremental
+1|1|1|1|1
+
+=== ULTIMAS EJECUCIONES ===
+EjecucionId|Modo|Estado|Servidor|Leidos|Cargados|Rechazados|Segundos|Inicio|Fin
+5|INCREMENTAL|COMPLETADO|EC2AMAZ-T8BSC8R|2050|485821|0|120|2026-08-25 02:31:58|2026-08-25 02:33:58
+4|INCREMENTAL|COMPLETADO|EC2AMAZ-T8BSC8R|2050|485821|0|132|2026-08-25 02:27:48|2026-08-25 02:30:00
+
+=== BITACORA DE ETAPAS ===
+Secuencia|Nombre|Fuente|Destino|Estado|Filas|Segundos
+1|EXTRAER_PG|POSTGRESQL||COMPLETADO|2050|8.675
+2|EXTRAER_MONGO|MONGODB||COMPLETADO|0|2.327
+3|EXTRAER_ARCHIVOS|JSON||COMPLETADO|0|0.613
+4|TRUNCAR_STG|INTERNO|stg.*|COMPLETADO|15|1.680
+5|CARGAR_STG|INTERNO|stg.Cliente|COMPLETADO|0|1.319
+6|CARGAR_STG|INTERNO|stg.PreferenciaCliente|COMPLETADO|0|1.095
+7|CARGAR_STG|INTERNO|stg.Hotel|COMPLETADO|200|3.857
+8|CARGAR_STG|INTERNO|stg.TipoHabitacion|COMPLETADO|791|4.776
+9|CARGAR_STG|INTERNO|stg.Tour|COMPLETADO|400|1.616
+10|CARGAR_STG|INTERNO|stg.PaqueteTuristico|COMPLETADO|150|1.385
+11|CARGAR_STG|INTERNO|stg.PaqueteHotel|COMPLETADO|282|1.287
+12|CARGAR_STG|INTERNO|stg.PaqueteTour|COMPLETADO|227|1.380
+13|CARGAR_STG|INTERNO|stg.Reserva|COMPLETADO|0|1.097
+14|CARGAR_STG|INTERNO|stg.ReservaHabitacion|COMPLETADO|0|1.115
+15|CARGAR_STG|INTERNO|stg.ReservaTour|COMPLETADO|0|1.159
+16|CARGAR_STG|INTERNO|stg.Resena|COMPLETADO|0|1.185
+17|CARGAR_STG|INTERNO|stg.InteraccionWeb|COMPLETADO|0|1.102
+18|VALIDAR|INTERNO|etl.Error|COMPLETADO|0|0.472
+19|CARGAR_DW_DIM|INTERNO|dw.Dim*|COMPLETADO|54496|0.680
+20|CARGAR_DW_HECHOS|INTERNO|dw.Fact*|COMPLETADO|0|1.406
+21|CARGAR_DW_OCUPACION|INTERNO|dw.FactOcupacionDiaria|COMPLETADO|431325|0.911
+22|VERIFICAR_INTEGRIDAD|INTERNO|dw.*|COMPLETADO|0|70.614
+23|AVANZAR_MARCAS|INTERNO|etl.Marca|COMPLETADO|7|5.046
+
+=== RECHAZOS Y ADVERTENCIAS ===
+Fuente|Objeto|Regla|Severidad|Cantidad
+SIN_ERRORES|0
+
+=== MARCAS DE AGUA ===
+Fuente|Objeto|Tipo|Valor|FilasUltimoLote|EjecucionId|Actualizada
+JSON|preferencias|ARCHIVO|1787362659.4497533|0|5|2026-08-25 02:33:57
+MONGODB|interacciones_web|FECHA|2027-01-21T12:10:00|0|5|2026-08-25 02:33:57
+MONGODB|resenas|FECHA|2027-01-21T11:30:00|0|5|2026-08-25 02:33:57
+POSTGRESQL|cliente|TIMESTAMP|2027-02-01 08:00:00|0|5|2026-08-25 02:33:57
+POSTGRESQL|preferencia_cliente|TIMESTAMP|2026-08-22 02:13:14.281377|0|5|2026-08-25 02:33:57
+POSTGRESQL|reserva|TIMESTAMP|2027-02-05 10:00:00|0|5|2026-08-25 02:33:57
+XML|paquetes|ARCHIVO|1787362659.3683026|0|5|2026-08-25 02:33:58
+
+=== CONTEOS DEL MODELO ===
+Objeto|Filas
+dw.FactInteraccionWeb|1500002
+dw.FactOcupacionDiaria|431325
+dw.FactResena|500002
+dw.FactReserva|2000011
+dw.FactReservaHabitacion|1632459
+dw.FactReservaTour|2577212
+
+=== INTEGRIDAD POST ETL ===
+foreign_keys_no_confiables_o_deshabilitadas|0
+RESULTADO|CALIDAD_ETL_VERIFICADA
+CODIGO_SALIDA|0
+
+RESULTADO_FINAL|APROBADO

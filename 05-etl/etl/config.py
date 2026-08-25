@@ -191,17 +191,16 @@ def cadena_odbc(base: str | None = None) -> str:
 def argumentos_bcp() -> list[str]:
     """Argumentos de autenticacion comunes a todas las invocaciones de bcp.
 
-    No se pasa -u ("confiar en el certificado del servidor"): esa opcion solo
-    existe en el bcp que viene con ODBC Driver 18. El instalado aqui es el de
-    ODBC 17, que la rechaza con "unknown option u". ODBC 17 no fuerza cifrado
-    por omision, asi que la conexion local funciona sin ella.
-
-    Contra Amazon RDS el destino lleva puerto explicito (ver destino_sql).
-    RDS acepta el bcp de ODBC 17 porque negocia TLS sin exigir que el cliente
-    valide la cadena del certificado; si una version futura lo exigiera, la
-    salida seria migrar a las herramientas de ODBC 18 y agregar -u aqui.
+    Contra Amazon RDS el destino lleva puerto explicito (ver destino_sql) y
+    se agrega -u cuando SQL_CIFRADO esta activo. Las herramientas actuales
+    usan ODBC 18 internamente, que cifra por omision y rechaza la cadena del
+    certificado de RDS si no se marca explicitamente como confiable. El
+    laboratorio local conserva el comportamiento anterior porque no define
+    SQL_CIFRADO.
     """
     args = ["-S", destino_sql()]
+    if SQL_CIFRADO:
+        args.append("-u")
     if SQL_USUARIO:
         args += ["-U", SQL_USUARIO, "-P", SQL_PASSWORD]
     else:

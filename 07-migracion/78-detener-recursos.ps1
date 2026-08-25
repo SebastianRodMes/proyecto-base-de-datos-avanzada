@@ -130,8 +130,24 @@ foreach ($i in $instancias) {
 if ($Esperar) {
     foreach ($i in $instancias) {
         Escribir "Esperando a que $i quede en '$destino' ..." 'PASO'
-        if ($Iniciar) { & aws rds wait db-instance-available --db-instance-identifier $i 2>&1 | Out-Null }
-        else          { & aws rds wait db-instance-stopped   --db-instance-identifier $i 2>&1 | Out-Null }
+        if ($Iniciar) {
+            & aws rds wait db-instance-available --db-instance-identifier $i 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) { throw "AWS no pudo confirmar que $i quedara available." }
+        } else {
+            # AWS CLI 2.36 no incluye el waiter db-instance-stopped aunque
+            # algunas versiones de la documentacion lo mencionan. Se hace
+            # polling acotado para no declarar apagada una instancia que aun
+            # esta en checkpoint. 120 * 15 s = 30 minutos como maximo.
+            $confirmado = $false
+            for ($intento = 1; $intento -le 120; $intento++) {
+                $estadoActual = & aws rds describe-db-instances `
+                    --db-instance-identifier $i `
+                    --query 'DBInstances[0].DBInstanceStatus' --output text 2>$null
+                if ($estadoActual -eq 'stopped') { $confirmado = $true; break }
+                Start-Sleep -Seconds 15
+            }
+            if (-not $confirmado) { throw "Tiempo agotado esperando que $i quedara stopped." }
+        }
         Escribir "  $i listo" 'OK'
     }
 }

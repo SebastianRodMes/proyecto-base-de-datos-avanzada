@@ -71,6 +71,11 @@ class Orquestador:
         self.inicio = time.time()
         self.filas_leidas = 0
         self.archivos: list[tuple[str, Path, int]] = []
+        # Conteo real por objeto con marca de agua. Se conserva hasta el
+        # cierre correcto de la corrida y alimenta FilasUltimoLote. Antes
+        # se enviaba siempre cero, por lo que la vista incremental no podia
+        # demostrar cuanto habia procesado cada origen.
+        self.filas_por_marca: dict[tuple[str, str], int] = {}
 
         self.usar_pg = not (args.solo_mongo or args.solo_archivos)
         self.usar_mongo = not (args.solo_pg or args.solo_archivos)
@@ -99,16 +104,29 @@ class Orquestador:
         log(f"  Base       : {info['base']}  (version {info['version']})")
         log(f"  Alias      : {config.SQL_SERVIDOR}")
 
+        requeridos = [
+            "usp_ValidarStaging", "usp_CargarDimensiones", "usp_CargarHechos",
+            "usp_CargarOcupacionDiaria", "usp_VerificarIntegridad",
+        ]
+        if self.incremental:
+            # Falla temprano y con una instruccion util si 43b/44b no se
+            # desplegaron. Antes el error aparecia varios minutos despues,
+            # al invocar el primer procedimiento incremental.
+            requeridos += [
+                "Marca", "usp_ObtenerMarca", "usp_ActualizarMarca",
+                "usp_CargarHechosIncremental", "usp_CargarOcupacionIncremental",
+            ]
+        valores = ",".join(f"('{nombre}')" for nombre in requeridos)
         faltantes = sql.consultar(
-            "SELECT o.name FROM (VALUES ('usp_ValidarStaging'),('usp_CargarDimensiones'),"
-            "('usp_CargarHechos'),('usp_CargarOcupacionDiaria'),('usp_VerificarIntegridad')) "
-            "AS o(name) WHERE OBJECT_ID('etl.' + o.name) IS NULL"
+            f"SELECT o.name FROM (VALUES {valores}) AS o(name) "
+            "WHERE OBJECT_ID('etl.' + o.name) IS NULL"
         )
         if faltantes:
             raise SystemExit(
-                "Faltan procedimientos en la base: "
+                "Faltan objetos ETL en la base: "
                 + ", ".join(f[0] for f in faltantes)
-                + "\nEjecute los scripts 40..45 de 04-sqlserver antes del ETL."
+                + "\nEjecute los scripts 40..45 y, para modo INCREMENTAL, "
+                  "43b/44b de 04-sqlserver antes del ETL."
             )
 
         if self.usar_pg:
@@ -160,9 +178,12 @@ class Orquestador:
                 for objeto, valor in marcas.items():
                     if valor is None:
                         continue
+                    filas = self.filas_por_marca.get((fuente, objeto), 0)
                     sql.actualizar_marca(fuente, objeto, valor,
+                                         filas=filas,
                                          ejecucion_id=self.ejecucion_id)
-                    log(f"  {fuente:<12} {objeto:<22} -> {valor}")
+                    log(f"  {fuente:<12} {objeto:<22} -> {valor}"
+                        f"  ({formato_filas(filas)} filas)")
                     total += 1
             sql.finalizar_etapa(etapa, total)
         except Exception as exc:                      # noqa: BLE001
@@ -187,6 +208,9 @@ class Orquestador:
             for ext, ruta, filas, _ in extract_postgres.extraer_todo(
                     self.ejecucion_id, marcas):
                 self.archivos.append((ext.tabla_staging, ruta, filas))
+                if ext.objeto_marca:
+                    clave = ("POSTGRESQL", ext.objeto_marca)
+                    self.filas_por_marca[clave] = self.filas_por_marca.get(clave, 0) + filas
                 total += filas
             sql.finalizar_etapa(etapa, total)
             self.filas_leidas += total
@@ -202,6 +226,12 @@ class Orquestador:
             for tabla, ruta, filas, _ in extract_mongo.extraer_todo(
                     self.ejecucion_id, marcas):
                 self.archivos.append((tabla, ruta, filas))
+                objeto = (
+                    config.COLECCION_RESENAS
+                    if tabla == "stg.Resena"
+                    else config.COLECCION_INTERACCIONES
+                )
+                self.filas_por_marca[("MONGODB", objeto)] = filas
                 total += filas
             sql.finalizar_etapa(etapa, total)
             self.filas_leidas += total
@@ -219,6 +249,10 @@ class Orquestador:
             for tabla, ruta, filas, _ in extract_files.extraer_todo(
                     self.ejecucion_id, marcas):
                 self.archivos.append((tabla, ruta, filas))
+                if tabla == "stg.PreferenciaArchivo":
+                    self.filas_por_marca[("JSON", "preferencias")] = filas
+                elif tabla == "stg.PaqueteArchivo":
+                    self.filas_por_marca[("XML", "paquetes")] = filas
                 total += filas
             sql.finalizar_etapa(etapa, total)
             self.filas_leidas += total

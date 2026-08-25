@@ -227,7 +227,12 @@ Remove-Item .env.local.bak
 | `SQL_PASSWORD` | `RDS_SQL_PASSWORD` |
 | `MONGO_URI` | `ATLAS_URI` |
 
-**Lo que ya se probó y lo que no.** La corrida registrada en `00-docs/05-evidencias/migracion/etl-cloud.txt` se hizo con `--modo INCREMENTAL --solo-pg`: ejercitó PostgreSQL en RDS y el DW en RDS, pero **no** Atlas ni los archivos. Para cerrar el entregable del todo falta una corrida sin `--solo-pg`. Es cuestión de repetir el bloque de arriba quitando esa bandera.
+**Cierre del Integrante 2.** La corrida original de `etl-cloud.txt` se hizo con
+`--solo-pg`, pero el pendiente ya fue cerrado con la ejecución #5: PostgreSQL,
+Atlas, JSON y XML se ejercitaron juntos contra RDS SQL Server. El resultado,
+la calidad antes/después y dos defectos corregidos están en
+`00-docs/12-etl-integrante2-semanas3-4.md` y
+`00-docs/05-evidencias/migracion/etl-integrante2-calidad.txt`.
 
 ### 3.5 Trampas al repetir
 
