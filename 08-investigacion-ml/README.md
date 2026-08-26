@@ -120,7 +120,7 @@ generador para que el texto no dependa directamente de la calificación.
 ```text
 08-investigacion-ml/
 ├── README.md                 documentación del tema
-├── Investigacion-ML-Resenas.pptx   presentación
+├── Reseñas.pptx              presentación
 ├── .gitignore                excluye data/ y modelos/ (regenerables)
 ├── ml/
 │   ├── config.py             conexión, rutas y mapeo de etiquetas
