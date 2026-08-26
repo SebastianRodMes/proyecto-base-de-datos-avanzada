@@ -237,9 +237,26 @@ La corrida anterior, con `--solo-pg`, no leía de Atlas. Vale la pena decir por 
 >
 > **No vuelvas a limpiar las marcas de `MONGODB`** mientras Atlas y el DW no compartan los `_id`. Con las marcas en su máximo el problema no se repite. Para dejar los dos lados consistentes hay que volver a migrar Mongo desde el laboratorio local actual, o recargar el DW desde ese mismo laboratorio. Detalle completo en la sección 6 de `etl-cloud.txt`.
 
+**Cómo encaja con el trabajo del Integrante 2.** El Integrante 2 construyó el orquestador de las cuatro fuentes, `05-etl/validar_calidad.py` y `07-migracion/80-validar-etl-integrante2.ps1`, y con eso corrió la **ejecución #5** contra la nube. Su documentación está en `00-docs/12-etl-integrante2-semanas3-4.md` y `00-docs/05-evidencias/migracion/etl-integrante2-calidad.txt`, y las dos correcciones que hizo sobre `43b`/`44b` siguen vigentes.
+
+Conviene precisar qué cubre cada corrida, porque las dos aparecen en la documentación y sus cifras no coinciden:
+
+| | Ejecución #5 (Integrante 2) | Ejecución #8 (Integrante 1) |
+|---|---|---|
+| Etapas | 23 | 25 |
+| `EXTRAER_PG` | 2 050 filas | 2 050 filas |
+| `EXTRAER_MONGO` | **0 filas** | **1 249 874 filas** |
+| `EXTRAER_ARCHIVOS` | **0 filas**, `sin archivos de entrada` | **6 150 filas** |
+| Rechazos | 0 | 84, los esperados |
+| Estado | `COMPLETADO` | `CON_ERRORES` por esos 84 |
+
+No es que la #5 estuviera mal: **ejecutó** las etapas de Mongo y archivos, y por eso se la describió como "las cuatro fuentes". Lo que pasa es que con `etl.Marca` en el máximo de la fuente un incremental lee 0 documentos, y los archivos quedan fuera porque su `mtime` no supera la marca. Para que movieran datos hubo que forzar la relectura, y eso es lo que hizo la #8.
+
+Dicho de otro modo: la #5 prueba que el **camino** funciona de punta a punta; la #8 prueba que **los datos** viajan. Y fue la #8 la que destapó lo de los `_id`, que la #5 no podía ver justamente porque no leía de Atlas.
+
 ### 3.5 Trampas al repetir
 
-Cuatro cosas que muerden a quien vuelva a correr los scripts:
+Cinco cosas que muerden a quien vuelva a correr los scripts:
 
 | Trampa | Qué pasa | Cómo evitarla |
 |---|---|---|
@@ -278,28 +295,30 @@ Cuatro síntomas que ya se vieron, con su causa real. Los cuatro engañan: ningu
 
 ## 5. Qué falta y de quién es
 
-Lo que sigue **no** lo hizo el Integrante 1 porque el enunciado lo asigna a otros roles. Está listado para que se vea, no para reclamarlo.
+Esta tabla se escribió cuando casi todo estaba abierto. Hoy está casi toda cerrada: los Integrantes 2, 3 y 4 entregaron entre el 24 y el 25 de agosto. Se conserva el listado porque muestra el reparto según el enunciado, con el estado actualizado.
 
 | Pendiente | Semana | Responsable según el enunciado | Estado |
 |---|---|---|---|
-| Tema de investigación: documentar y prototipo | 3 | **Integrante 4** | No iniciado |
-| Tema de investigación: implementación completa | 4 | **Integrante 4** | No iniciado |
-| Demostración de la tecnología investigada | 3 | **Integrante 4** | No iniciado |
-| Dashboard y métricas de negocio | 3 | **Integrante 3** | El dashboard de las semanas 1-2 sirve; falta revisar si el escenario pide indicadores nuevos |
-| Validación de dashboard | 3 | Integrante 3 con Integrante 1 | El refresco real ya está hecho y capturado; queda que el Integrante 3 contraste el dashboard local contra el de la nube |
-| Manual técnico | 4 | Equipo | No iniciado |
-| Manual de usuario | 4 | Equipo | No iniciado |
-| Video de demostración | 4 | Equipo | No iniciado |
-| Presentación ejecutiva final | 4 | Equipo | No iniciado |
+| Tema de investigación: documentar y prototipo | 3 | **Integrante 4** | **Completo**: ML de clasificación de sentimiento en `08-investigacion-ml/` |
+| Tema de investigación: implementación completa | 4 | **Integrante 4** | **Completo**: scripts, métricas, matriz de confusión y capturas de ejecución |
+| Demostración de la tecnología investigada | 3 | **Integrante 4** | **Completo**: `08-investigacion-ml/Reseñas.pptx` |
+| Dashboard y métricas de negocio | 3 | **Integrante 3** | **Completo**: 52 KPIs certificados, `13-dashboard-metricas-integrante3.md` y `dashboard-turismo.html` |
+| Validación de dashboard | 3 | Integrante 3 con Integrante 1 | **Completo**: paridad DAX vs SQL certificada, y el refresco real contra la nube ya está capturado |
+| Manual técnico | 4 | Equipo | Cubierto en la práctica por `01`, `11`, `12` y `15`; no existe como documento único |
+| Manual de usuario | 4 | Equipo | **Completo**: `14-manual-usuario-dashboard.md` |
+| Video de demostración | 4 | Equipo | **No iniciado**. Es el último pendiente real del proyecto |
+| Presentación ejecutiva final | 4 | Equipo | **Completa**: `Presentación de flujo.pptx`, lista para presentar |
 | Capturas de Power BI contra la nube | 4 | **Integrante 1** | **Hecho** el 25 de agosto: refresco real contra RDS y capturas de las páginas 1 y 6 |
+
+> El estado vivo de los pendientes se lleva en `00-docs/15-pendientes-y-operacion-cloud.md`. Si las dos tablas se contradicen, mandá esa.
 
 ### 5.1 Sobre el tema de investigación
 
 El enunciado ofrece nueve temas: CDC, Kafka, Data Lake, Docker, Data Vault, GeoJSON, series temporales, *machine learning* y observabilidad.
 
-**El repositorio ya insinúa cuál se eligió.** `00-docs/02-diccionario-modelo-estrella.md:199` documenta la columna `LongitudTexto` de `dw.FactResena` como *«Insumo para el tema de investigación (clasificación de reseñas con ML)»*. Si esa sigue siendo la decisión, los datos ya están: 500 002 reseñas con calificación, texto, idioma y verificación, migradas completas a Atlas justamente por eso.
+**Se eligió *machine learning*,** y el trabajo está en `08-investigacion-ml/`: extracción de reseñas, entrenamiento, predicción, métricas, matriz de confusión y capturas de las tres ejecuciones. La presentación es `08-investigacion-ml/Reseñas.pptx`.
 
-> Vale la pena que el equipo confirme el tema antes de la Semana 4, porque dos de los nueve **ya están medio hechos sin habérselo propuesto**: *Docker* (todo el laboratorio está contenerizado) y *Data Lake* (los archivos crudos viven en `s3://.../raw/`). Si el tema elegido fuera alguno de esos dos, buena parte de la evidencia ya existe.
+El repositorio ya apuntaba en esa dirección desde la Semana 1: `00-docs/02-diccionario-modelo-estrella.md:199` documenta la columna `LongitudTexto` de `dw.FactResena` como *«Insumo para el tema de investigación (clasificación de reseñas con ML)»*. Por eso `resenas` se migró **completa** a Atlas y no al 50 % como `interacciones_web`: las 500 002 reseñas con calificación, texto, idioma y verificación estaban reservadas para esto.
 
 ### 5.2 Sobre las capturas de Power BI
 

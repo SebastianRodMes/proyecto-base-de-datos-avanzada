@@ -29,3 +29,6 @@ desktop.ini
 05-etl/.env.*.bak
 *_accessKeys.csv
 *.pem
+
+# Archivos temporales de Office
+~$*

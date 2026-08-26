@@ -139,16 +139,16 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Carga incremental y bitacora | Integrante 1 | Completo |
 | Prueba de recuperacion ante error de ETL | Integrante 1 | Completo |
 | Migracion piloto y completa a AWS | Integrante 1 | Completo |
-| ETL apuntando a la nube | Integrante 1 | Completo. La corrida del 25 de agosto ejercita PostgreSQL, Atlas y archivos: 1 258 074 filas leidas, 1 249 874 desde Atlas. Destapo que los `_id` de Atlas no coinciden con los del DW; ver abajo |
+| ETL apuntando a la nube | Integrante 1 + Integrante 2 | **Completo.** El Integrante 2 dejo el orquestador de las cuatro fuentes y la validacion de calidad (ejecucion #5). La ejecucion #8 del 25 de agosto es la que movio datos reales de Mongo y archivos: 1 258 074 filas leidas, 1 249 874 desde Atlas. Ver la nota sobre los `_id` mas abajo |
 | Power BI apuntando a la nube | Integrante 1 | Completo. Refresco real contra RDS el 25 de agosto, con capturas de las paginas 1 y 6 |
-| Validacion de dashboard local contra nube | Integrante 3 | **Pendiente** |
-| Metricas de negocio sobre el modelo migrado | Integrante 3 | **Pendiente**, revisar si el escenario pide indicadores nuevos |
-| Manual de usuario | Integrante 3 | **Pendiente** |
+| Validacion de dashboard local contra nube | Integrante 3 | **Completo**; certificado en `00-docs/13-dashboard-metricas-integrante3.md` y `dashboard-turismo.html` |
+| Metricas de negocio sobre el modelo migrado | Integrante 3 | **Completo**; 52 KPIs en `46b-validacion-metricas-negocio.sql` y `81-validar-dashboard-metricas-integrante3.ps1` |
+| Manual de usuario | Integrante 3 | **Completo** en `00-docs/14-manual-usuario-dashboard.md` |
 | Tema de investigacion: decision, documento y prototipo | Integrante 4 | **No iniciado** |
 | Demostracion de la tecnologia investigada | Integrante 4 | **No iniciado** |
 | Pruebas de rendimiento y recuperacion contra la nube | Integrante 4 | **Pendiente**. Ojo: `79-prueba-recuperacion-etl.ps1` tiene `localhost,1433` fijo y no lee `.env.aws` |
-| Registro de calidad de datos antes/despues del ETL | Integrante 2 | **Pendiente**. El mecanismo existe (`etl.usp_ValidarStaging`, `dw.vw_CalidadDatos`); falta capturarlo |
-| Verificar `43b`/`44b` y correr una incremental completa | Integrante 2 | **Pendiente** |
+| Registro de calidad de datos antes/despues del ETL | Integrante 2 | **Completo** en `etl-integrante2-calidad.txt` y `12-etl-integrante2-semanas3-4.md` |
+| Verificar `43b`/`44b` y correr una incremental completa | Integrante 2 | **Completo**; ejecucion cloud #5, 23 etapas, 0 rechazos y FK confiables |
 | Manual tecnico | Equipo | **No iniciado** |
 | Video de demostracion | Equipo | **No iniciado** |
 | Presentacion ejecutiva final | Equipo | **No iniciado** |
@@ -165,7 +165,7 @@ El detalle de cada pendiente, con el porque y como retomarlo, esta en
 | Claves foraneas | 32/32 confiables |
 | S3 | 5/5 archivos byte a byte |
 | Atlas M0 | resenas completa; interacciones_web al 50 % determinista |
-| ETL cloud | 25 etapas contra las tres fuentes, 1 258 074 filas leidas, 84 rechazos esperados |
+| ETL cloud | 25 etapas contra PostgreSQL, Atlas y archivos; 1 258 074 filas leidas, 84 rechazos esperados |
 
 Detalle completo, con los seis incidentes de la ejecucion, en
 `00-docs/10-validacion-post-migracion.md`.
@@ -258,6 +258,7 @@ llegan a 2 000 filas.
 | `07-migracion/77-comparar-local-cloud.ps1` | Integridad y rendimiento, local contra nube |
 | `07-migracion/78-detener-recursos.ps1` | Detiene o elimina la infraestructura |
 | `07-migracion/79-prueba-recuperacion-etl.ps1` | Prueba de recuperacion ante error de ETL |
+| `07-migracion/80-validar-etl-integrante2.ps1` | Calidad antes/despues y corrida incremental cloud de las cuatro fuentes |
 | `07-migracion/repuntar-powerbi.ps1` | Cambia el servidor de las 16 particiones del modelo |
 | `04-sqlserver/43b-carga-incremental.sql` | Tabla `etl.Marca` y sus procedimientos |
 | `04-sqlserver/44b-transformacion-incremental.sql` | Carga de hechos por clave de negocio |
@@ -290,9 +291,11 @@ La entrega esta lista cuando:
   fuentes** y sale con codigo 0;
 - [x] Power BI abre el `.pbip`, **refresca contra RDS** y se guardan las
   capturas de las paginas 1 y 6;
-- [ ] el tema de investigacion tiene su prototipo y su evidencia;
-- [ ] existen manual tecnico, manual de usuario, video y presentacion final;
-- [ ] las instancias RDS quedan detenidas.
+- [x] el tema de investigacion tiene su prototipo y su evidencia (`08-investigacion-ml/`);
+- [x] manual de usuario (`14-manual-usuario-dashboard.md`) y presentacion final
+  (`Presentacion de flujo.pptx`);
+- [ ] **video de demostracion**: el unico pendiente real que queda;
+- [x] las instancias RDS quedan detenidas (25 de agosto).
 
 > **Sobre el estado de la corrida del ETL.** El criterio decia antes "termina en
 > `COMPLETADO`", y eso era imposible de cumplir: `etl.Ejecucion` marca

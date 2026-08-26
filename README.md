@@ -35,7 +35,10 @@ PostgreSQL y MongoDB alimentan un modelo estrella en SQL Server 2022, consumido 
 # 6. Validar y comparar
 .\07-migracion\77-comparar-local-cloud.ps1
 
-# 7. Detener los recursos para que el costo no siga corriendo
+# 7. Validar ETL incremental y calidad con las cuatro fuentes
+.\07-migracion\80-validar-etl-integrante2.ps1
+
+# 8. Detener los recursos para que el costo no siga corriendo
 .\07-migracion\78-detener-recursos.ps1
 ```
 
@@ -48,6 +51,10 @@ Documentos de la migracion:
 | [00-docs/09-inventario-migracion.md](00-docs/09-inventario-migracion.md) | Inventario de objetos con veredicto de portabilidad |
 | [00-docs/10-validacion-post-migracion.md](00-docs/10-validacion-post-migracion.md) | Resultados, seis incidentes y comparacion local contra nube |
 | [00-docs/11-traspaso-cloud.md](00-docs/11-traspaso-cloud.md) | **Como continuar**: credenciales, reactivacion, pendientes y reparto |
+| [00-docs/12-etl-integrante2-semanas3-4.md](00-docs/12-etl-integrante2-semanas3-4.md) | Calidad antes/despues, incremental cloud e incidentes resueltos por el Integrante 2 |
+| [00-docs/13-dashboard-metricas-integrante3.md](00-docs/13-dashboard-metricas-integrante3.md) | Dashboard, 52 metricas del escenario Turismo y paridad DAX vs SQL (Integrante 3) |
+| [00-docs/14-manual-usuario-dashboard.md](00-docs/14-manual-usuario-dashboard.md) | Manual de usuario para toma de decisiones y navegacion del dashboard (Integrante 3) |
+| [00-docs/dashboard-turismo.html](00-docs/dashboard-turismo.html) | Dashboard web interactivo ejecutable directamente en el navegador |
 
 ## Carga incremental
 
@@ -66,7 +73,15 @@ Contraste medido en este laboratorio:
 | `FULL` | 8 317 880 | 8 min 27 s (507 s; una corrida previa tardo 424 s) |
 | `INCREMENTAL` | 2 050 | 22 s |
 
-Evidencia en `00-docs/05-evidencias/migracion/carga-incremental.txt` y `prueba-recuperacion-etl.txt`.
+Evidencia en `00-docs/05-evidencias/migracion/carga-incremental.txt`,
+`prueba-recuperacion-etl.txt` y `etl-integrante2-calidad.txt`.
+
+La comprobacion reproducible del Integrante 2 ejecuta las cuatro fuentes,
+valida calidad antes y despues, y registra etapas, marcas e integridad:
+
+```powershell
+.\07-migracion\80-validar-etl-integrante2.ps1
+```
 
 ## Advertencia sobre los puertos de esta maquina
 
@@ -110,7 +125,7 @@ El informe completo del Integrante 4 esta en [00-docs/06-informe-integrante4.md]
 | Particionamiento | | Distribucion identica, los 12 filegroups reproducidos |
 | Archivos JSON/XML | S3 | 5/5 byte a byte |
 | MongoDB | Atlas M0 | `resenas` completa; `interacciones_web` al 50 % determinista (cupo de M0) |
-| ETL apuntando a la nube | | 25 etapas contra PostgreSQL, Atlas y archivos; 1,258,074 filas leidas, 84 rechazos esperados |
+| ETL apuntando a la nube | | 25 etapas contra PostgreSQL, Atlas y archivos; 1,258,074 filas leidas (1,249,874 desde Atlas), 84 rechazos esperados |
 | Power BI | | 16 particiones repuntadas, 16 vistas responden |
 
 **El hallazgo principal:** RDS for SQL Server **si acepta filegroups de usuario**, asi que los scripts `41` a `45` y `47b` migraron sin una sola modificacion. La restriccion de "solo PRIMARY" es de Azure SQL Database, no de los servicios gestionados en general.
