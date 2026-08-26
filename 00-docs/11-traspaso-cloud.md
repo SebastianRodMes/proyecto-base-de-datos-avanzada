@@ -227,7 +227,15 @@ Remove-Item .env.local.bak
 | `SQL_PASSWORD` | `RDS_SQL_PASSWORD` |
 | `MONGO_URI` | `ATLAS_URI` |
 
-**Lo que ya se probó y lo que no.** La corrida registrada en `00-docs/05-evidencias/migracion/etl-cloud.txt` se hizo con `--modo INCREMENTAL --solo-pg`: ejercitó PostgreSQL en RDS y el DW en RDS, pero **no** Atlas ni los archivos. Para cerrar el entregable del todo falta una corrida sin `--solo-pg`. Es cuestión de repetir el bloque de arriba quitando esa bandera.
+**Lo que ya se probó.** La corrida registrada en `00-docs/05-evidencias/migracion/etl-cloud.txt` es del 25 de agosto y se hizo **sin** `--solo-pg`: ejercitó las tres fuentes contra la nube. 1 258 074 filas leídas en 11m 27s, de ellas 1 249 874 desde Atlas (500 002 reseñas y 749 872 interacciones) y 6 150 desde los archivos JSON y XML. Los 84 rechazos son los esperados y quedaron en `etl.Error`, que es lo que puebla `dw.vw_CalidadDatos`.
+
+La corrida anterior, con `--solo-pg`, no leía de Atlas. Vale la pena decir por qué hicieron falta dos intentos más antes de que Mongo moviera datos: **con `etl.Marca` en el máximo de la fuente, un incremental lee 0 documentos**, así que una corrida "sin `--solo-pg`" a secas ejecuta las etapas de Mongo y archivos pero con cero filas. Para que movieran datos de verdad hubo que limpiar las marcas de `MONGODB` y tocar el `mtime` de los cinco archivos de `03-archivos/entrada`.
+
+> **Y ahí saltó un problema que ya existía.** La clave de negocio de `dw.FactResena` y `dw.FactInteraccionWeb` es el `_id` de MongoDB. Los del DW empiezan en `6a8220` y los de Atlas en `6a8906`: 5,3 días de diferencia en la marca de tiempo del ObjectId. El MongoDB local se regeneró entre la carga del DW y la migración a Atlas. `mongodump` y `mongorestore` preservan `_id`, así que `74-migrar-mongo.ps1` no fue el culpable.
+>
+> Para el DW cada documento de Atlas es una fila nueva, y el borrar-e-insertar por clave solo encontró 2 coincidencias de 1 249 874. Las tablas quedaron con doble conteo (1 000 002 y 2 249 872) hasta que se borraron las 1 249 870 filas de origen Atlas. Después: 6/6 tablas de hechos en su cifra documentada, 32/32 claves foráneas confiables, 0 huérfanos.
+>
+> **No vuelvas a limpiar las marcas de `MONGODB`** mientras Atlas y el DW no compartan los `_id`. Con las marcas en su máximo el problema no se repite. Para dejar los dos lados consistentes hay que volver a migrar Mongo desde el laboratorio local actual, o recargar el DW desde ese mismo laboratorio. Detalle completo en la sección 6 de `etl-cloud.txt`.
 
 ### 3.5 Trampas al repetir
 
@@ -239,6 +247,7 @@ Cuatro cosas que muerden a quien vuelva a correr los scripts:
 | La clase por defecto | Era `db.t3.micro`, que no puede cargar el DW | **Ya corregido**: el valor por defecto es `db.t3.small`. Ver sección 6.1 de `10-*.md` |
 | El `.bak` de la ruta alterna | El piloto intentaba restaurar un archivo que nadie subía, y el error parecía un rechazo de RDS | **Ya corregido**: `72` genera el respaldo, lo sube y recién entonces intenta restaurar. Con `-SinRutaAlterna` se salta |
 | Las evidencias | Los 15 archivos de `05-evidencias/migracion/` se escriben **con nombre fijo** | Correr un script "para probar" **pisa la entrega**. Copiá la carpeta antes de experimentar |
+| Limpiar las marcas de `MONGODB` para forzar una relectura | Las dos tablas de hechos de Mongo se duplican en silencio, porque los `_id` de Atlas no son los del DW. Los índices `UQ_*_Negocio` no lo impiden: las claves son de verdad distintas | **No lo hagas.** Con las marcas en su máximo el incremental lee 0 documentos y no pasa nada. Si ya ocurrió, borrá las filas cuyo `EjecucionIdCarga` sea el de esa corrida y cuya clave empiece en `6a8906` |
 
 ---
 
@@ -277,12 +286,12 @@ Lo que sigue **no** lo hizo el Integrante 1 porque el enunciado lo asigna a otro
 | Tema de investigación: implementación completa | 4 | **Integrante 4** | No iniciado |
 | Demostración de la tecnología investigada | 3 | **Integrante 4** | No iniciado |
 | Dashboard y métricas de negocio | 3 | **Integrante 3** | El dashboard de las semanas 1-2 sirve; falta revisar si el escenario pide indicadores nuevos |
-| Validación de dashboard | 3 | Integrante 3 con Integrante 1 | **Parcial**: hay validación estática contra la nube, falta el refresco real |
+| Validación de dashboard | 3 | Integrante 3 con Integrante 1 | El refresco real ya está hecho y capturado; queda que el Integrante 3 contraste el dashboard local contra el de la nube |
 | Manual técnico | 4 | Equipo | No iniciado |
 | Manual de usuario | 4 | Equipo | No iniciado |
 | Video de demostración | 4 | Equipo | No iniciado |
 | Presentación ejecutiva final | 4 | Equipo | No iniciado |
-| Capturas de Power BI contra la nube | 4 | **Integrante 1** | Pendiente, requiere una persona |
+| Capturas de Power BI contra la nube | 4 | **Integrante 1** | **Hecho** el 25 de agosto: refresco real contra RDS y capturas de las páginas 1 y 6 |
 
 ### 5.1 Sobre el tema de investigación
 
@@ -294,16 +303,42 @@ El enunciado ofrece nueve temas: CDC, Kafka, Data Lake, Docker, Data Vault, GeoJ
 
 ### 5.2 Sobre las capturas de Power BI
 
-Es lo único del alcance del Integrante 1 que quedó abierto, y no por olvido: **abrir el `.pbip`, autenticar y refrescar es interactivo** y no se puede guionizar.
+**Cerrado el 25 de agosto.** Era lo único del alcance del Integrante 1 que quedaba abierto, porque abrir el `.pbip`, autenticar y refrescar es interactivo. Se hizo así: el `.pbip` se abrió y se disparó el refresco desde la cinta, una persona escribió la contraseña en el diálogo de **Base de datos** —ese paso sigue sin poder guionizarse— y el resto corrió solo.
 
-Lo que sí quedó hecho y verificado: las 16 particiones apuntan a RDS, y las 16 vistas que consume el modelo responden en la nube con los conteos correctos (`00-docs/05-evidencias/migracion/powerbi-validacion-cloud.txt`).
+El refresco tardó unos 6 minutos. Las cuatro tablas de hechos grandes se pasaron ese rato en `ASYNC_NETWORK_IO`: RDS ya tenía las filas listas y esperaba a que el cliente las consumiera. Con las 17 tablas en modo **import** y 8,6 M de filas viajando de `us-east-1` a Panamá, el cuello de botella es la WAN, no la instancia. Conviene saberlo antes de la demostración en vivo.
 
-Lo que falta:
+Las capturas quedaron en:
+
+- `00-docs/05-evidencias/migracion/powerbi-cloud-pagina1-resumen.png`
+- `00-docs/05-evidencias/migracion/powerbi-cloud-pagina6-estado.png`
+
+Lo que muestran, y que sirve de contraste contra el ETL y contra RDS:
+
+| Visual | Valor | Cuadra con |
+|---|---|---|
+| Nodo activo | `EC2AMAZ-HN6CSJ3` | `@@SERVERNAME` de la instancia actual |
+| Estado del mirroring | `GESTIONADO POR AWS`, `RDS Single-AZ` | servicio gestionado, sin AG propio |
+| Semáforo de frescura | `Datos al dia`, última carga `8/26/2026` | la corrida del ETL cloud |
+| % Ocupación hotelera | `30.2 %` | el `30.19 %` que reportó el ETL |
+| Registros rechazados | `84` | los 84 de `etl.Error`, desglosados 44 + 38 + 2 |
+| Reservas / Reseñas / Interacciones | 2 mill. / 500 mil / 2 mill. | 2 000 011 / 500 002 / 1 500 002 |
+
+El desglose de calidad de datos que aparece en la página 6 (`JSON preferencias no_nulo 44`, `JSON preferencias numerico_positivo 38`, `XML paquetes numerico_positivo 2`) es, de paso, el registro de calidad que el Integrante 2 tenía pendiente capturar.
+
+**Qué le hace a los archivos guardar el `.pbip`.** Al guardar desde Power BI Desktop 2.157, la aplicación reescribe tres JSON de metadatos —`TurismoDW.pbip`, `TurismoDW.Report/definition.pbir` y `TurismoDW.SemanticModel/definition.pbism`— y les **quita la línea `$schema`**. También crea `TurismoDW.SemanticModel/diagramLayout.json`, que guarda dónde quedó cada tabla en la vista de modelo. Son cambios cosméticos y esperados; no hay que revertirlos, y volverán a aparecer en el próximo guardado. Lo que importa es que **no toca los TMDL de las tablas**: las 16 particiones siguen apuntando a RDS después de guardar. Se verificó.
+
+**El `.pbix` no se genera solo.** Guardar el proyecto no produce el binario: hay que hacer *Archivo → Guardar como → `TurismoDW.pbix`* aparte. Y `.gitignore` excluye `*.pbix` a propósito, porque el archivo con datos incrustados pesa cientos de megabytes. Si el profesor exige el binario, hay que entregarlo por fuera del repositorio.
+
+Lo que sí quedó hecho y verificado: las 16 particiones apuntan a RDS, y las 16 vistas que consume el modelo responden en la nube con los conteos correctos (`00-docs/05-evidencias/migracion/powerbi-validacion-cloud.txt`, regenerado el 25 de agosto después del ETL completo y de la reparación de la sección 3.4).
+
+Tres cifras de ese archivo cambiaron respecto de la versión del 21 de agosto, y cambiaron **bien**: `vw_DimCliente` 50 009 → 50 010, `vw_FactReserva` 2 000 010 → 2 000 011 y `vw_FactOcupacionDiaria` 431 321 → 431 325, por las corridas incrementales. Y `vw_CalidadDatos` pasó de 0 a 6 filas, porque los 84 rechazos por fin poblaron `etl.Error`. Esa vista es, de paso, el registro de calidad de datos que el Integrante 2 tenía pendiente capturar.
+
+Para repetirlo —por ejemplo, si hay que rehacer las capturas después de otra carga:
 
 1. Encender las instancias (sección 3.2).
 2. `Start-Process .\06-powerbi\TurismoDW.pbip`
 3. Autenticación **Base de datos**, usuario `turismoadmin`, contraseña de `.secrets/turismodw-cloud.env`, confiar en el certificado del servidor.
-4. Refrescar.
+4. Refrescar. Tarda unos 6 minutos; no está colgado.
 5. Capturar página 1 (Resumen) y página 6 (Estado del sistema) en `00-docs/05-evidencias/migracion/`.
 
 > En la página 6 vas a ver `RDS Single-AZ` y `GESTIONADO POR AWS` donde antes decía `AG PRIMARY / SYNCHRONIZED`. Es lo correcto: la vista se adaptó para reportar la redundancia del servicio gestionado en vez de un grupo de disponibilidad propio. Y el `NodoActual` **cambia** después de cualquier cambio de clase de instancia o mantenimiento de AWS; no es un error.
@@ -375,6 +410,6 @@ Para que nadie abandone un paso creyendo que se colgó. Medido en esta ejecució
 
 1. **Crear el usuario IAM y la clave de acceso** en la consola de AWS.
 2. **Crear el cluster de Atlas**, el usuario de base y la regla de red; después pegar `ATLAS_URI` a mano.
-3. **Refrescar Power BI** y tomar las capturas.
+3. **Escribir la contraseña en el diálogo de Power BI.** Lanzar el `.pbip`, disparar el refresco y tomar las capturas sí se puede automatizar; el diálogo de credenciales no.
 
 Todo lo demás corre solo.

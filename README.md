@@ -110,7 +110,7 @@ El informe completo del Integrante 4 esta en [00-docs/06-informe-integrante4.md]
 | Particionamiento | | Distribucion identica, los 12 filegroups reproducidos |
 | Archivos JSON/XML | S3 | 5/5 byte a byte |
 | MongoDB | Atlas M0 | `resenas` completa; `interacciones_web` al 50 % determinista (cupo de M0) |
-| ETL apuntando a la nube | | `COMPLETADO`, 19 etapas, 0 rechazos |
+| ETL apuntando a la nube | | 25 etapas contra PostgreSQL, Atlas y archivos; 1,258,074 filas leidas, 84 rechazos esperados |
 | Power BI | | 16 particiones repuntadas, 16 vistas responden |
 
 **El hallazgo principal:** RDS for SQL Server **si acepta filegroups de usuario**, asi que los scripts `41` a `45` y `47b` migraron sin una sola modificacion. La restriccion de "solo PRIMARY" es de Azure SQL Database, no de los servicios gestionados en general.

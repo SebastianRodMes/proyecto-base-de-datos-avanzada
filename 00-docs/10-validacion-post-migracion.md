@@ -142,6 +142,8 @@ Testigo          Cluster: RDS gestionado por AWS
 La hora de arranque de la instancia pasa a obtenerse de `create_date` de `tempdb`, que SQL Server recrea en cada arranque: mismo dato, sin permisos elevados.
 
 > **`NodoActual` no es estable en RDS.** Al escalar la clase de `db.t3.micro` a `db.t3.small`, AWS reemplazó la máquina y `@@SERVERNAME` pasó de `EC2AMAZ-CEG5E1B` a `EC2AMAZ-4AR53DH`. Conviene saberlo antes de la demostración: la página 6 del reporte va a mostrar un nombre distinto después de cualquier cambio de clase o de un mantenimiento de AWS. No es un error, es cómo funciona el servicio gestionado, y es justamente lo que la columna debe reflejar.
+>
+> Van tres nombres. Tras detener y volver a arrancar las instancias el 25 de agosto, el nodo es **`EC2AMAZ-HN6CSJ3`**, y es el que aparece en `powerbi-validacion-cloud.txt` y el que se verá en las capturas. Los `EC2AMAZ-4AR53DH` que quedan más abajo en este documento son el registro de lo que se observó entonces; no hay que "corregirlos".
 
 ### 5.3 Verificación de integridad
 
@@ -186,7 +188,9 @@ Las 16 vistas que consume el modelo responden en la nube con los conteos correct
 
 > `dw.vw_CalidadDatos` devuelve cero filas **por diseño**: resume `etl.Error`, y la bitácora de la nube arranca limpia para que las corridas cloud sean distinguibles de las locales. Se poblará en la primera corrida del ETL contra la nube.
 
-**Lo que falta y no se puede guionizar:** abrir el `.pbip` en Power BI Desktop, autenticar y refrescar es un paso interactivo. La validación de arriba es **estática** —comprueba que el modelo apunta a RDS y que las 16 vistas responden— pero no reemplaza el refresco real ni las capturas de las páginas 1 y 6. Ver `00-docs/11-traspaso-cloud.md`.
+**Cerrado el 25 de agosto.** La validación de arriba es **estática** —comprueba que el modelo apunta a RDS y que las 16 vistas responden— y no reemplaza el refresco real. Ese refresco ya se hizo: el `.pbip` se abrió, una persona autenticó contra RDS y las 17 tablas en modo import cargaron en ~6 minutos, con las tablas de hechos grandes esperando en `ASYNC_NETWORK_IO` porque el límite es la WAN. Las capturas de las páginas 1 y 6 están en `00-docs/05-evidencias/migracion/powerbi-cloud-pagina1-resumen.png` y `powerbi-cloud-pagina6-estado.png`.
+
+Los visuales confirman los números por una vía independiente de las consultas SQL de este documento: `30.2 %` de ocupación contra el `30.19 %` que reportó el ETL, `84` registros rechazados desglosados en 44 + 38 + 2, y `EC2AMAZ-HN6CSJ3` / `RDS Single-AZ` / `GESTIONADO POR AWS` en la página 6. El detalle está en `00-docs/11-traspaso-cloud.md`, sección 5.2.
 
 Evidencia: `00-docs/05-evidencias/migracion/migracion-dw-completa.txt`, `metricas-cloud.txt`, `powerbi-validacion-cloud.txt`
 
@@ -349,7 +353,33 @@ La etapa más cara fue `VERIFICAR_INTEGRIDAD` con **76 s**: revalidar 32 claves 
 
 > **Lo que esta corrida NO probó.** Se usó `--solo-pg`, así que ejercitó PostgreSQL en RDS y el DW en RDS, pero **no** leyó de Atlas ni de los archivos. Se eligió así porque la migración de MongoDB estaba en curso en ese momento y una lectura concurrente habría medido el restore, no el ETL.
 >
-> El camino de Mongo y archivos está probado contra el laboratorio local —la prueba de carga incremental de la sección 7.1 los ejercita completos— pero **falta una corrida cloud sin `--solo-pg`** para cerrar el entregable del todo. El procedimiento está en `00-docs/11-traspaso-cloud.md`, sección 3.4.
+> **Cerrado el 25 de agosto.** Una corrida sin `--solo-pg` ejercitó las tres fuentes contra la nube: 1 258 074 filas leídas en 11m 27s, de ellas 1 249 874 desde Atlas y 6 150 desde los archivos, con los 84 rechazos esperados. `etl-cloud.txt` quedó regenerado con esa corrida; la del `--solo-pg` ya no está en el archivo.
+
+### 9.1 Los `_id` de Atlas no son los del DW
+
+La corrida completa destapó una divergencia que **ya existía y que ninguna validación anterior podía ver**, porque hasta entonces ninguna corrida cloud había leído de Atlas.
+
+La clave de negocio de `dw.FactResena` y `dw.FactInteraccionWeb` es el `_id` de MongoDB. Los cuatro primeros bytes de un ObjectId son la marca de tiempo de su creación:
+
+| Origen | Prefijo | Instante |
+|---|---|---|
+| Filas del DW, migradas desde el laboratorio local | `6a82204a` | generación que alimentó al DW |
+| Documentos que hoy viven en Atlas | `6a89063b` | 5,3 días después |
+
+`mongodump` y `mongorestore` preservan `_id`, así que `74-migrar-mongo.ps1` no los reasignó. La única explicación compatible con los datos es que **el MongoDB local se regeneró entre la carga del DW y la migración a Atlas**.
+
+Para el DW, entonces, cada documento de Atlas es una reseña distinta de la que ya tenía. El borrar-e-insertar por clave de negocio encontró **2 coincidencias de 1 249 874**, y las tablas quedaron con doble conteo:
+
+| Tabla | Origen local | Origen Atlas | Prueba incremental | Quedó en | Documentado |
+|---|---:|---:|---:|---:|---:|
+| `dw.FactResena` | 500 000 | 500 000 | 2 | 1 000 002 | 500 002 |
+| `dw.FactInteraccionWeb` | 1 500 000 | 749 870 | 2 | 2 249 872 | 1 500 002 |
+
+Las 4 claves con prefijo `6a890d` sí coinciden en ambos lados: son los documentos de prueba incremental, creados después de la migración.
+
+**Reparación.** Se borraron las 1 249 870 filas de origen Atlas y se conservaron las de origen local más las 4 de prueba. Verificado después: 6/6 tablas de hechos en su cifra documentada, 32/32 claves foráneas confiables, 0 huérfanos, y las 16 vistas de Power BI respondiendo con los conteos correctos.
+
+**Para el equipo.** Con `etl.Marca` en el máximo de Atlas el problema no se repite, porque una corrida incremental lee 0 documentos. Quien quiera dejar los dos lados consistentes tiene que volver a migrar Mongo desde el laboratorio local actual, o recargar el DW desde ese mismo laboratorio. Lo que **no** hay que hacer es limpiar las marcas de `MONGODB` y correr el ETL.
 
 Evidencia: `00-docs/05-evidencias/migracion/etl-cloud.txt`
 

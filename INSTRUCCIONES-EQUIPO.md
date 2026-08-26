@@ -114,8 +114,15 @@ T4 queda documentada como regresion; no presentar 5/5 mejoras.
 
 El PBIP ya se abrio, autentico y refresco. Una consulta DAX sobre el modelo vivo reconcilio las 16 tablas y confirmo `sql-secondary / SYNCHRONIZED`.
 
-1. Capturar pagina 1 y pagina 6.
+1. Capturar pagina 1 y pagina 6 **contra el laboratorio local**.
 2. Guardar como `TurismoDW.pbix` si el profesor exige el binario.
+
+> **Ojo, son dos juegos de capturas distintos.** Las de la nube ya estan hechas
+> (`00-docs/05-evidencias/migracion/powerbi-cloud-pagina*.png`, del 25 de
+> agosto) y muestran `RDS Single-AZ / GESTIONADO POR AWS`. Estas de aqui son
+> las de las semanas 1 y 2 y muestran `sql-secondary / SYNCHRONIZED`. El
+> modelo apunta hoy a RDS, asi que para rehacer las locales hay que repuntarlo
+> con `07-migracion\repuntar-powerbi.ps1` y volver a repuntarlo despues.
 
 Validacion realizada: 17 tablas, 26 relaciones, 52 medidas, 6 paginas, 55 visuales, 89 referencias correctas y 16/16 tablas sin diferencias frente a SQL Server.
 
@@ -132,8 +139,8 @@ HA (`48` a `51`) se conservan como evidencia de las semanas anteriores.
 | Carga incremental y bitacora | Integrante 1 | Completo |
 | Prueba de recuperacion ante error de ETL | Integrante 1 | Completo |
 | Migracion piloto y completa a AWS | Integrante 1 | Completo |
-| ETL apuntando a la nube | Integrante 1 | Completo con `--solo-pg`; falta una corrida que ejercite Mongo y archivos |
-| Power BI apuntando a la nube | Integrante 1 | Modelo repuntado y validado de forma estatica; **faltan las capturas del refresco real** |
+| ETL apuntando a la nube | Integrante 1 | Completo. La corrida del 25 de agosto ejercita PostgreSQL, Atlas y archivos: 1 258 074 filas leidas, 1 249 874 desde Atlas. Destapo que los `_id` de Atlas no coinciden con los del DW; ver abajo |
+| Power BI apuntando a la nube | Integrante 1 | Completo. Refresco real contra RDS el 25 de agosto, con capturas de las paginas 1 y 6 |
 | Validacion de dashboard local contra nube | Integrante 3 | **Pendiente** |
 | Metricas de negocio sobre el modelo migrado | Integrante 3 | **Pendiente**, revisar si el escenario pide indicadores nuevos |
 | Manual de usuario | Integrante 3 | **Pendiente** |
@@ -158,7 +165,7 @@ El detalle de cada pendiente, con el porque y como retomarlo, esta en
 | Claves foraneas | 32/32 confiables |
 | S3 | 5/5 archivos byte a byte |
 | Atlas M0 | resenas completa; interacciones_web al 50 % determinista |
-| ETL cloud | COMPLETADO, 19 etapas, 0 rechazos |
+| ETL cloud | 25 etapas contra las tres fuentes, 1 258 074 filas leidas, 84 rechazos esperados |
 
 Detalle completo, con los seis incidentes de la ejecucion, en
 `00-docs/10-validacion-post-migracion.md`.
@@ -178,6 +185,27 @@ docker compose -f docker\docker-compose.yml `
 ```
 
 PostgreSQL queda en `15432` y MongoDB en `27018`.
+
+**Los `_id` de Atlas.** La clave de negocio de `dw.FactResena` y de
+`dw.FactInteraccionWeb` es el `_id` de MongoDB. Los del DW empiezan en
+`6a8220`; los de Atlas, en `6a8906`. Los cuatro primeros bytes de un ObjectId
+son su marca de tiempo, asi que entre una generacion y otra pasaron 5,3 dias:
+el MongoDB local se regenero entre la carga del DW y la migracion a Atlas.
+`mongodump` y `mongorestore` preservan `_id`, de modo que la migracion no
+tuvo la culpa.
+
+La consecuencia practica: para el DW, cada documento de Atlas es una fila
+nueva. Si alguien limpia las marcas de `MONGODB` en `etl.Marca` y corre el
+ETL contra la nube, las dos tablas se duplican en silencio; los indices
+`UQ_*_Negocio` no lo impiden porque las claves de verdad son distintas. Ya
+paso una vez, el 25 de agosto, y se reparo borrando las 1 249 870 filas de
+origen Atlas.
+
+**No limpies las marcas de `MONGODB`.** Con las marcas en su maximo una
+corrida incremental lee 0 documentos y el problema no aparece. Para dejar los
+dos lados consistentes hay que volver a migrar Mongo desde el laboratorio
+local actual, o recargar el DW desde ese mismo laboratorio. El detalle esta
+en la seccion 6 de `00-docs/05-evidencias/migracion/etl-cloud.txt`.
 
 **Las credenciales.** Nada de AWS ni de Atlas se versiona. `70-provisionar-aws.ps1`
 genera las contrasenas y las deja en `.secrets\turismodw-cloud.env`, que esta
@@ -254,15 +282,26 @@ llegan a 2 000 filas.
 
 La entrega esta lista cuando:
 
-- `07-migracion/76-validacion-post-migracion.sql` contra RDS devuelve
+- [x] `07-migracion/76-validacion-post-migracion.sql` contra RDS devuelve
   `MIGRACION VERIFICADA`;
-- `07-migracion/77-comparar-local-cloud.ps1` reporta checksums identicos en las
-  14 tablas;
-- una corrida `INCREMENTAL` del ETL contra la nube termina en `COMPLETADO`;
-- Power BI abre el `.pbip`, **refresca contra RDS** y se guardan las capturas de
-  las paginas 1 y 6;
-- el tema de investigacion tiene su prototipo y su evidencia;
-- existen manual tecnico, manual de usuario, video y presentacion final;
-- las instancias RDS quedan detenidas.
+- [x] `07-migracion/77-comparar-local-cloud.ps1` reporta checksums identicos en
+  las 14 tablas;
+- [x] una corrida `INCREMENTAL` del ETL contra la nube ejercita **las tres
+  fuentes** y sale con codigo 0;
+- [x] Power BI abre el `.pbip`, **refresca contra RDS** y se guardan las
+  capturas de las paginas 1 y 6;
+- [ ] el tema de investigacion tiene su prototipo y su evidencia;
+- [ ] existen manual tecnico, manual de usuario, video y presentacion final;
+- [ ] las instancias RDS quedan detenidas.
+
+> **Sobre el estado de la corrida del ETL.** El criterio decia antes "termina en
+> `COMPLETADO`", y eso era imposible de cumplir: `etl.Ejecucion` marca
+> `CON_ERRORES` en cuanto hay un solo rechazo, y una corrida que lea los
+> archivos JSON y XML **siempre** produce los 84 rechazos esperados. Una corrida
+> `COMPLETADO` contra la nube solo se consigue saltandose los archivos, que es
+> justo lo que no habia que hacer. Lo que hay que mirar es el codigo de salida
+> del proceso y que los 84 rechazos sean los de siempre: 44 `no_nulo` y 38
+> `numerico_positivo` en `preferencias`, mas 2 `numerico_positivo` en
+> `paquetes`.
 
 **Lo que falta y de quien es** esta en `00-docs/11-traspaso-cloud.md`.
