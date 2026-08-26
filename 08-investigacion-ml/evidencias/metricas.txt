@@ -1,0 +1,24 @@
+PROTOTIPO ML - CLASIFICACIÓN DE SENTIMIENTO DE RESEÑAS
+========================================================
+Registros totales : 500,002
+Entrenamiento     : 400,001
+Prueba            : 100,001
+Vocabulario TF-IDF: 477 términos (1-2 gramas)
+Exactitud global  : 1.0000
+
+Reporte por clase (conjunto de prueba):
+              precision    recall  f1-score   support
+
+    negativa     0.9999    1.0000    1.0000     13008
+     neutral     1.0000    1.0000    1.0000     15101
+    positiva     1.0000    1.0000    1.0000     71892
+
+    accuracy                         1.0000    100001
+   macro avg     1.0000    1.0000    1.0000    100001
+weighted avg     1.0000    1.0000    1.0000    100001
+
+Matriz de confusión (filas=real, columnas=predicho):
+          negativa    neutral   positiva
+negativa    13,008          0          0
+ neutral         0     15,101          0
+positiva         1          0     71,891
