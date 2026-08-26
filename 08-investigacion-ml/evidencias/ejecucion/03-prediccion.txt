@@ -1,0 +1,18 @@
+$ python 03_predecir.py    [2026-08-25 20:23:15]
+Clasificación de sentimiento
+------------------------------------------------------------
+[positiva   99.8%]  El mejor viaje de mi vida, todo excelente y el personal muy amable.
+[negativa   49.6%]  El tour estuvo bien pero el transporte llego tarde, algo regular.
+[negativa   99.8%]  Una experiencia decepcionante, el servicio fue deficiente y no lo recomiendo.
+[positiva   99.9%]  Cumplio con lo prometido, buena relacion calidad precio.
+[ neutral   99.4%]  Ni bueno ni malo, aceptable para el precio que costo.
+
+$ python 03_predecir.py "el hotel estaba sucio, la comida fea y el trato horrible, jamas vuelvo"
+Clasificación de sentimiento
+------------------------------------------------------------
+[negativa   62.3%]  el hotel estaba sucio, la comida fea y el trato horrible, jamas vuelvo
+
+$ python 03_predecir.py "que maravilla de lugar, quede encantado, super recomendado"
+Clasificación de sentimiento
+------------------------------------------------------------
+[positiva   95.2%]  que maravilla de lugar, quede encantado, super recomendado

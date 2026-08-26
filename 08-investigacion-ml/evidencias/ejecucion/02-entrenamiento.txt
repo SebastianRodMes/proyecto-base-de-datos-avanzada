@@ -1,0 +1,44 @@
+$ python 02_entrenar_modelo.py    [2026-08-25 20:22:44]
+Cargando dataset...
+Filas: 500,002
+Distribución de clases:
+  negativa :  65,041  ( 13.0%)
+  neutral  :  75,506  ( 15.1%)
+  positiva : 359,455  ( 71.9%)
+
+Entrenamiento: 400,001 | Prueba: 100,001
+Entrenando (TF-IDF + Regresión Logística)...
+Evaluando...
+
+PROTOTIPO ML - CLASIFICACIÓN DE SENTIMIENTO DE RESEÑAS
+========================================================
+Registros totales : 500,002
+Entrenamiento     : 400,001
+Prueba            : 100,001
+Vocabulario TF-IDF: 477 términos (1-2 gramas)
+Exactitud global  : 1.0000
+
+Reporte por clase (conjunto de prueba):
+              precision    recall  f1-score   support
+
+    negativa     0.9999    1.0000    1.0000     13008
+     neutral     1.0000    1.0000    1.0000     15101
+    positiva     1.0000    1.0000    1.0000     71892
+
+    accuracy                         1.0000    100001
+   macro avg     1.0000    1.0000    1.0000    100001
+weighted avg     1.0000    1.0000    1.0000    100001
+
+Matriz de confusión (filas=real, columnas=predicho):
+          negativa    neutral   positiva
+negativa    13,008          0          0
+ neutral         0     15,101          0
+positiva         1          0     71,891
+
+Términos más asociados a cada clase:
+  negativa : no, decepcionante, deficiente, problemas, no lo, mala, lo recomiendo, recomiendo, bastante, que costo, para lo, bastante decepcionante
+  neutral  : ni, mas, aceptable, correcto, regular, algo, regular la, pico, aceptable el, servicio fue, lento, en horas
+  positiva : recomendado, excelente, cumplio, viaje, todo, buena, personal, muy, buena relacion, relacion calidad, relacion, calidad
+
+Matriz de confusion -> C:\Users\sr331\Desktop\Avance proyecto - Semana 3\Semana3-Integrante1-AlexHerrera\08-investigacion-ml\evidencias\matriz-confusion.png
+Modelo guardado    -> C:\Users\sr331\Desktop\Avance proyecto - Semana 3\Semana3-Integrante1-AlexHerrera\08-investigacion-ml\modelos\modelo_sentimiento.joblib
