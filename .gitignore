@@ -24,7 +24,9 @@ desktop.ini
 
 # Credenciales locales de la migracion cloud (NUNCA versionar)
 .secrets/
+.secrets*
 05-etl/.env.aws
+05-etl/.env.*.bak
 *_accessKeys.csv
 *.pem
 

@@ -1,51 +1,59 @@
 =====================================================================
  ETL OPERATIVO CONTRA LA INFRAESTRUCTURA CLOUD
  ITI-821 | Escenario 8: Turismo Inteligente | Integrante 1: Alex Herrera
- Fecha : 2026-08-21 22:29:28
+ Fecha : 2026-08-25 22:45:43
 =====================================================================
 
 Origen  : RDS for PostgreSQL 16   turismodw-pg
+          MongoDB Atlas M0        turismo_nosql
+          Archivos JSON y XML     03-archivos/entrada
 Destino : RDS for SQL Server EX   turismodw-sql
-Modo    : INCREMENTAL --solo-pg
+Modo    : INCREMENTAL (PostgreSQL + MongoDB + archivos)
 
 === 1. Bitacora de la ejecucion en la nube ===
-Ejecucion Modo Estado Servidor Leidos Cargados Segundos
---------- ---- ------ -------- ------ -------- --------
-1 INCREMENTAL COMPLETADO EC2AMAZ-4AR53DH 2053 485821 118
+Ejecucion Modo Estado Servidor Leidos Cargados Rechazados Segundos
+--------- ---- ------ -------- ------ -------- ---------- --------
+8 INCREMENTAL CON_ERRORES EC2AMAZ-HN6CSJ3 1258074 485825 84 687
 
 === 2. Etapas ===
 Secuencia Etapa Destino Estado Segundos Filas
 --------- ----- ------- ------ -------- -----
-1 EXTRAER_PG  COMPLETADO 8.843 2053
-2 TRUNCAR_STG stg.* COMPLETADO 2.153 15
-3 CARGAR_STG stg.Cliente COMPLETADO 1.599 1
-4 CARGAR_STG stg.PreferenciaCliente COMPLETADO 1.193 0
-5 CARGAR_STG stg.Hotel COMPLETADO 1.491 200
-6 CARGAR_STG stg.TipoHabitacion COMPLETADO 1.585 791
-7 CARGAR_STG stg.Tour COMPLETADO 1.722 400
-8 CARGAR_STG stg.PaqueteTuristico COMPLETADO 1.473 150
-9 CARGAR_STG stg.PaqueteHotel COMPLETADO 1.322 282
-10 CARGAR_STG stg.PaqueteTour COMPLETADO 1.439 227
-11 CARGAR_STG stg.Reserva COMPLETADO 1.368 1
-12 CARGAR_STG stg.ReservaHabitacion COMPLETADO 1.329 1
-13 CARGAR_STG stg.ReservaTour COMPLETADO 1.196 0
-14 VALIDAR etl.Error COMPLETADO .549 0
-15 CARGAR_DW_DIM dw.Dim* COMPLETADO .782 54496
-16 CARGAR_DW_HECHOS dw.Fact* COMPLETADO 1.787 0
-17 CARGAR_DW_OCUPACION dw.FactOcupacionDiaria COMPLETADO 3.691 431325
-18 VERIFICAR_INTEGRIDAD dw.* COMPLETADO 76.286 0
-19 AVANZAR_MARCAS etl.Marca COMPLETADO 2.984 3
+1 EXTRAER_PG  COMPLETADO 9.477 2050
+2 EXTRAER_MONGO  COMPLETADO 379.940 1249874
+3 EXTRAER_ARCHIVOS  COMPLETADO 0.899 6150
+4 TRUNCAR_STG stg.* COMPLETADO 1.921 15
+5 CARGAR_STG stg.Cliente COMPLETADO 1.308 0
+6 CARGAR_STG stg.PreferenciaCliente COMPLETADO 1.295 0
+7 CARGAR_STG stg.Hotel COMPLETADO 1.520 200
+8 CARGAR_STG stg.TipoHabitacion COMPLETADO 1.760 791
+9 CARGAR_STG stg.Tour COMPLETADO 2.042 400
+10 CARGAR_STG stg.PaqueteTuristico COMPLETADO 1.638 150
+11 CARGAR_STG stg.PaqueteHotel COMPLETADO 1.593 282
+12 CARGAR_STG stg.PaqueteTour COMPLETADO 2.049 227
+13 CARGAR_STG stg.Reserva COMPLETADO 1.334 0
+14 CARGAR_STG stg.ReservaHabitacion COMPLETADO 1.177 0
+15 CARGAR_STG stg.ReservaTour COMPLETADO 1.461 0
+16 CARGAR_STG stg.Resena COMPLETADO 55.835 500002
+17 CARGAR_STG stg.InteraccionWeb COMPLETADO 54.671 749872
+18 CARGAR_STG stg.PreferenciaArchivo COMPLETADO 3.746 6000
+19 CARGAR_STG stg.PaqueteArchivo COMPLETADO 4.379 150
+20 VALIDAR etl.Error COMPLETADO 1.829 84
+21 CARGAR_DW_DIM dw.Dim* COMPLETADO 2.619 54496
+22 CARGAR_DW_HECHOS dw.Fact* COMPLETADO 52.377 4
+23 CARGAR_DW_OCUPACION dw.FactOcupacionDiaria COMPLETADO 1.292 431325
+24 VERIFICAR_INTEGRIDAD dw.* COMPLETADO 89.326 0
+25 AVANZAR_MARCAS etl.Marca COMPLETADO 5.859 7
 
 === 3. Marcas de agua tras la corrida cloud ===
 Fuente Objeto Marca FilasUltimoLote
 ------ ------ ----- ---------------
-JSON preferencias 1787362659.4497533 0
+JSON preferencias 1787718241.7478101 0
 MONGODB interacciones_web 2027-01-21T12:10:00 0
 MONGODB resenas 2027-01-21T11:30:00 0
 POSTGRESQL cliente 2027-02-01 08:00:00 0
 POSTGRESQL preferencia_cliente 2026-08-22 02:13:14.281377 0
 POSTGRESQL reserva 2027-02-05 10:00:00 0
-XML paquetes 1787362659.3683026 0
+XML paquetes 1787718241.7491357 0
 
 === 4. Efecto sobre los hechos ===
 Hecho Filas
@@ -56,3 +64,59 @@ dw.FactResena 500002
 dw.FactReserva 2000011
 dw.FactReservaHabitacion 1632459
 dw.FactReservaTour 2577212
+
+=== 5. Rechazos de la corrida ===
+Fuente Objeto Regla Severidad Filas
+------ ------ ----- --------- -----
+JSON preferencias no_nulo RECHAZO 44
+JSON preferencias numerico_positivo RECHAZO 38
+XML paquetes numerico_positivo RECHAZO 2
+=== 6. Hallazgo: los _id de Atlas no coinciden con los del DW ===
+
+Esta es la primera corrida cloud que lee MongoDB de verdad. La corrida
+anterior (Ejecucion 1, --solo-pg) no lo hacia, y las dos posteriores leyeron
+0 documentos porque etl.Marca ya estaba en el maximo de Atlas. Para forzar la
+relectura se limpiaron las marcas de MONGODB y se toco el mtime de los cinco
+archivos de 03-archivos/entrada.
+
+El resultado destapo una divergencia que ya existia:
+
+  dw.FactResena          claves de origen local  prefijo 6a8220   500 000
+                         claves de origen Atlas  prefijo 6a8906   500 000
+  dw.FactInteraccionWeb  claves de origen local  prefijo 6a8220 1 500 000
+                         claves de origen Atlas  prefijo 6a8906   749 870
+
+La clave de negocio de estas dos tablas es el _id de MongoDB. Los cuatro
+primeros bytes de un ObjectId son la marca de tiempo de su creacion:
+
+  6a82204a -> generacion que alimento al DW
+  6a89063b -> generacion que hoy vive en Atlas
+  diferencia: 5,3 dias
+
+mongodump y mongorestore preservan _id, asi que 74-migrar-mongo.ps1 no los
+reasigno. La unica explicacion compatible con los datos es que el MongoDB
+local se regenero entre la carga del DW y la migracion a Atlas. Para el DW,
+cada documento de Atlas es una resena distinta de la que ya tenia: el
+borrar-e-insertar por clave solo encontro 2 coincidencias de 1 249 874.
+
+Las 4 claves con prefijo 6a890d (2 resenas y 2 interacciones) si coinciden en
+ambos lados: son los documentos de prueba incremental, creados despues de la
+migracion y por eso identicos.
+
+Reparacion aplicada: se borraron las 1 249 870 filas de origen Atlas y se
+conservaron las de origen local mas las 4 de prueba. Las tablas volvieron a
+500 002 y 1 500 002, que son las cifras que sostienen la reconciliacion 22/22,
+la comparacion local-nube y el modelo de Power BI. Verificado despues:
+6/6 tablas de hechos en su cifra documentada, 32/32 claves foraneas
+confiables, 0 huerfanos.
+
+Lo que esta corrida SI deja probado: el ETL cloud extrae de RDS for
+PostgreSQL, de Atlas y de los archivos, los carga por bcp contra RDS for SQL
+Server y transforma al modelo estrella. 1 258 074 filas leidas, 1 249 874 de
+ellas desde Atlas, en 11m 27s.
+
+Lo que NO hay que hacer: volver a limpiar las marcas de MONGODB mientras
+Atlas y el DW no compartan los _id. Con las marcas en su maximo el problema
+no se repite, porque una corrida incremental lee 0 documentos. Para dejar los
+dos lados consistentes hay que volver a migrar Mongo desde el laboratorio
+local actual, o recargar el DW desde ese mismo laboratorio.

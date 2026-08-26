@@ -9,12 +9,31 @@ y apagar** las instancias en la nube, y las **credenciales** para conectar Power
 
 | Pendiente | Responsable | Estado |
 |---|---|---|
-| Capturas del dashboard en la nube (páginas 1 y 6) | Integrante 1 / Alex | Bloqueado por conexión a RDS |
+| Capturas del dashboard en la nube (páginas 1 y 6) | Integrante 1 / Alex | **Hecho** el 25 de agosto |
 | Video de demostración | Equipo | No iniciado |
 | Presentación final ante el grupo | Equipo | Lista para presentar |
 
 Todo lo demás está terminado: migración a la nube, ETL e integración, almacén de datos
 validado, dashboard conectado, tema de investigación (ML de reseñas) y manual de usuario.
+
+> **Las capturas ya no bloquean nada.** Se destrabó la conexión a RDS, se refrescó el
+> modelo contra la nube y quedaron en:
+>
+> - `00-docs/05-evidencias/migracion/powerbi-cloud-pagina1-resumen.png`
+> - `00-docs/05-evidencias/migracion/powerbi-cloud-pagina6-estado.png`
+>
+> Son las dos que van en los marcos reservados de la **diapositiva 6** de
+> `Presentación de flujo.pptx`. Con eso, el único pendiente real del proyecto es el
+> video.
+>
+> Lo que muestran, por si hay que defenderlas: `30.2 %` de ocupación —que coincide con
+> el `30.19 %` que reportó el ETL—, `84` registros rechazados desglosados 44 + 38 + 2,
+> y en la página 6 `EC2AMAZ-HN6CSJ3` con `RDS Single-AZ / GESTIONADO POR AWS`. Ese
+> nombre de nodo **cambia** cada vez que AWS reemplaza la máquina; no es un error.
+>
+> El refresco tarda unos 6 minutos porque las 17 tablas son de modo *import* y las de
+> hechos esperan en `ASYNC_NETWORK_IO`: el límite es la WAN hasta `us-east-1`, no la
+> instancia. Si se rehace en vivo, conviene tenerlo hecho de antes.
 
 Las presentaciones ya están armadas:
 

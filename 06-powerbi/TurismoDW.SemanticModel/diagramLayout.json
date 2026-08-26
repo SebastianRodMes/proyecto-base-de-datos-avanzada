@@ -1,0 +1,243 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1770.1481377685006,
+            "y": 629.824906860862
+          },
+          "nodeIndex": "_Medidas",
+          "nodeLineageTag": "4417f70b-cf84-40b1-88a1-cb3d6eaf64ca",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2054.1481377685004,
+            "y": 631.824906860862
+          },
+          "nodeIndex": "CalidadDatos",
+          "nodeLineageTag": "20faf39f-21c6-48ab-8b78-28954e771341",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1536.1481377685009,
+            "y": 563.83325402262881
+          },
+          "nodeIndex": "DimCanal",
+          "nodeLineageTag": "c4071e88-8a42-4a12-b35b-f1bea482532a",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 868.14926523906979,
+            "y": 657.38793234341279
+          },
+          "nodeIndex": "DimCliente",
+          "nodeLineageTag": "9ae2be40-dbc7-4889-afdf-bbe213f981ac",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 925.54678374187176,
+            "y": 1010.6113231024378
+          },
+          "nodeIndex": "DimEstadoReserva",
+          "nodeLineageTag": "cf6d9c65-3e86-40b4-9823-49a00ac26715",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 92.307146792622,
+            "y": 828.87348328800158
+          },
+          "nodeIndex": "DimHotel",
+          "nodeLineageTag": "fe2cea27-e8c2-4b99-b8c0-009af5df1301",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 367.079523857343,
+            "y": -50
+          },
+          "nodeIndex": "DimPaquete",
+          "nodeLineageTag": "50ffa8b1-fa14-4b63-b9e1-c660bd7b728e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 581.88295217447921,
+            "y": 657.38707022163646
+          },
+          "nodeIndex": "DimTiempo",
+          "nodeLineageTag": "e432edae-3d47-4a44-b3e3-ff1aac0ee99c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 91.600689199998669,
+            "y": 1213.6498137217241
+          },
+          "nodeIndex": "DimTipoHabitacion",
+          "nodeLineageTag": "3f18e2b8-0aac-4ff2-87ec-a4ab2ef02e04",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 899.411513925038,
+            "y": -49.988423936188838
+          },
+          "nodeIndex": "DimTour",
+          "nodeLineageTag": "b8c93c2b-1554-461a-a514-ab982e5e67be",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2338.1481377685004,
+            "y": 629.824906860862
+          },
+          "nodeIndex": "EstadoSistema",
+          "nodeLineageTag": "5eea0edd-0946-4757-834c-c602c75ccc9c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1251.0151242181548,
+            "y": 657.530151912852
+          },
+          "nodeIndex": "FactInteraccionWeb",
+          "nodeLineageTag": "f16b029f-2f4c-4c1f-a89f-47815817c960",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 275.60694380392079
+          },
+          "nodeIndex": "FactOcupacionDiaria",
+          "nodeLineageTag": "05f8299f-0336-4d34-905c-c8a8623e6e9c",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 335.36442981945152,
+            "y": 303.72641176222044
+          },
+          "nodeIndex": "FactResena",
+          "nodeLineageTag": "af8cedc9-3d79-4e08-832f-b6cf3eff3d4c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 622.11843470307986,
+            "y": 303.72539021458692
+          },
+          "nodeIndex": "FactReserva",
+          "nodeLineageTag": "289125b5-5216-4484-b62f-56aa57a20a28",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 378.65895478808807,
+            "y": 1011.0742501635667
+          },
+          "nodeIndex": "FactReservaHabitacion",
+          "nodeLineageTag": "276f3e73-9e5a-4c2c-8c89-e228f01f846d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1097.2847478107567,
+            "y": 303.74384646725628
+          },
+          "nodeIndex": "FactReservaTour",
+          "nodeLineageTag": "14d5fbc6-9c1f-480f-b8bd-8707a32bb892",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas las tablas",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas las tablas",
+  "defaultDiagram": "Todas las tablas"
+}

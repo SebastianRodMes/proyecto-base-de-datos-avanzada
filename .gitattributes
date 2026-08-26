@@ -2,3 +2,8 @@
 # finales de linea LF aunque se clonen en Windows, o el shell falla.
 *.sh   text eol=lf
 Dockerfile text eol=lf
+
+# Las capturas de Power BI son evidencia de entrega. Marcarlas binarias evita
+# que una futura regla "* text=auto" les normalice saltos de linea y las rompa.
+*.png  binary
+*.jpg  binary
