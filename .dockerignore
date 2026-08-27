@@ -1,0 +1,21 @@
+# Contexto de build del ETL: solo lo necesario. Excluye lo pesado/irrelevante.
+05-etl/.venv/
+05-etl/logs/
+05-etl/.env
+05-etl/.env.aws
+05-etl/.env.*.bak
+**/__pycache__/
+**/*.pyc
+.git/
+.secrets/
+00-docs/
+06-powerbi/
+07-migracion/
+08-investigacion-ml/
+99-setup/
+docker/
+01-postgres/
+02-mongodb/
+*.md
+*.pbix
+*.abf

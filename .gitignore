@@ -11,6 +11,9 @@ venv/
 # Archivos intermedios del ETL (bcp)
 *.dat
 
+# Logs del ETL cloud automatico (run-etl-cloud.ps1)
+05-etl/logs/
+
 # Sistema operativo
 Thumbs.db
 .DS_Store
